@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page.title }}</title>
+    <link rel="stylesheet" href="{{ '/css/styles.css' | relative_url }}">
+</head>
+<body>
+    <header>
+        <h1>{{ site.title }}</h1>
+        <nav>
+            {% for item in site.navigation %}
+                <a href="{{ item.link }}">{{ item.name }}</a>
+            {% endfor %}
+        </nav>
+    </header>
+    <main>
+        <h2>Blog Posts</h2>
+        {% for post in paginator.posts %}
+            <article>
+                <h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
+                <p>{{ post.excerpt }}</p>
+            </article>
+        {% endfor %}
+        <nav class="pagination">
+            {% if paginator.previous_page %}
+                <a href="{{ paginator.previous_page_path | relative_url }}">Newer Posts</a>
+            {% endif %}
+            {% if paginator.next_page %}
+                <a href="{{ paginator.next_page_path | relative_url }}">Older Posts</a>
+            {% endif %}
+        </nav>
+    </main>
+    <footer>
+        <p>© {{ "now" | date: "%Y" }} {{ site.author }}</p>
+    </footer>
+</body>
+</html>

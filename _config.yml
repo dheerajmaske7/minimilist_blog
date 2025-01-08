@@ -1,0 +1,35 @@
+title: "Dheeraj Maske"
+description: "Minimalist blog with blogs, projects, and more."
+author: "Dheeraj Maske"
+email: "dheerajmaske2001@gmail.com"
+
+
+#baseurl: "/minimilist_blog_website/docs" # Add your repository name
+#url: "https://dheerajmaske7.github.io" # Your GitHub Pages URL
+
+
+paginate: 5 # Number of posts per page
+paginate_path: "/page:num" # Pagination URL structure
+
+# Social Links
+social_links:
+  twitter: "https://twitter.com/Dheeraj_maske" # Replace with your Twitter handle
+
+# Plugins
+plugins:
+  - jekyll-feed
+  - jekyll-paginate
+
+
+
+
+# Navigation Links
+navigation:
+  - name: Blogs
+    link: /
+  - name: Projects
+    link: /projects/
+  - name: Twitter
+    link: https://twitter.com/Dheeraj_maske
+  - name: About
+    link: /about/
