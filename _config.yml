@@ -4,10 +4,8 @@ author: "Dheeraj Maske"
 email: "dheerajmaske2001@gmail.com"
 
 
-baseurl: "/minimilist_blog" # The repository name
-#baseurl: "" # The repository name
-url: "https://dheerajmaske7.github.io" # Your GitHub Pages URL
-
+#baseurl: "/minimilist_blog" # Repository name
+#url: "https://dheerajmaske7.github.io" # GitHub Pages URL
 
 
 paginate: 5 # Number of posts per page

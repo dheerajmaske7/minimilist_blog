@@ -1,4 +1,4 @@
-name: Build and Deploy Jekyll Site
+name: Deploy GitHub Pages
 
 on:
   push:
@@ -6,23 +6,27 @@ on:
       - main
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 3.1
-      - name: Install Jekyll and Bundler
-        run: |
-          gem install jekyll bundler
-      - name: Build Jekyll Site
-        run: |
-          bundle install
-          bundle exec jekyll build
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./_site
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Build Site
+      run: |
+        # If you're using Jekyll, build the site
+        # Otherwise, adjust this step to your build process
+        jekyll build
+
+    - name: Deploy to GitHub Pages
+      run: |
+        mkdir gh-pages
+        mv _site/* gh-pages/
+        cd gh-pages
+        git init
+        git remote add origin https://github.com/dheerajmaske7/minimilist_blog_website.git
+        git checkout -b gh-pages
+        git add .
+        git commit -m "Deploy to GitHub Pages"
+        git push --force origin gh-pages

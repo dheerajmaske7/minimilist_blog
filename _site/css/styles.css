@@ -1,0 +1,68 @@
+/* General Styles */
+body {
+    font-family: Georgia, serif;
+    background-color: #fff;
+    color: #333;
+    line-height: 1.8;
+    margin: 0;
+  }
+  
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    border-bottom: 1px solid #ddd;
+  }
+
+
+/* Header Content */
+.header-content {
+  display: flex; /* Align items horizontally */
+  align-items: center; /* Center items vertically */
+}
+
+/* Profile Icon Styling */
+.profile-icon {
+  width: 60px; /* Adjust size for better visibility */
+  height: 60px; /* Match the width */
+  border-radius: 50%; /* Circular shape */
+  margin-right: 15px; /* Space between the image and name */
+}
+
+/* Header Title Styling */
+header h1 {
+  font-size: 28px; /* Adjust font size to match the image size */
+  margin: 0; /* Remove unnecessary margins */
+  font-weight: normal; /* Adjust weight to make it cleaner */
+}
+
+
+  header nav {
+    display: flex;
+    gap: 15px;
+  }
+  
+  header nav a {
+    text-decoration: none;
+    color: #007acc;
+    font-weight: bold;
+  }
+  
+  header nav a:hover {
+    text-decoration: underline;
+  }
+  
+  main {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+  }
+  
+  footer {
+    text-align: center;
+    margin-top: 50px;
+    font-size: 14px;
+    color: #777;
+  }
+  
