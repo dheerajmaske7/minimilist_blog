@@ -1,4 +1,10 @@
 ---
+layout: post
+title: "Technical Docmentation at Bitquery: Arbitrum NFT Api, Guide to recover stolen bitcoin,Top 10 Web-Socket API,Transaction Simulation and Automated Volume Surge Detection using Trade Execution Bot "
+date: 2024-03-10
+excerpt: "....."
+---
+
 Redirection to Bitquery Website
 ---
 ## [Article 1: Arbitrum NFT API](https://bitquery.io/blog/arbitrum-nft-api)
