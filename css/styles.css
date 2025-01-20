@@ -1,68 +1,99 @@
 /* General Styles */
 body {
-    font-family: Georgia, serif;
-    background-color: #fff;
-    color: #333;
-    line-height: 1.8;
-    margin: 0;
-  }
-  
-  header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    border-bottom: 1px solid #ddd;
-  }
+  font-family: Georgia, serif;
+  background-color: #fff;
+  color: #333;
+  line-height: 1.8;
+  margin: 0;
+}
 
+header {
+  display: flex;
+  flex-direction: column; /* Stack items vertically for smaller screens */
+  justify-content: center; /* Center items */
+  align-items: center;
+  padding: 10px 20px;
+  border-bottom: 1px solid #ddd;
+}
 
 /* Header Content */
 .header-content {
   display: flex; /* Align items horizontally */
   align-items: center; /* Center items vertically */
+  justify-content: center; /* Center content horizontally */
+  flex-wrap: wrap; /* Allow wrapping for smaller screens */
+  text-align: center;
+  margin-bottom: 10px; /* Add space between the header and navigation */
 }
 
 /* Profile Icon Styling */
 .profile-icon {
-  width: 60px; /* Adjust size for better visibility */
-  height: 60px; /* Match the width */
+  width: 80px; /* Larger size for better visibility */
+  height: 80px; /* Match the width */
   border-radius: 50%; /* Circular shape */
-  margin-right: 15px; /* Space between the image and name */
+  margin-bottom: 10px; /* Space below the image for smaller screens */
 }
 
 /* Header Title Styling */
 header h1 {
-  font-size: 28px; /* Adjust font size to match the image size */
+  font-size: 24px; /* Adjust font size for smaller screens */
   margin: 0; /* Remove unnecessary margins */
   font-weight: normal; /* Adjust weight to make it cleaner */
+  text-align: center; /* Center-align text for better layout */
+  line-height: 1.2; /* Reduce line height for compactness */
 }
 
+/* Navigation Styling */
+header nav {
+  display: flex;
+  flex-wrap: wrap; /* Allow wrapping for smaller screens */
+  gap: 10px; /* Reduce gap for mobile-friendly spacing */
+  justify-content: center; /* Center navigation links */
+}
+
+header nav a {
+  text-decoration: none;
+  color: #007acc;
+  font-weight: bold;
+}
+
+header nav a:hover {
+  text-decoration: underline;
+}
+
+/* Main Content */
+main {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  margin-top: 50px;
+  font-size: 14px;
+  color: #777;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  header {
+    flex-direction: column; /* Stack items vertically */
+    align-items: center;
+  }
+
+  .profile-icon {
+    width: 60px; /* Smaller size for mobile screens */
+    height: 60px;
+  }
+
+  header h1 {
+    font-size: 20px; /* Smaller font size for mobile screens */
+  }
 
   header nav {
-    display: flex;
-    gap: 15px;
+    flex-direction: column; /* Stack links vertically */
+    gap: 8px; /* Reduce gap for tighter spacing */
   }
-  
-  header nav a {
-    text-decoration: none;
-    color: #007acc;
-    font-weight: bold;
-  }
-  
-  header nav a:hover {
-    text-decoration: underline;
-  }
-  
-  main {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-  }
-  
-  footer {
-    text-align: center;
-    margin-top: 50px;
-    font-size: 14px;
-    color: #777;
-  }
-  
+}
