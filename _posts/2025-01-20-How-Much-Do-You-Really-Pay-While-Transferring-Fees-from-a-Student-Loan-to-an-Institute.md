@@ -5,8 +5,6 @@ date: 2025-01-20
 excerpt: "A deep dive into the hidden charges and inefficiencies in traditional remittance methods, and how decentralized finance (DeFi) solutions like NYUCoin can save students significant costs."
 ---
 
-# How Much Are You Really Losing to Hidden Fees When Paying Tuition Abroad by Traditional Banking?
-
 
 When I transferred funds from a loan of ₹20,00,000 to New York University (NYU) for my tuition fees, I realized how much extra I ended up paying in hidden charges. It was an eye-opening experience to see how many intermediaries were involved in the process and how each one added their own fees. This got me thinking—what if there was a better way? Let me walk you through my experience, the charges I paid, and an idea that could save students like me a significant amount of money.
 
