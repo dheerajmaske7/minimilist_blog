@@ -16,7 +16,7 @@ When I transferred funds from a loan of ₹20,00,000 to New York University (NYU
 
 Here’s how the money flowed from my loan to NYU and the charges involved at each step:
 
-![Flowchart of Payment Process](assets\images\How_Much_Do_You_Really_Pay_While_Transferring_Fees_from_a_Student_Loan\PaymentFlow-Blockdiagram.png)
+![Flowchart of Payment Process](\assets\images\How_Much_Do_You_Really_Pay_While_Transferring_Fees_from_a_Student_Loan\PaymentFlow-Blockdiagram.jpg)
 
 - This flowchart shows the **traditional process** of transferring funds.
 - Steps include:
@@ -34,7 +34,7 @@ Here’s how the money flowed from my loan to NYU and the charges involved at ea
 
 After completing the process, I found out that I paid a total of ₹29,527.22 in extra charges—just to transfer my fees! Here’s the detailed breakdown of where this money went:
 
-![Total Extra Charges Breakdown](assets\images\How_Much_Do_You_Really_Pay_While_Transferring_Fees_from_a_Student_Loan\PaymentFlow-Extra Amount-Blockdiagram.png)
+![Total Extra Charges Breakdown](\assets\images\How_Much_Do_You_Really_Pay_While_Transferring_Fees_from_a_Student_Loan\PaymentFlow-Extra Amount-Blockdiagram.jpg)
 
 - The breakdown highlights:
   - **TCS (₹10,000)**: Tax collected at source.
@@ -56,7 +56,7 @@ While going through this process, I started wondering: what if NYU had its own s
 
 Here’s how the payment process would look if NYUCoin and decentralized exchanges (DEXs) were used:
 
-![Flowchart of Payment with NYUCoin](assets\images\How_Much_Do_You_Really_Pay_While_Transferring_Fees_from_a_Student_Loan\PaymentFlow-DexAmt-Blockdiagram.png)
+![Flowchart of Payment with NYUCoin](\assets\images\How_Much_Do_You_Really_Pay_While_Transferring_Fees_from_a_Student_Loan\PaymentFlow-DexAmt-Blockdiagram.jpg)
 
 - The simplified process with NYUCoin:
   1. **Buy USDT/ETH via DEX (Decentralized Exchange)**: Students purchase cryptocurrency directly.
@@ -70,7 +70,7 @@ Here’s how the payment process would look if NYUCoin and decentralized exchang
 
 Using decentralized finance (DeFi) tools like a DEX could save us a lot of money. Here's a direct comparison:
 
-![Saving Comparison Table](assets\images\Dex-comparision-with-TF.png)
+![Saving Comparison Table](/assets/images/How_Much_Do_You_Really_Pay_While_Transferring_Fees_from_a_Student_Loan\Dex-comparision-with-TF.jpg)
 
 ---
 
