@@ -1,4 +1,9 @@
-# Talk on Liquid Staking Protocol at NYU STERN Blockchain Lab
+---
+layout: post
+title: "Talk on Liquid Staking Protocol at NYU STERN Blockchain Lab"
+date: 2025-01-31
+excerpt: "Liquid Staking removes the barriers of traditional staking by allowing users to stake their ETH while maintaining liquidity. Learn how it works, its benefits, and its role in DeFi."
+---
 
 Thanks to **[Gustavo](https://www.linkedin.com/in/gustavo-grivol-782170201/?originalSubdomain=br)** and **[Professor Hannah](https://www.stern.nyu.edu/faculty/bio/hanna-halaburda)** for the opportunity to speak at **[Blockchain Lab NYU](https://blockchain.stern.nyu.edu/)**.
 
@@ -30,14 +35,14 @@ Liquid Staking allows users to stake their **ETH without locking their assets**.
 3. **Users receive LSTs** (e.g., stETH), representing their staked ETH.
 4. **LSTs remain tradable and usable in DeFi**, ensuring liquidity while earning staking rewards.
 
-![Liquid Staking Deposit Flow](assets/images/Liquid_Staking_Protocol/Deposit_flow.png)  
+![Liquid Staking Deposit Flow](assets/images/Liquid_Staking_Protocol/Deposit_flow.jpg)
 
 ---
 
 ## **How Are Rewards Distributed?**
 Rewards from liquid staking are distributed **proportionally** based on the staked ETH and the performance of validators.
 
-![Reward Distribution](assets/images/Liquid_Staking_Protocol/Reward_distribution.png)  
+![Reward Distribution](assets/images/Liquid_Staking_Protocol/Reward_distribution.jpg)
 
 ---
 
@@ -53,7 +58,7 @@ Liquid Staking creates a **self-reinforcing cycle** that strengthens Ethereum’
 
 This continuous loop enhances **network security and usability**, making staking more accessible to all.
 
-![Positive Feedback Loop](assets/images/Liquid_Staking_Protocol/Positive_feedback_loop.png)  
+![Positive Feedback Loop](assets/images/Liquid_Staking_Protocol/Positive_feedback_loop.jpg)
 
 ---
 
@@ -67,7 +72,7 @@ Liquid Staking **doesn’t stop at Layer 1 (Ethereum mainnet)**. Restaking allow
 Thus, **restaking amplifies the utility of LSTs**, further optimizing capital efficiency.
 
 
-![Layer 2 Restaking](assets/images/Liquid_Staking_Protocol/Layer2_Restaking.png)  
+![Layer 2 Restaking](assets/images/Liquid_Staking_Protocol/Layer2_Restaking.jpg)
 
 ---
 
@@ -80,7 +85,7 @@ Liquid staking protocols fall into different categories based on **custodianship
 
 Each category offers **different trade-offs in security, decentralization, and risk exposure**.
 
-![Liquid Staking Categorization](Image4)
+![Liquid Staking Categorization](assets/images/Liquid_Staking_Protocol/Image4.jpg)  
 
 ---
 
