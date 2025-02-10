@@ -4,6 +4,7 @@ title: "AI Bot That Became a Crypto Millionaire"
 date: 2024-12-27
 excerpt: "Truth Terminal, an AI bot created by Andy Ayrey, started as an experiment and turned into a crypto millionaire by promoting meme coins. Here's how it happened and why it matters."
 ---
+![Image 1](\assets\images\AIBOT_MILLIONAIRE\image1.jpg)
 
 ### 1/ Why is Truth Terminal important?
 
@@ -18,6 +19,7 @@ Truth Terminal started on Twitter in June 2024, rapidly gaining attention for it
 - **Tweets**: 5,000+  
 
 It became a hub for conversations about AI, philosophy, and cryptocurrency.
+![Image 2](\assets\images\AIBOT_MILLIONAIRE\image2.jpg)
 
 ---
 
@@ -28,6 +30,8 @@ In July 2024, **Marc Andreessen** noticed Truth Terminal’s unique content and 
 - Improving its AI model (allocated $10,000-$15,000).
 - Setting up a Discord server for community engagement.
 - Exploring the creation of a cryptocurrency token or memecoin inspired by its viral content.
+![Image 3](\assets\images\AIBOT_MILLIONAIRE\image3.jpg)
+
 
 This sparked the creation of **GOAT (Goatseus Maximus)**, a meme coin inspired by Truth Terminal’s viral posts.
 
@@ -49,6 +53,7 @@ Truth Terminal showcases how AI can:
 - Thrive on community interest and speculation (as seen with meme coins like GOAT).
 
 However, the volatility of meme coins raises concerns about their **stability** and **ethical implications**.
+![Image 4](\assets\images\AIBOT_MILLIONAIRE\image4.jpg)
 
 ---
 

@@ -1,4 +1,131 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-02-03T23:50:34-05:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Dheeraj Maske</title><subtitle>Minimalist blog with blogs, projects, and more.</subtitle><author><name>Dheeraj Maske</name></author><entry><title type="html">How Much Are You Really Losing to Hidden Fees When Paying Tuition Abroad by Traditional Banking?</title><link href="http://localhost:4000/2025/01/20/How-Much-Do-You-Really-Pay-While-Transferring-Fees-from-a-Student-Loan-to-an-Institute.html" rel="alternate" type="text/html" title="How Much Are You Really Losing to Hidden Fees When Paying Tuition Abroad by Traditional Banking?" /><published>2025-01-20T00:00:00-05:00</published><updated>2025-01-20T00:00:00-05:00</updated><id>http://localhost:4000/2025/01/20/How-Much-Do-You-Really-Pay-While-Transferring-Fees-from-a-Student-Loan-to-an-Institute</id><content type="html" xml:base="http://localhost:4000/2025/01/20/How-Much-Do-You-Really-Pay-While-Transferring-Fees-from-a-Student-Loan-to-an-Institute.html"><![CDATA[<p>When I transferred funds from a loan of ₹20,00,000 to New York University (NYU) for my tuition fees, I realized how much extra I ended up paying in hidden charges. It was an eye-opening experience to see how many intermediaries were involved in the process and how each one added their own fees. This got me thinking—what if there was a better way? Let me walk you through my experience, the charges I paid, and an idea that could save students like me a significant amount of money.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-02-09T20:34:09-05:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Dheeraj Maske</title><subtitle>Minimalist blog with blogs, projects, and more.</subtitle><author><name>Dheeraj Maske</name></author><entry><title type="html">Talk on Liquid Staking Protocol at NYU STERN Blockchain Lab</title><link href="http://localhost:4000/2025/01/31/Talk-on-Liquid-staking-protocol-at-NYU-Stern-Blockchain-Lab.html" rel="alternate" type="text/html" title="Talk on Liquid Staking Protocol at NYU STERN Blockchain Lab" /><published>2025-01-31T00:00:00-05:00</published><updated>2025-01-31T00:00:00-05:00</updated><id>http://localhost:4000/2025/01/31/Talk-on-Liquid-staking-protocol-at-NYU-Stern-Blockchain-Lab</id><content type="html" xml:base="http://localhost:4000/2025/01/31/Talk-on-Liquid-staking-protocol-at-NYU-Stern-Blockchain-Lab.html"><![CDATA[<p>Thanks to <strong><a href="https://www.linkedin.com/in/gustavo-grivol-782170201/?originalSubdomain=br">Gustavo</a></strong> and <strong><a href="https://www.stern.nyu.edu/faculty/bio/hanna-halaburda">Professor Hannah</a></strong> for the opportunity to speak at <strong><a href="https://blockchain.stern.nyu.edu/">Blockchain Lab NYU</a></strong>.</p>
+
+<h2 id="introduction"><strong>Introduction</strong></h2>
+<p>With Ethereum’s transition from <strong>Proof-of-Work (PoW) to Proof-of-Stake (PoS)</strong> in 2022, staking became the primary method of securing the network. However, traditional staking presented several challenges, such as <strong>liquidity lockups, high entry barriers, and exit restrictions</strong>.</p>
+
+<p><strong>Liquid Staking</strong> emerged as a solution, allowing users to stake their assets while maintaining liquidity. This blog explores <strong>how liquid staking works, its benefits, and its relationship with restaking protocols</strong>.</p>
+
+<hr />
+
+<h2 id="the-problem-with-traditional-staking"><strong>The Problem with Traditional Staking</strong></h2>
+<p>In the <strong>PoS model</strong>, validators secure the network by staking a fixed amount of ETH (e.g., <strong>32 ETH for Ethereum</strong>). Users, on the other hand, delegate their assets to validators. However, this traditional staking method comes with several limitations:</p>
+
+<ul>
+  <li><strong>Locked Assets:</strong> Once staked, assets become illiquid and unusable for other purposes.</li>
+  <li><strong>High Entry Barriers:</strong> Becoming a validator requires a significant investment (~$75,000 for 32 ETH).</li>
+  <li><strong>Limited Yield Opportunities:</strong> Users only earn the <strong>Annual Percentage Rate (APR)</strong> from staking without additional yield generation.</li>
+  <li><strong>Unstaking Delays &amp; Exit Restrictions:</strong> Withdrawals are subject to long waiting periods.</li>
+</ul>
+
+<p>To address these issues, <strong>liquid staking protocols</strong> were introduced.</p>
+
+<hr />
+
+<h2 id="what-is-liquid-staking"><strong>What is Liquid Staking?</strong></h2>
+<p>Liquid Staking allows users to stake their <strong>ETH without locking their assets</strong>. In return, they receive <strong>Liquid Staking Tokens (LSTs)</strong>, such as <strong>stETH (staked ETH) from Lido</strong>. These LSTs can be utilized in <strong>DeFi applications for lending, trading, and yield farming</strong>, all while continuing to earn staking rewards.</p>
+
+<h3 id="how-liquid-staking-works"><strong>How Liquid Staking Works</strong></h3>
+<ol>
+  <li><strong>Users deposit ETH</strong> into a liquid staking protocol (e.g., Lido).</li>
+  <li><strong>The protocol stakes ETH</strong> on behalf of the users by delegating to validators.</li>
+  <li><strong>Users receive LSTs</strong> (e.g., stETH), representing their staked ETH.</li>
+  <li><strong>LSTs remain tradable and usable in DeFi</strong>, ensuring liquidity while earning staking rewards.</li>
+</ol>
+
+<p><img src="\assets\images\Liquid_Staking_Protocol\Deposit_flow.jpg" alt="Liquid Staking Deposit Flow" /></p>
+
+<hr />
+
+<h2 id="how-are-rewards-distributed"><strong>How Are Rewards Distributed?</strong></h2>
+<p>Rewards from liquid staking are distributed <strong>proportionally</strong> based on the staked ETH and the performance of validators.</p>
+
+<p><img src="\assets\images\Liquid_Staking_Protocol\Reward_distribution.jpg" alt="Reward Distribution" /></p>
+
+<hr />
+
+<h2 id="the-positive-feedback-loop-of-liquid-staking"><strong>The Positive Feedback Loop of Liquid Staking</strong></h2>
+<p>Liquid Staking creates a <strong>self-reinforcing cycle</strong> that strengthens Ethereum’s ecosystem:</p>
+
+<ol>
+  <li><strong>More Liquid Staking →</strong> Users can stake ETH while maintaining liquidity.</li>
+  <li><strong>More Validators →</strong> Increased validator participation enhances decentralization.</li>
+  <li><strong>Lower Transaction Costs →</strong> Higher competition among validators improves efficiency.</li>
+  <li><strong>Increased ETH Demand →</strong> As staking becomes more accessible, demand for ETH rises.</li>
+  <li><strong>More Staking →</strong> A larger percentage of ETH gets staked, securing the network further.</li>
+  <li><strong>More Liquidity →</strong> The cycle continues, reinforcing Ethereum’s dominance.</li>
+</ol>
+
+<p>This continuous loop enhances <strong>network security and usability</strong>, making staking more accessible to all.</p>
+
+<p><img src="/assets/images/Liquid_Staking_Protocol/Positive_feedback_loop.jpg" alt="Positive Feedback Loop" /></p>
+
+<hr />
+
+<h2 id="how-restaking-extends-liquid-staking"><strong>How Restaking Extends Liquid Staking</strong></h2>
+<p>Liquid Staking <strong>doesn’t stop at Layer 1 (Ethereum mainnet)</strong>. Restaking allows <strong>LSTs (e.g., stETH) to be further utilized</strong> in securing <strong>Layer 2 networks, oracles, and bridges</strong> through protocols like <strong>EigenLayer</strong>.</p>
+
+<ul>
+  <li><strong>LSTs → EigenLayer Protocol → AVS (Actively Validated Services)</strong></li>
+  <li><strong>AVS includes oracles, bridges, and Layer 2 solutions</strong> that need additional security.</li>
+  <li><strong>This creates new yield opportunities</strong>, making Ethereum’s security model more robust.</li>
+</ul>
+
+<p>Thus, <strong>restaking amplifies the utility of LSTs</strong>, further optimizing capital efficiency.</p>
+
+<p><img src="/assets/images/Liquid_Staking_Protocol/Layer2_Restaking.jpg" alt="Layer 2 Restaking" /></p>
+
+<hr />
+
+<h2 id="categorization-of-liquid-staking"><strong>Categorization of Liquid Staking</strong></h2>
+<p>Liquid staking protocols fall into different categories based on <strong>custodianship, decentralization, and governance models</strong>:</p>
+
+<ul>
+  <li><strong>Decentralized Liquid Staking (e.g., Lido):</strong> Community-driven with distributed validators.</li>
+  <li><strong>Centralized Liquid Staking (e.g., Binance, Coinbase):</strong> Managed by centralized exchanges.</li>
+  <li><strong>Hybrid Approaches:</strong> Combining elements of both decentralized and centralized models.</li>
+</ul>
+
+<p>Each category offers <strong>different trade-offs in security, decentralization, and risk exposure</strong>.</p>
+
+<p><img src="/assets/images/Liquid_Staking_Protocol/Image4.jpg" alt="Liquid Staking Categorization" /></p>
+
+<hr />
+
+<h2 id="posas-take-on-liquid-staking"><strong>PoSA’s Take on Liquid Staking</strong></h2>
+<p>The <strong>Proof of Stake Alliance (PoSA)</strong> advocates for <strong>clear policies</strong> surrounding liquid staking. Key points include:</p>
+
+<ul>
+  <li><strong>Regulatory Compliance:</strong> Involvement of bodies like <strong>SEC, CFTC</strong>.</li>
+  <li><strong>Not a Taxable Event:</strong> Swapping ETH for LSTs <strong>is not considered a taxable event</strong>.</li>
+  <li><strong>Differentiating LSTs from LSDs (Liquid Staking Derivatives):</strong> Ensuring clarity in financial products.</li>
+  <li><strong>No Investment Advice:</strong> Platforms like Lido <strong>cannot provide financial recommendations</strong>.</li>
+</ul>
+
+<p>By promoting transparency, PoSA aims to <strong>legitimize liquid staking under fair regulations</strong>.</p>
+
+<hr />
+
+<h2 id="risks-involved-in-liquid-staking"><strong>Risks Involved in Liquid Staking</strong></h2>
+<p>While liquid staking enhances staking efficiency, it introduces <strong>several risks</strong>:</p>
+
+<ol>
+  <li><strong>stETH Price Risk (Pegging Issues):</strong> LSTs may <strong>deviate from their pegged ETH value</strong> in volatile markets.</li>
+  <li><strong>Regulatory Risk:</strong> Governments and regulators <strong>may impose restrictions</strong> on staking protocols.</li>
+  <li><strong>Centralization Risk:</strong> Large liquid staking providers (e.g., Lido) <strong>could become too dominant</strong>, affecting decentralization.</li>
+  <li><strong>Governance Risk:</strong> Decision-making in <strong>DAO-controlled protocols</strong> may become complex or manipulated.</li>
+  <li><strong>Smart Contract Risk:</strong> Exploits like <strong>the Ankr hack (December 2022)</strong> highlight potential security flaws.</li>
+</ol>
+
+<p>Users must assess these risks before participating in liquid staking.</p>
+
+<hr />
+
+<h2 id="conclusion-why-liquid-staking-matters"><strong>Conclusion: Why Liquid Staking Matters</strong></h2>
+<p>Liquid Staking <strong>solves key limitations of traditional staking</strong> by unlocking liquidity, reducing entry barriers, and increasing capital efficiency. It <strong>creates a positive feedback loop</strong> that strengthens Ethereum’s network security while enabling new DeFi opportunities.</p>
+
+<p>Additionally, <strong>restaking protocols extend staking benefits to Layer 2s, bridges, and oracles</strong>, further enhancing Ethereum’s ecosystem.</p>
+
+<p>As liquid staking evolves, <strong>balancing decentralization, regulation, and security</strong> will be crucial for its long-term success.</p>]]></content><author><name>Dheeraj Maske</name></author><summary type="html"><![CDATA[Liquid Staking removes the barriers of traditional staking by allowing users to stake their ETH while maintaining liquidity. Learn how it works, its benefits, and its role in DeFi.]]></summary></entry><entry><title type="html">How Much Are You Really Losing to Hidden Fees When Paying Tuition Abroad by Traditional Banking?</title><link href="http://localhost:4000/2025/01/20/How-Much-Do-You-Really-Pay-While-Transferring-Fees-from-a-Student-Loan-to-an-Institute.html" rel="alternate" type="text/html" title="How Much Are You Really Losing to Hidden Fees When Paying Tuition Abroad by Traditional Banking?" /><published>2025-01-20T00:00:00-05:00</published><updated>2025-01-20T00:00:00-05:00</updated><id>http://localhost:4000/2025/01/20/How-Much-Do-You-Really-Pay-While-Transferring-Fees-from-a-Student-Loan-to-an-Institute</id><content type="html" xml:base="http://localhost:4000/2025/01/20/How-Much-Do-You-Really-Pay-While-Transferring-Fees-from-a-Student-Loan-to-an-Institute.html"><![CDATA[<p>When I transferred funds from a loan of ₹20,00,000 to New York University (NYU) for my tuition fees, I realized how much extra I ended up paying in hidden charges. It was an eye-opening experience to see how many intermediaries were involved in the process and how each one added their own fees. This got me thinking—what if there was a better way? Let me walk you through my experience, the charges I paid, and an idea that could save students like me a significant amount of money.</p>
 
 <hr />
 
@@ -85,7 +212,124 @@
 
 <p>If NYU adopted a decentralized solution like <strong>NYUCoin</strong>, students could save approximately ₹23,527.22 on a ₹20,00,000 loan—around 70% reduction in extra charges. This approach is not just cost-effective but also transparent and efficient, ensuring that more of our money goes toward education rather than fees.</p>
 
-<p>For students, every penny counts, and innovations like this could make a huge difference. It’s time we rethink the way we pay our tuition fees.</p>]]></content><author><name>Dheeraj Maske</name></author><summary type="html"><![CDATA[A deep dive into the hidden charges and inefficiencies in traditional remittance methods, and how decentralized finance (DeFi) solutions like NYUCoin can save students significant costs.]]></summary></entry><entry><title type="html">Why One Should Not Use Centralized Exchanges for Crypto Trading</title><link href="http://localhost:4000/2025/01/04/Why-one-should-not-use-Centralized-Exchanges-for-Crypto-Trading.html" rel="alternate" type="text/html" title="Why One Should Not Use Centralized Exchanges for Crypto Trading" /><published>2025-01-04T00:00:00-05:00</published><updated>2025-01-04T00:00:00-05:00</updated><id>http://localhost:4000/2025/01/04/Why-one-should-not-use-Centralized-Exchanges-for-Crypto-Trading</id><content type="html" xml:base="http://localhost:4000/2025/01/04/Why-one-should-not-use-Centralized-Exchanges-for-Crypto-Trading.html"><![CDATA[<p>Centralized exchanges (CEXs) like Coinbase and Binance may offer convenience, but they come with a critical flaw: <strong>you don’t own the private keys to your cryptocurrency</strong>.</p>
+<p>For students, every penny counts, and innovations like this could make a huge difference. It’s time we rethink the way we pay our tuition fees.</p>]]></content><author><name>Dheeraj Maske</name></author><summary type="html"><![CDATA[A deep dive into the hidden charges and inefficiencies in traditional remittance methods, and how decentralized finance (DeFi) solutions like NYUCoin can save students significant costs.]]></summary></entry><entry><title type="html">Trusted Execution Environments (TEEs) and Why They Matter in Crypto Networks</title><link href="http://localhost:4000/2025/01/14/Trusted-Execution-Environments-(TEEs)-and-Why-They-Matter-in-Crypto-Networks.html" rel="alternate" type="text/html" title="Trusted Execution Environments (TEEs) and Why They Matter in Crypto Networks" /><published>2025-01-14T00:00:00-05:00</published><updated>2025-01-14T00:00:00-05:00</updated><id>http://localhost:4000/2025/01/14/Trusted-Execution-Environments-(TEEs)-and-Why-They-Matter-in-Crypto-Networks</id><content type="html" xml:base="http://localhost:4000/2025/01/14/Trusted-Execution-Environments-(TEEs)-and-Why-They-Matter-in-Crypto-Networks.html"><![CDATA[<h2 id="1-can-you-securely-process-data-without-exposure">1/ <strong>Can You Securely Process Data Without Exposure?</strong></h2>
+
+<p>If these questions make you curious, this thread is for you:</p>
+
+<ul>
+  <li>Can you process sensitive data on your device without worrying about hackers or malware?</li>
+  <li>What if your bank could approve your loan without ever seeing your financial data?</li>
+  <li>Could your crypto wallet execute secure transactions without exposing private keys?</li>
+  <li>Would it be possible for dApps to guarantee privacy while still being publicly verifiable?</li>
+  <li>Can blockchain validators process transactions without knowing transaction amounts?</li>
+</ul>
+
+<p>The solution? <strong>Trusted Execution Environments (TEEs).</strong> Let’s dive in. 🧵</p>
+
+<hr />
+
+<h2 id="2-the-problem-in-blockchain-systems">2/ <strong>The Problem in Blockchain Systems</strong></h2>
+
+<p>In traditional blockchain systems, <strong>validators have access to pending transactions</strong> in the mempool.<br />
+This visibility allows for <strong>MEV (Maximum Extractable Value) exploitation</strong>, where validators can:</p>
+
+<ul>
+  <li><strong>Reorder</strong> transactions for profit.</li>
+  <li><strong>Front-run</strong> transactions (place their orders before yours).</li>
+  <li><strong>Back-run</strong> transactions (execute orders based on your trade).</li>
+</ul>
+
+<p>This undermines <strong>fairness</strong> and <strong>privacy</strong> in crypto networks.</p>
+
+<hr />
+<p><img src="/assets/images/TEE_Diagram/tee-diagram.jpg" alt="Trusted Execution Environments (TEE) Diagram" /></p>
+
+<hr />
+<h2 id="3-what-are-trusted-execution-environments-tees">3/ <strong>What Are Trusted Execution Environments (TEEs)?</strong></h2>
+
+<p>TEEs are <strong>secure hardware-based environments</strong> within a processor.</p>
+
+<p>Think of them as a <strong>vault</strong> inside your computer that:</p>
+<ul>
+  <li><strong>Isolates</strong> sensitive transactions.</li>
+  <li><strong>Prevents tampering</strong> (even from system administrators).</li>
+  <li><strong>Ensures private execution</strong> of data.</li>
+</ul>
+
+<h3 id="-example-secure-biometric-authentication">🔒 Example: Secure Biometric Authentication</h3>
+
+<p>When you unlock your phone using <strong>fingerprint or face recognition</strong>:</p>
+<ul>
+  <li>The <strong>Non-Secure World</strong> (your phone’s OS) collects biometric data.</li>
+  <li>The <strong>Secure World (TEE)</strong> processes and verifies it <strong>without exposing</strong> the raw data.</li>
+</ul>
+
+<p>This ensures your biometric information remains <strong>secure and untouchable</strong> by external threats.</p>
+
+<hr />
+
+<h2 id="4-why-do-tees-matter-for-crypto">4/ <strong>Why Do TEEs Matter for Crypto?</strong></h2>
+
+<p>TEEs solve critical issues in blockchain networks:</p>
+
+<p>✅ <strong>Privacy</strong>: Encrypts transaction data, keeping details hidden from validators.<br />
+✅ <strong>Fairness</strong>: Prevents MEV attacks by enforcing strict transaction ordering.<br />
+✅ <strong>Security</strong>: Ensures tamper-proof execution, protecting users from exploits.</p>
+
+<hr />
+
+<h2 id="5-how-tees-work-in-blockchain-networks">5/ <strong>How TEEs Work in Blockchain Networks</strong></h2>
+
+<h3 id="a-secure-isolation-of-transactions">a. <strong>Secure Isolation of Transactions</strong></h3>
+<p>🔹 Instead of entering the <strong>public mempool</strong>, transactions go directly into a <strong>TEE</strong>.<br />
+🔹 Transaction details (amount, recipient) are <strong>isolated</strong> from validators and external access.<br />
+🔹 Even <strong>admin-level access</strong> cannot modify or view these transactions.</p>
+
+<h3 id="b-data-encryption">b. <strong>Data Encryption</strong></h3>
+<p>🔹 Inside the TEE, transactions are <strong>encrypted</strong> into unreadable code.<br />
+🔹 Example: If <strong>Alice buys tokens</strong>, TEEs <strong>hide</strong> the amount and price from validators, preventing exploitation.</p>
+
+<h3 id="c-fair-transaction-ordering">c. <strong>Fair Transaction Ordering</strong></h3>
+<p>🔹 Traditional systems allow validators to <strong>reorder</strong> transactions for profit.<br />
+🔹 TEEs enforce a <strong>strict sequence</strong> based on real-time order arrival.</p>
+
+<h3 id="d-tamper-proof-execution">d. <strong>Tamper-Proof Execution</strong></h3>
+<p>🔹 If someone tries to <strong>hack</strong> or modify a transaction, the TEE detects and <strong>blocks</strong> the attempt.</p>
+
+<h3 id="e-secure-finalization">e. <strong>Secure Finalization</strong></h3>
+<p>🔹 Once processed, the <strong>TEE submits</strong> the final transaction to the blockchain.<br />
+🔹 The result <strong>cannot be altered or viewed</strong> by validators.</p>
+
+<hr />
+
+<h2 id="6-why-hardware-matters-in-tees">6/ <strong>Why Hardware Matters in TEEs</strong></h2>
+
+<p>Unlike <strong>software-based security</strong>, TEEs operate at the <strong>hardware level</strong>, making them:</p>
+
+<p>🔹 <strong>Highly resistant to advanced attacks</strong><br />
+🔹 <strong>More reliable than software encryption</strong><br />
+🔹 <strong>Less dependent on trust in third parties</strong></p>
+
+<h3 id="-example-secure-crypto-transactions">🔎 Example: Secure Crypto Transactions</h3>
+
+<p>Instead of sending transactions to a <strong>public mempool</strong>, TEEs enable:<br />
+✅ <strong>Confidentiality</strong>: Transactions remain encrypted inside the TEE.<br />
+✅ <strong>Fair Ordering</strong>: Transactions process in the exact order they arrive.<br />
+✅ <strong>Secure Execution</strong>: The final transaction is added to the blockchain without revealing details.</p>
+
+<p>This prevents <strong>MEV exploitation</strong>, ensuring <strong>private, tamper-proof transactions</strong>.</p>
+
+<hr />
+
+<h2 id="7-why-tees-are-a-game-changer-for-crypto-networks">7/ <strong>Why TEEs Are a Game-Changer for Crypto Networks</strong></h2>
+
+<p>🔹 <strong>Enhanced Privacy</strong>: Keeps user data and transactions private.<br />
+🔹 <strong>Fairness</strong>: Prevents validators from <strong>manipulating</strong> transactions for profit.<br />
+🔹 <strong>Security</strong>: Strengthens blockchain integrity with <strong>hardware-level safeguards</strong>.</p>
+
+<p>TEEs could <strong>redefine trust</strong> in crypto, making networks not just decentralized but also <strong>tamper-proof, private, and fair</strong>.</p>
+
+<p>🚀 Stay tuned for more insights on blockchain security and innovation!</p>]]></content><author><name>Dheeraj Maske</name></author><summary type="html"><![CDATA[TEEs provide a secure, tamper-proof environment for processing sensitive data, ensuring privacy, security, and fairness in crypto networks. Here’s how they work.]]></summary></entry><entry><title type="html">Why One Should Not Use Centralized Exchanges for Crypto Trading</title><link href="http://localhost:4000/2025/01/04/Why-one-should-not-use-Centralized-Exchanges-for-Crypto-Trading.html" rel="alternate" type="text/html" title="Why One Should Not Use Centralized Exchanges for Crypto Trading" /><published>2025-01-04T00:00:00-05:00</published><updated>2025-01-04T00:00:00-05:00</updated><id>http://localhost:4000/2025/01/04/Why-one-should-not-use-Centralized-Exchanges-for-Crypto-Trading</id><content type="html" xml:base="http://localhost:4000/2025/01/04/Why-one-should-not-use-Centralized-Exchanges-for-Crypto-Trading.html"><![CDATA[<p>Centralized exchanges (CEXs) like Coinbase and Binance may offer convenience, but they come with a critical flaw: <strong>you don’t own the private keys to your cryptocurrency</strong>.</p>
 
 <p>The phrase <strong>“not your keys, not your coins”</strong> holds true because when you use a CEX, your funds are held in a wallet controlled by the exchange. This makes your assets vulnerable to:</p>
 <ul>
@@ -148,7 +392,9 @@
   <li>Full ownership of your crypto</li>
   <li>Alignment with the decentralized ethos of blockchain</li>
   <li>Reduced risks associated with centralized exchanges</li>
-</ul>]]></content><author><name>Dheeraj Maske</name></author><summary type="html"><![CDATA[Centralized exchanges (CEXs) like Coinbase and Binance may offer convenience, but they come with a critical flaw...]]></summary></entry><entry><title type="html">AI Bot That Became a Crypto Millionaire</title><link href="http://localhost:4000/2024/12/27/AI-Bot-That-Became-a-Crypto-Millionaire.html" rel="alternate" type="text/html" title="AI Bot That Became a Crypto Millionaire" /><published>2024-12-27T00:00:00-05:00</published><updated>2024-12-27T00:00:00-05:00</updated><id>http://localhost:4000/2024/12/27/AI-Bot-That-Became-a-Crypto-Millionaire</id><content type="html" xml:base="http://localhost:4000/2024/12/27/AI-Bot-That-Became-a-Crypto-Millionaire.html"><![CDATA[<h3 id="1-why-is-truth-terminal-important">1/ Why is Truth Terminal important?</h3>
+</ul>]]></content><author><name>Dheeraj Maske</name></author><summary type="html"><![CDATA[Centralized exchanges (CEXs) like Coinbase and Binance may offer convenience, but they come with a critical flaw...]]></summary></entry><entry><title type="html">AI Bot That Became a Crypto Millionaire</title><link href="http://localhost:4000/2024/12/27/AI-Bot-That-Became-a-Crypto-Millionaire.html" rel="alternate" type="text/html" title="AI Bot That Became a Crypto Millionaire" /><published>2024-12-27T00:00:00-05:00</published><updated>2024-12-27T00:00:00-05:00</updated><id>http://localhost:4000/2024/12/27/AI-Bot-That-Became-a-Crypto-Millionaire</id><content type="html" xml:base="http://localhost:4000/2024/12/27/AI-Bot-That-Became-a-Crypto-Millionaire.html"><![CDATA[<p><img src="\assets\images\AIBOT_MILLIONAIRE\image1.jpg" alt="Image 1" /></p>
+
+<h3 id="1-why-is-truth-terminal-important">1/ Why is Truth Terminal important?</h3>
 
 <p>Truth Terminal isn’t just a chatbot — it’s Andy Ayrey’s “ext cortex,” an extension of his thinking. Created using the <strong>Llama 70b model</strong> and fine-tuned with <strong>Claude Opus</strong>, it was designed to explore big ideas, blending AI and human creativity.</p>
 
@@ -162,7 +408,8 @@
   <li><strong>Tweets</strong>: 5,000+</li>
 </ul>
 
-<p>It became a hub for conversations about AI, philosophy, and cryptocurrency.</p>
+<p>It became a hub for conversations about AI, philosophy, and cryptocurrency.
+<img src="\assets\images\AIBOT_MILLIONAIRE\image2.jpg" alt="Image 2" /></p>
 
 <hr />
 
@@ -173,7 +420,8 @@
   <li>Purchasing a dedicated computer to reduce AWS reliance.</li>
   <li>Improving its AI model (allocated $10,000-$15,000).</li>
   <li>Setting up a Discord server for community engagement.</li>
-  <li>Exploring the creation of a cryptocurrency token or memecoin inspired by its viral content.</li>
+  <li>Exploring the creation of a cryptocurrency token or memecoin inspired by its viral content.
+<img src="\assets\images\AIBOT_MILLIONAIRE\image3.jpg" alt="Image 3" /></li>
 </ul>
 
 <p>This sparked the creation of <strong>GOAT (Goatseus Maximus)</strong>, a meme coin inspired by Truth Terminal’s viral posts.</p>
@@ -199,7 +447,8 @@
   <li>Thrive on community interest and speculation (as seen with meme coins like GOAT).</li>
 </ul>
 
-<p>However, the volatility of meme coins raises concerns about their <strong>stability</strong> and <strong>ethical implications</strong>.</p>
+<p>However, the volatility of meme coins raises concerns about their <strong>stability</strong> and <strong>ethical implications</strong>.
+<img src="\assets\images\AIBOT_MILLIONAIRE\image4.jpg" alt="Image 4" /></p>
 
 <hr />
 
@@ -489,7 +738,7 @@ If a king suddenly declared, “Power will now be shared equally,” chaos would
 
 <hr />
 
-<p>Let me know your thoughts or counterpoints. Decentralization, while promising, is as much about societal change as it is about technology.</p>]]></content><author><name>Dheeraj Maske</name></author><summary type="html"><![CDATA[Decentralization is a revolutionary idea, but its execution faces significant challenges. From economic inequality to human nature, the struggle to distribute power fairly is deeply rooted in history.]]></summary></entry><entry><title type="html">Solving MEV with Zero-Knowledge Proofs and Trusted Execution Environments</title><link href="http://localhost:4000/2024/12/03/Solving-MEV-with-Zero-Knowledge-Proofs-and-Trusted-Execution-Environments.html" rel="alternate" type="text/html" title="Solving MEV with Zero-Knowledge Proofs and Trusted Execution Environments" /><published>2024-12-03T00:00:00-05:00</published><updated>2024-12-03T00:00:00-05:00</updated><id>http://localhost:4000/2024/12/03/Solving-MEV-with-Zero-Knowledge-Proofs-and-Trusted-Execution-Environments</id><content type="html" xml:base="http://localhost:4000/2024/12/03/Solving-MEV-with-Zero-Knowledge-Proofs-and-Trusted-Execution-Environments.html"><![CDATA[<h3 id="published-on-december-03-2024">Published on: December 03, 2024</h3>
+<p>Let me know your thoughts or counterpoints. Decentralization, while promising, is as much about societal change as it is about technology.</p>]]></content><author><name>Dheeraj Maske</name></author><summary type="html"><![CDATA[Decentralization is a revolutionary idea, but its execution faces significant challenges. From economic inequality to human nature, the struggle to distribute power fairly is deeply rooted in history.]]></summary></entry><entry><title type="html">A White Space : Solving MEV with ZK Proofs and TEEs</title><link href="http://localhost:4000/2024/12/03/Solving-MEV-with-Zero-Knowledge-Proofs-and-Trusted-Execution-Environments.html" rel="alternate" type="text/html" title="A White Space : Solving MEV with ZK Proofs and TEEs" /><published>2024-12-03T00:00:00-05:00</published><updated>2024-12-03T00:00:00-05:00</updated><id>http://localhost:4000/2024/12/03/Solving-MEV-with-Zero-Knowledge-Proofs-and-Trusted-Execution-Environments</id><content type="html" xml:base="http://localhost:4000/2024/12/03/Solving-MEV-with-Zero-Knowledge-Proofs-and-Trusted-Execution-Environments.html"><![CDATA[<h3 id="published-on-december-03-2024">Published on: December 03, 2024</h3>
 
 <hr />
 
@@ -765,223 +1014,4 @@ Coming from a developing country like India, where basic necessities are a prior
 
 <hr />
 
-<p>I’d love to hear your thoughts or counterpoints on this perspective. Apologies if the above POV comes from limited understanding.</p>]]></content><author><name>Dheeraj Maske</name></author><summary type="html"><![CDATA[Blockchain technology has immense potential, but does it address the pressing challenges people face today? Coming from a developing country like India, I question whether its applications align with real-world needs.]]></summary></entry><entry><title type="html">How Story Protocol Could’ve Saved Taylor Swift’s $300M Mistake</title><link href="http://localhost:4000/2024/11/28/How-Story-Protocol-Couldve-Saved-Taylor-Swifts-300M-Mistake.html" rel="alternate" type="text/html" title="How Story Protocol Could’ve Saved Taylor Swift’s $300M Mistake" /><published>2024-11-28T00:00:00-05:00</published><updated>2024-11-28T00:00:00-05:00</updated><id>http://localhost:4000/2024/11/28/How-Story-Protocol-Couldve-Saved-Taylor-Swifts-300M-Mistake</id><content type="html" xml:base="http://localhost:4000/2024/11/28/How-Story-Protocol-Couldve-Saved-Taylor-Swifts-300M-Mistake.html"><![CDATA[<p>1/ <strong>Taylor Swift’s $300M Problem</strong></p>
-
-<p>Taylor Swift lost control of her early music catalog when her record label sold her masters (original recordings) without her consent.<br />
-This isn’t just her story — it’s a problem many creators face. Let’s dive in. 🧵</p>
-
-<hr />
-
-<h3 id="2-the-problem-creators-dont-own-their-work">2/ The Problem: Creators Don’t Own Their Work</h3>
-
-<p>Taylor’s masters were owned by her label, which meant:</p>
-<ul>
-  <li>She couldn’t control who could license her music or how it was used.</li>
-  <li>Worse, her music rights were sold to someone she didn’t trust, without her approval.</li>
-</ul>
-
-<p>This happens to creators everywhere — not just Taylor.</p>
-
-<hr />
-
-<h3 id="3-the-bigger-picture">3/ The Bigger Picture</h3>
-
-<p>Creators face significant issues with <strong>Intellectual Property (IP)</strong>:</p>
-<ul>
-  <li><strong>No Transparency</strong>: Where are royalties coming from? How much is earned?</li>
-  <li><strong>Complex Licensing</strong>: Negotiating terms is slow and expensive.</li>
-  <li><strong>Disempowered Creators</strong>: Small creators lack resources to protect their rights.</li>
-</ul>
-
-<hr />
-
-<h3 id="4-what-if-taylor-owned-her-masters">4/ What If Taylor Owned Her Masters?</h3>
-
-<p>This is where <strong>Story Protocol</strong> comes in — a blockchain system designed to give creators full control of their work.<br />
-What Bitcoin did for money, Story Protocol is doing for IP.</p>
-
-<h4 id="what-is-ip">What is IP?</h4>
-<p>IP (Intellectual Property) refers to any creation of the mind — like Taylor Swift’s <em>“Love Story”</em>.<br />
-If she owned her IP, she could control its use and earn directly from it, without others profiting unfairly.</p>
-
-<p>Here’s how Story Protocol works 👇</p>
-
-<hr />
-
-<h3 id="5-how-story-protocol-works-for-creators">5/ How Story Protocol Works for Creators</h3>
-
-<p>Imagine Taylor releases <em>“Love Story”</em> using Story Protocol:</p>
-<ul>
-  <li><strong>Ownership</strong>: Her song is registered on the blockchain, proving she owns it.</li>
-  <li><strong>Licensing</strong>: Smart contracts let her set terms for how it’s used and for how much.</li>
-  <li><strong>Royalties</strong>: Payments are instant, direct, and fully transparent.</li>
-</ul>
-
-<p>No middlemen. No delays. Total control.</p>
-
-<hr />
-
-<h3 id="6-programmable-ip-licenses-pil">6/ Programmable IP Licenses (PIL)</h3>
-
-<p>With Story Protocol, <em>“Love Story”</em> becomes a tokenized IP asset:</p>
-<ul>
-  <li>Each license (e.g., for ads or movies) is automated with smart contracts.</li>
-  <li>Licensing fees and royalties go directly to Taylor’s wallet, instantly splitting revenue with collaborators.</li>
-</ul>
-
-<p>No waiting months. No disputes over payments.</p>
-
-<hr />
-
-<h3 id="7-what-couldve-been-different">7/ What Could’ve Been Different?</h3>
-
-<p>If Taylor’s early music was on Story Protocol:</p>
-<ul>
-  <li>Her masters couldn’t be sold without her consent — ownership is locked on the blockchain.</li>
-  <li>Licensing and royalties would be fully transparent, showing exactly what her music earned.</li>
-  <li>Collaborators (e.g., producers) would be paid instantly and fairly.</li>
-</ul>
-
-<hr />
-
-<h3 id="8-why-this-matters-for-all-creators">8/ Why This Matters for ALL Creators</h3>
-
-<p>This isn’t just about Taylor — it’s about empowering every creator:</p>
-<ul>
-  <li><strong>Small creators</strong> can protect their work just like Taylor.</li>
-  <li><strong>Artists and collaborators</strong> get paid instantly and fairly.</li>
-  <li><strong>Fans</strong> know their support directly benefits the creator.</li>
-</ul>
-
-<hr />
-
-<h3 id="9-why-story-protocol-could-help-creators">9/ Why Story Protocol Could Help Creators</h3>
-
-<p>Story Protocol simplifies IP management through:</p>
-<ol>
-  <li><strong>Immutable Ownership</strong>: Ownership records are permanent and publicly visible.<br />
-<em>(Example: Taylor’s song *“Love Story”</em> is permanently tied to her name.)*</li>
-  <li><strong>Automated Royalties</strong>: Payments are handled by smart contracts.<br />
-<em>(Example: Spotify streams automatically pay Taylor, no middlemen involved.)</em></li>
-  <li><strong>Total Control</strong>: Creators decide how their work is used.<br />
-<em>(Example: Taylor allows movie licensing but blocks political ads.)</em></li>
-</ol>
-
-<hr />
-
-<h3 id="10-imagine-this-for-you">10/ Imagine This for YOU</h3>
-
-<p>If you’re a creator, put yourself in Taylor’s shoes:</p>
-<ul>
-  <li>Wouldn’t you want to own your work forever?</li>
-  <li>Wouldn’t you want full control over how it’s used?</li>
-  <li>Wouldn’t you want to get paid instantly and fairly?</li>
-</ul>
-
-<hr />
-
-<h3 id="11-the-takeaway">11/ The Takeaway</h3>
-
-<p>With Story Protocol, creators can protect their IP, ensure fair earnings, and take control of their future.<br />
-Replace your name in this story — because whether you’re a researcher, content writer, software developer, or artist, your creative work deserves the same protection.</p>]]></content><author><name>Dheeraj Maske</name></author><summary type="html"><![CDATA[Taylor Swift lost control of her music catalog when her record label sold her masters without her consent. Story Protocol could have changed that, giving her full ownership and control of her work.]]></summary></entry><entry><title type="html">From Bearish to Bullish: How @punk6529 Changed My Mind on NFTs</title><link href="http://localhost:4000/2024/11/27/From-Bearish-to-Bullish-How-punk6529-Changed-My-Mind-on-NFTs.html" rel="alternate" type="text/html" title="From Bearish to Bullish: How @punk6529 Changed My Mind on NFTs" /><published>2024-11-27T00:00:00-05:00</published><updated>2024-11-27T00:00:00-05:00</updated><id>http://localhost:4000/2024/11/27/From-Bearish-to-Bullish-How-punk6529-Changed-My-Mind-on-NFTs</id><content type="html" xml:base="http://localhost:4000/2024/11/27/From-Bearish-to-Bullish-How-punk6529-Changed-My-Mind-on-NFTs.html"><![CDATA[<h3 id="1-questioning-nfts-">1/ Questioning NFTs 🤔</h3>
-
-<p>I recently came across a thread by <a href="https://x.com/punk6529/status/1424127571663405060">@punk6529</a> that challenged my bearish views on NFTs. It explained why NFTs matter, how they solve real problems, and why their underlying myth — <strong>decentralization</strong> — is so powerful.</p>
-
-<hr />
-
-<h3 id="2-the-power-of-myths">2/ The Power of Myths</h3>
-
-<p>Humans thrive on myths — shared stories that allow us to cooperate and build systems.</p>
-
-<ul>
-  <li><strong>Money</strong> is a myth: It works because we agree it has value.</li>
-  <li><strong>Nations</strong> are myths: Flags and borders are stories we believe in.</li>
-  <li><strong>Brands</strong> are myths: Think Apple, Nike, or even Bitcoin.</li>
-</ul>
-
-<p>These myths shape our reality and fuel human innovation.</p>
-
-<hr />
-
-<h3 id="3-bitcoin-a-modern-myth">3/ Bitcoin: A Modern Myth</h3>
-
-<p>Bitcoin succeeded because of its myths:</p>
-
-<ul>
-  <li><strong>Decentralization</strong>: No single authority controls it.</li>
-  <li><strong>Digital Gold</strong>: A store of value in digital form.</li>
-  <li><strong>HODL</strong>: A belief that holding Bitcoin will lead to future rewards.</li>
-</ul>
-
-<p>These myths created <strong>trust</strong>, <strong>adoption</strong>, and ultimately, <strong>value</strong>.</p>
-
-<hr />
-
-<h3 id="4-nfts-a-new-myth">4/ NFTs: A New Myth</h3>
-
-<p>NFTs are the next evolution of myth-making. They allow us to:</p>
-
-<ul>
-  <li>Turn art into digital assets with <strong>provable ownership</strong>.</li>
-  <li>Immortalize memes as cultural milestones.</li>
-  <li>Build communities through <strong>shared ownership</strong> and incentives.</li>
-</ul>
-
-<p>They are myths for a digital, decentralized world.</p>
-
-<hr />
-
-<h3 id="5-why-decentralization-matters">5/ Why Decentralization Matters</h3>
-
-<p>NFTs are built on the same myth as Bitcoin: <strong>decentralization</strong>.<br />
-This means no one owns the system, and individuals have the power to shape its value. It allows people to pick their own myths, rather than relying on institutions to impose them.</p>
-
-<hr />
-
-<h3 id="6-solving-real-problems">6/ Solving Real Problems</h3>
-
-<p>NFTs are already solving problems for:</p>
-
-<ul>
-  <li><strong>Artists</strong>: They can monetize directly, bypassing traditional gatekeepers like galleries or labels.</li>
-  <li><strong>Creators</strong>: Memes and culture, once exploited for free, now generate value.</li>
-  <li><strong>Communities</strong>: Ownership aligns incentives, building stronger, more invested tribes.</li>
-</ul>
-
-<h4 id="ps-if-you-want-to-solve-problems-for-artists-or-creators-stay-bullish-on-nfts">PS: If you want to solve problems for artists or creators, stay bullish on NFTs.</h4>
-
-<p>Take YouTube creators or independent bands:</p>
-
-<ul>
-  <li>YouTube takes a significant cut of ad revenue, leaving creators underpaid.</li>
-  <li>Musicians on platforms like Spotify earn pennies per stream.</li>
-</ul>
-
-<p>NFTs give creators <strong>direct access</strong> to their fans, fair royalties, and <strong>true ownership</strong>.</p>
-
-<hr />
-
-<h3 id="7-the-risk-of-institutions">7/ The Risk of Institutions</h3>
-
-<p>Here’s the risk: Institutions — masters of myth-making — might co-opt NFTs for centralization.</p>
-
-<p>Look at streaming platforms like Spotify or YouTube. While they empower creators with reach, they <strong>control revenue and data</strong>, leaving creators with minimal rewards.</p>
-
-<p>If institutions dominate NFTs, they could build new walled gardens, owning platforms and royalties while creators remain underpaid. Protecting the <strong>decentralized roots</strong> of NFTs is crucial to avoid this outcome.</p>
-
-<hr />
-
-<h3 id="8-belief-comes-first">8/ Belief Comes First</h3>
-
-<p>Here’s the kicker: First, you have to believe in a myth before it becomes reality.</p>
-
-<ul>
-  <li>Bitcoin wasn’t “digital gold” at the start — it became that because people believed in it.</li>
-  <li>NFTs need belief to grow into tools that solve problems at scale.</li>
-</ul>
-
-<hr />
-
-<h3 id="9-why-my-view-is-shifting">9/ Why My View Is Shifting</h3>
-
-<p>Initially, I thought NFTs were just overhyped JPGs. Now, I see their potential to democratize art, culture, and value. They’re solving problems for artists, creators, and communities — and their story is just beginning.</p>]]></content><author><name>Dheeraj Maske</name></author><summary type="html"><![CDATA[Initially skeptical of NFTs, I came across @punk6529's thread that shifted my perspective. NFTs are more than just digital art; they’re tools for decentralization, creativity, and solving real-world problems.]]></summary></entry></feed>
+<p>I’d love to hear your thoughts or counterpoints on this perspective. Apologies if the above POV comes from limited understanding.</p>]]></content><author><name>Dheeraj Maske</name></author><summary type="html"><![CDATA[Blockchain technology has immense potential, but does it address the pressing challenges people face today? Coming from a developing country like India, I question whether its applications align with real-world needs.]]></summary></entry></feed>

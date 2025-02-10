@@ -1,3 +1,10 @@
+---
+layout: post
+title: "Understnding Double Spending and preventing attacks in Cryptocurrency"
+date: 2023-01-07
+excerpt: ""
+---
+
 # Double-Spending in Cryptocurrencies
 
 When currency is used twice for the same purpose at the same time, it is referred to as **double-spending**. In the context of cryptocurrencies like Bitcoin and Ethereum, double-spending occurs when transaction information within a blockchain is manipulated under certain conditions. This can lead to several types of attacks, as discussed below.

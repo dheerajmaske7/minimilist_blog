@@ -1,3 +1,10 @@
+---
+layout: post
+title: "On-Chain  VS  Off-Chain  VS  Side-Chain"
+date: 2023-02-07
+excerpt: ""
+---
+
 # On-Chain vs Off-Chain vs Sidechain: Understanding Blockchain Transaction Modes
 
 Blockchain transactions can occur in different ways depending on factors such as cost, scalability, and processing time. In this blog, we'll explore the differences between **on-chain**, **off-chain**, and **sidechain** transactions and discuss their advantages, disadvantages, and use cases.

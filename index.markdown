@@ -5,7 +5,7 @@ title: "Welcome to my Blogs"
 
 ### Blog Posts
 
-Welcome to my blog! Here are my latest posts:
+Welcome to my blog! Problems based writing for the crypto world :
 
 <ul>
 {% for post in site.posts %}

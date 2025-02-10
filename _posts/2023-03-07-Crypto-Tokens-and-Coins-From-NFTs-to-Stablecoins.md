@@ -1,3 +1,9 @@
+---
+layout: post
+title: "Tokens VS Coins : Decoded"
+date: 2023-03-07
+excerpt: ""
+---
 # Tokens and Coins Decoded
 
 In the world of Web3, you might have noticed a variety of coins and tokens. From NFTs to popular cryptocurrencies like Bitcoin and Ethereum, there’s a lot going on. Let’s break down the difference between a **coin** and a **token** and dive into their various types and use cases.

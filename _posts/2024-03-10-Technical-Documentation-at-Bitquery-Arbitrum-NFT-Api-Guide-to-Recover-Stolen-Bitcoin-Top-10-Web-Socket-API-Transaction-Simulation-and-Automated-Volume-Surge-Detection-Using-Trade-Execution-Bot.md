@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Technical Docmentation at Bitquery: Arbitrum NFT Api, Guide to recover stolen bitcoin,Top 10 Web-Socket API,Transaction Simulation and Automated Volume Surge Detection using Trade Execution Bot "
+title: "Technical Docmentation at Bitquery: My 6 articles helped 1000+ Developers"
 date: 2024-03-10
 excerpt: "....."
 ---

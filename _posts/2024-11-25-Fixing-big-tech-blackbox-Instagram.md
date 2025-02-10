@@ -1,10 +1,9 @@
 ---
 layout: post
-title: "Fixing Big Tech's Black Box: Blockchain + Governments = Accountability!"
+title: "Instagram is a Blackbox"
 date: 2024-11-25
 excerpt: "Big tech platforms like Instagram operate as black boxes, controlling and altering user data without transparency. Introducing blockchain and governments as accountability mechanisms could balance power."
 ---
-
 
 Every time you upload a photo or video to platforms like Instagram, you lose control over it. Your content is compressed, stored, and managed by the platform. Did you know they can alter or delete your content without your knowledge? (Yes, you might have signed those terms and conditions, but you deserve to have control over your data!)
 

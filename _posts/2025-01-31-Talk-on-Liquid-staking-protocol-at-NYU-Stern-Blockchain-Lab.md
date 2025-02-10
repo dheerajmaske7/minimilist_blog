@@ -35,14 +35,14 @@ Liquid Staking allows users to stake their **ETH without locking their assets**.
 3. **Users receive LSTs** (e.g., stETH), representing their staked ETH.
 4. **LSTs remain tradable and usable in DeFi**, ensuring liquidity while earning staking rewards.
 
-![Liquid Staking Deposit Flow](assets/images/Liquid_Staking_Protocol/Deposit_flow.jpg)
+![Liquid Staking Deposit Flow](\assets\images\Liquid_Staking_Protocol\Deposit_flow.jpg)
 
 ---
 
 ## **How Are Rewards Distributed?**
 Rewards from liquid staking are distributed **proportionally** based on the staked ETH and the performance of validators.
 
-![Reward Distribution](assets/images/Liquid_Staking_Protocol/Reward_distribution.jpg)
+![Reward Distribution](\assets\images\Liquid_Staking_Protocol\Reward_distribution.jpg)
 
 ---
 
@@ -58,7 +58,7 @@ Liquid Staking creates a **self-reinforcing cycle** that strengthens Ethereum’
 
 This continuous loop enhances **network security and usability**, making staking more accessible to all.
 
-![Positive Feedback Loop](assets/images/Liquid_Staking_Protocol/Positive_feedback_loop.jpg)
+![Positive Feedback Loop](/assets/images/Liquid_Staking_Protocol/Positive_feedback_loop.jpg)
 
 ---
 
@@ -72,7 +72,7 @@ Liquid Staking **doesn’t stop at Layer 1 (Ethereum mainnet)**. Restaking allow
 Thus, **restaking amplifies the utility of LSTs**, further optimizing capital efficiency.
 
 
-![Layer 2 Restaking](assets/images/Liquid_Staking_Protocol/Layer2_Restaking.jpg)
+![Layer 2 Restaking](/assets/images/Liquid_Staking_Protocol/Layer2_Restaking.jpg)
 
 ---
 
@@ -85,7 +85,7 @@ Liquid staking protocols fall into different categories based on **custodianship
 
 Each category offers **different trade-offs in security, decentralization, and risk exposure**.
 
-![Liquid Staking Categorization](assets/images/Liquid_Staking_Protocol/Image4.jpg)  
+![Liquid Staking Categorization](/assets/images/Liquid_Staking_Protocol/Image4.jpg)  
 
 ---
 

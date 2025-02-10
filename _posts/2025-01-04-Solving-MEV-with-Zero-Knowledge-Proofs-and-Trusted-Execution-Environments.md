@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Solving MEV with Zero-Knowledge Proofs and Trusted Execution Environments"
+title: "A White Space : Solving MEV with ZK Proofs and TEEs"
 date: 2024-12-03
 excerpt: "Maximal Extractable Value (MEV) undermines blockchain fairness and transparency. Solutions like Zero-Knowledge Proofs (ZKPs) and Trusted Execution Environments (TEEs) can help eliminate exploitation and protect users."
 ---
