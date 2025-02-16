@@ -2,6 +2,12 @@
 layout: default
 title: "Welcome to my Blogs"
 ---
+<div class="visitor-stats">
+    <span>👥 Total Reads: </span>
+    <a href="https://hits.seeyoufarm.com">
+        <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fdheerajmaske7.github.io&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=visits&edge_flat=false&initial=300"/>
+    </a>
+</div>
 
 ### Blog Posts
 
@@ -23,3 +29,5 @@ Welcome to my blog! Problems based writing for the crypto world :
     <a href="{{ paginator.next_page_path | relative_url }}">Older Posts</a>
     {% endif %}
 </nav>
+
+
