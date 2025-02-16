@@ -12,7 +12,7 @@ permalink: /talks/
         <h3 class="talk-title">Non-Invasive Brain Computer Interface Discussion: Thought-to-Text Communication</h3>
         <div class="talk-date">Feburary 2025</div>
         <p class="talk-description">
-          Non-invasive EEG-based BCIs are promising to eliminate the need for any physical action, translating brain signals directly into words.<a href="https://docs.google.com/document/d/17i02GPG-aj4sLBGeqCx__OJcARw9iaHN2HY4AhicS_g/edit?usp=sharing">Thesis Proposal .</a>.
+          Non-invasive EEG-based BCIs are promising to eliminate the need for any physical action, translating brain signals directly into words.<a href="https://docs.google.com/document/d/17i02GPG-aj4sLBGeqCx__OJcARw9iaHN2HY4AhicS_g/edit?usp=sharing">Thesis Proposal .</a>
         </p>
     </div>
     <div class="talk-image-container">

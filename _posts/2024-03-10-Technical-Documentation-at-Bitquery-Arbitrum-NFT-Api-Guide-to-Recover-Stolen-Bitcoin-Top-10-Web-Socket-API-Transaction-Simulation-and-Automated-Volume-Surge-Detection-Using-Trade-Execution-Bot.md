@@ -38,4 +38,4 @@ Learn how to develop a trading bot to detect volume surges in cryptocurrency mar
 ---
 
 ### Note:
-These are articles are written for Bitquery company by me under the mentor ship Divyashree.
+These are articles are written for Bitquery company by me under the mentor ship of Divyashree.
