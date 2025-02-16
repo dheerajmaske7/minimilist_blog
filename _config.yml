@@ -29,7 +29,7 @@ navigation:
     link: /
   - name: Projects
     link: /projects/
-  - name: Twitter
-    link: https://twitter.com/Dheeraj_maske
+  - name: Talks
+    link: /talks/
   - name: About
     link: /about/

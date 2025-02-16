@@ -65,3 +65,68 @@ footer {
   font-size: 14px;
   color: #777;
 }
+
+/* Talks Page Styling */
+.talk-entry {
+  display: flex;
+  margin-bottom: 3em;
+  gap: 2em;
+  padding: 1em;
+  align-items: center;
+}
+
+.talk-entry.reverse {
+  flex-direction: row-reverse;
+}
+
+.talk-content {
+  flex: 1;
+  padding: 1em;
+}
+
+.talk-image-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.talk-image {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.talk-title {
+  font-size: 1.4em;
+  color: #333;
+  margin-bottom: 0.5em;
+}
+
+.talk-date {
+  color: #666;
+  font-size: 0.9em;
+  margin-bottom: 1em;
+}
+
+.talk-description {
+  color: #444;
+  line-height: 1.6;
+  font-size: 1.1em;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .talk-entry, .talk-entry.reverse {
+      flex-direction: column;
+  }
+  
+  .talk-image-container {
+      order: 1;
+  }
+  
+  .talk-content {
+      order: 2;
+  }
+}
