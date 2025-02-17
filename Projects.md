@@ -6,7 +6,16 @@ permalink: /projects/
 
 Explore them on my [GitHub profile](https://github.com/dheerajmaske7).
 
+---
+### Application based Research Proposals
+
+- **[Documented Here](https://docs.google.com/document/d/1Y4r82ElU3kHMLgIbVOXvI61qK_oX9AJaC7G0f0_b0xc/edit?tab=t.0)**   
+Feel Free to Reach out for Collabaration and Discussion.
+
+---
+
 ### Ongoing Projects:
+
 - **Audio Journaling Tool** (Oct 2024 - Present)  
 
 - **Webscraping tool for your fav blogger's Website** (Jan 2025 - Present) 

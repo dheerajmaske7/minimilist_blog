@@ -19,3 +19,6 @@ I write blogs that simplify complex ideas by answering the fundamentals—why, h
 
 -Feel free to connect with me on [Twitter](https://x.com/Dheeraj_maske).  
 -Reach out to me via email: **[firstname][lastname]2001[at]gmail[dot]com**.
+<br>
+<br>
+*This website's design was inspired by [Chris Dixon's blog](https://cdixon.org/).*
