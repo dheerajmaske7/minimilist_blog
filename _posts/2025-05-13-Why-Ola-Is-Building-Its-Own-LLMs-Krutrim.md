@@ -5,8 +5,6 @@ date: 2025-05-13
 excerpt: "Ola is no longer just a mobility company. It is positioning itself as a data and AI company, and Krutrim is a key part of that shift."
 ---
 
-# Why Ola Is Building Its Own LLMs (Krutrim)
-
 Ola started as a mobility services company, but today it is aiming for something much bigger. It is no longer just about cabs. Ola is evolving into a **data and AI company**.
 
 Building its own large language models (LLMs), branded as **Krutrim**, is part of this broader vision. More importantly, it shows how Indian companies can shape the future of AI **on their own terms**, rather than importing it wholesale.
@@ -14,7 +12,7 @@ Building its own large language models (LLMs), branded as **Krutrim**, is part o
 This way of thinking is inspired by the framework from the book *Fusion Strategy*.  
 Believe me, this is far beyond a mobility platform. Let me explain.
 
-[![Ola data to AI flywheel](/assets/images/Ola-Data-and-AI/mobility-to-algorithms.png)](https://olaelectric.com)
+[![Ola data to AI flywheel](\assets\images\Ola-Data-and-AI\mobility-to-algorithms.png)](https://olaelectric.com)
 
 ---
 
