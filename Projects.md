@@ -11,18 +11,13 @@ Explore them on my [GitHub profile](https://github.com/dheerajmaske7).
 
 - **[Documented Here](https://docs.google.com/document/d/1Y4r82ElU3kHMLgIbVOXvI61qK_oX9AJaC7G0f0_b0xc/edit?tab=t.0)**   
 Feel Free to Reach out for Collabaration and Discussion.
-
 ---
-
-### Ongoing Projects:
-
-- **Audio Journaling Tool** (Oct 2024 - Present)  
-
-- **Webscraping tool for your fav blogger's Website** (Jan 2025 - Present) 
-
 ---
 ### Completed Projects:
 
+
+- **[Analytics Engine for Measuring Trading Outcomes of Alerts](https://flourishing-brigadeiros-1a8602.netlify.app/)** (Jun 2025 - Aug 2025)  
+  An application that allows people to test the performance of their trading strategy on a given set of entry points in stocks for a particular time stamp.
 
 - **[Net Hourly Rate Calculator](https://net-hourly-rate-after-taxes-in-nyc-and-sf-w6eet8huyttfjoz7mwb2.streamlit.app/)** (Oct 2024)  
   Tool to calculate net hourly income after federal, state, & city taxes in cities like New York & San Francisco.

@@ -11,7 +11,7 @@ title: "Welcome to my Blogs"
 
 ### Blog Posts
 
-Welcome to my blog! Problems based writing for the crypto world :
+Welcome to my blog! Problems based writing for the cryptosystems world :
 
 <ul>
 {% for post in site.posts %}
