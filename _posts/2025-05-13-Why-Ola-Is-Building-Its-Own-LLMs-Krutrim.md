@@ -12,7 +12,17 @@ Building its own large language models (LLMs), branded as **Krutrim**, is part o
 This way of thinking is inspired by the framework from the book *Fusion Strategy*.  
 Believe me, this is far beyond a mobility platform. Let me explain.
 
-![Ola](\assets\images\Ola\mobility.png)
+
+<figure style="text-align:center; margin: 24px 0;">
+  <img 
+    src="/assets/images/Ola/mobility.png" 
+    alt="Prediction market screenshot: NYC mayor election"
+    style="max-width: 820px; width: 100%; height: auto; border-radius: 10px;"
+  />
+  <figcaption style="font-size: 0.95rem; opacity: 0.8; margin-top: 8px;">
+    Mobility service to building in house Models
+  </figcaption>
+</figure>
 
 ## Ola Is Not Just Uber’s Indian Version
 
