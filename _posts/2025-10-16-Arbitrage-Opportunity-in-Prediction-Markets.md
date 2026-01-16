@@ -1,11 +1,9 @@
 ---
 layout: post
 title: "Arbitrage Opportunity in Prediction Markets"
-date: 2025-01-16
+date: 2025-10-16
 excerpt: "A practical walkthrough of arbitrage opportunities in prediction markets—and why most of them are not worth the effort."
 ---
-
-# Arbitrage Opportunity in Prediction Markets
 
 ## Scenario
 
@@ -17,7 +15,16 @@ The same market exists on two platforms:
 - The first image represents **Polymarket**
 - The second image represents **Kalshi**
 
-![Predication](\assets\images\Predication_markets\P.png)
+<figure style="text-align:center; margin: 24px 0;">
+  <img 
+    src="/assets/images/Predication_markets/P.png" 
+    alt="Prediction market screenshot: NYC mayor election"
+    style="max-width: 820px; width: 100%; height: auto; border-radius: 10px;"
+  />
+  <figcaption style="font-size: 0.95rem; opacity: 0.8; margin-top: 8px;">
+    Market prices shown for the same outcome across Polymarket and Kalshi
+  </figcaption>
+</figure>
 
 
 
