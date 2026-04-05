@@ -1,4 +1,764 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-02-17T20:31:27-05:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Dheeraj Maske</title><subtitle>Minimalist blog with blogs, projects, and more.</subtitle><author><name>Dheeraj Maske</name></author><entry><title type="html">Money Through Time: From Gold to Crypto</title><link href="http://localhost:4000/2025/02/17/Evolution-of-money.html" rel="alternate" type="text/html" title="Money Through Time: From Gold to Crypto" /><published>2025-02-17T00:00:00-05:00</published><updated>2025-02-17T00:00:00-05:00</updated><id>http://localhost:4000/2025/02/17/Evolution-of-money</id><content type="html" xml:base="http://localhost:4000/2025/02/17/Evolution-of-money.html"><![CDATA[<p><img src="\assets\images\TEE_Diagram\Moneyworks.jpg" alt="Agenda" /></p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2026-04-05T19:38:38-04:00</updated><id>/feed.xml</id><title type="html">Dheeraj Maske</title><subtitle>Minimalist blog with blogs, projects, and more.</subtitle><author><name>Dheeraj Maske</name></author><entry><title type="html">Google: Capturing Attention Is All You Need</title><link href="/2025/12/15/Google-Capturing-Attention-Is-All-You-Need.html" rel="alternate" type="text/html" title="Google: Capturing Attention Is All You Need" /><published>2025-12-15T00:00:00-05:00</published><updated>2025-12-15T00:00:00-05:00</updated><id>/2025/12/15/Google-Capturing-Attention-Is-All-You-Need</id><content type="html" xml:base="/2025/12/15/Google-Capturing-Attention-Is-All-You-Need.html"><![CDATA[<figure style="text-align:center; margin: 0 0 1.5rem;">
+  <img src="/assets/images/Google_AI_Mode_search/title-attention-megaphone.png" alt="Pop-art style megaphone shouting ATTENTION — the attention economy in one image" style="max-width: 820px; width: 100%; height: auto; border-radius: 10px;" />
+</figure>
+
+<h3 id="published-on-december-15-2025">Published on: December 15, 2025</h3>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>Advertising has long been the lifeblood of the internet economy. Platforms like Google and Amazon perfected a model where users’ attention is the product, and advertisers pay for placement. Google earns over 80% of its revenue from ads, primarily through pay-per-click (PPC) search placements and YouTube display/video ads. Amazon, meanwhile, leverages its marketplace to sell “sponsored products,” with advertisers paying for prime visibility on product searches.</p>
+
+<p>In both cases, the distribution of money is straightforward: advertisers pay the platform, the platform takes the majority of the margin, and users see specific ads with little or no share of that value.</p>
+
+<h2 id="the-current-ad-model">The Current Ad Model</h2>
+
+<p>In the traditional setup:</p>
+
+<ul>
+  <li><strong>Advertisers</strong> pay platforms for visibility (bidding in auctions for search results, product placement, or social media feeds).</li>
+  <li><strong>Platforms</strong> (Google, Amazon, Meta, etc.) act as gatekeepers, controlling access to audiences and taking a large cut of ad spend.</li>
+  <li><strong>Users</strong> provide attention and data, but capture none of the direct economic value.</li>
+</ul>
+
+<p>The platforms maximize profits by scaling impressions, clicks, and conversions. This creates high-margin businesses: for example, Google Search ads alone have operating margins of 30–40% because they capture nearly all of the advertiser’s spend.</p>
+
+<h2 id="how-i-think-ads-will-work-in-the-agent-era">How I Think Ads Will Work in the Agent Era</h2>
+
+<p>In a recent podcast appearance, Aravind Srinivas (CEO of Perplexity) envisions a different world where AI agents become the new intermediaries between brands and consumers. Imagine telling your agent: “Book me a ride to JFK.” Instead of you scrolling through Uber and Lyft, your agent negotiates with their agents.</p>
+
+<p>Advertisers and brands will no longer target you directly. Instead, they will present offers to <strong>your agent</strong>.</p>
+
+<p>Your agent becomes the filter, negotiating for your preferences (cheapest, most sustainable, fastest, or even loyalty perks).</p>
+
+<p>This changes revenue distribution:</p>
+
+<ul>
+  <li>A portion of advertiser spend goes to the <strong>agent platform</strong> (e.g., Perplexity, OpenAI, Anthropic).</li>
+  <li>A portion may go <strong>directly to you</strong> as a rebate, discount, or credit, since your agent acts in your economic interest.</li>
+</ul>
+
+<p>The advertiser still gets the sale, but without relying on manipulative clicks or irrelevant impressions.</p>
+
+<p><strong>Margins compress.</strong> Instead of Google pocketing nearly all ad dollars, the money is split between:</p>
+
+<ul>
+  <li>The <strong>agent company</strong> (for infrastructure, compute, trust)—unlocking a different scope of agentic attention capture.</li>
+  <li>The <strong>user’s agent</strong> (for providing attention and transaction opportunities).</li>
+  <li>The <strong>advertiser’s agent</strong> (potentially paying lower acquisition costs due to precision targeting).</li>
+</ul>
+
+<h2 id="why-this-disrupts-googles-model">Why This Disrupts Google’s Model</h2>
+
+<p>This system undermines Google’s search ad monopoly. Today, advertisers pay billions for visibility bidding to appear on the first page of results. In the agent world, there’s no first page.</p>
+
+<p>There was a joke: “If you want to hide a dead body, hide it on the fourth page of Google search”—no one visits it.</p>
+
+<p>There’s a <strong>negotiation</strong>.</p>
+
+<p>If AI agents handle even 30–40% of consumer decisions, Google could lose a significant portion of its $175B annual ad revenue, as its entire model depends on controlling discovery. Instead of consumers being nudged by “sponsored results,” their agents will filter and negotiate ads on their behalf, forcing platforms to share value with users. A whole new game of wooing the agents will come into the picture.</p>
+
+<p>I respect Google because they saw it coming and <strong>disrupted</strong> their existing business model with AI mode, after Perplexity was challenging them—self-disruption.</p>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; margin: 1rem 0; align-items: start;">
+  <figure style="margin: 0;">
+    <figcaption style="font-size: 0.95rem; margin-bottom: 0.5rem; line-height: 1.4;"><strong>AI mode (AI Overview):</strong> the SERP leads with a synthesized answer and source cards—attention stays on Google before you click out.</figcaption>
+    <img src="/assets/images/Google_AI_Mode_search/google-ai-overview.png" alt="Google Search results with AI Overview" style="width: 100%; height: auto; border-radius: 10px; display: block;" />
+  </figure>
+  <figure style="margin: 0;">
+    <figcaption style="font-size: 0.95rem; margin-bottom: 0.5rem; line-height: 1.4;"><strong>Classic search (pre-AI style):</strong> ranked blue links and snippets—the old “list of destinations” layout.</figcaption>
+    <img src="/assets/images/Google_AI_Mode_search/google-classic-link-results.png" alt="Google Search results with classic link listings" style="width: 100%; height: auto; border-radius: 10px; display: block;" />
+  </figure>
+</div>
+
+<p>Let’s see what steps Google is taking.</p>
+
+<h2 id="googles-countersteps-a2a-ap2-and-x402">Google’s Countersteps: A2A, AP2, and x402</h2>
+
+<p>Google is not blind to this disruption. It has already begun laying the groundwork for an agent-first economy through open protocols:</p>
+
+<ul>
+  <li><strong>A2A (Agent-to-Agent)</strong> — A protocol for interoperability, allowing different AI agents to talk to each other securely. If Google’s standard becomes dominant, it ensures Google remains the backbone of agent ecosystems.</li>
+  <li><strong>AP2 (Agent Payments Protocol)</strong> — A new standard for enabling purchases through agents, with cryptographically signed “mandates” so transactions are trustworthy. This ensures that agents can complete the last mile of commerce, not just discovery.</li>
+  <li><strong>x402</strong> — An extension within AP2 that allows payments to flow via stablecoins, blockchains, and alternative rails. It’s based on HTTP 402 (“Payment Required”) and enables low-cost, programmable payments.</li>
+</ul>
+
+<p>In short, while companies like Perplexity are redefining the interface, Google is working on the <strong>infrastructure</strong>. If agents become the future of the internet, Google wants to own the rails—the pipes through which money and data flow.</p>
+
+<p>This is a classic <strong>Box 1 + Box 2</strong> defense: protect existing revenues while building protocols to avoid being sidelined. But it doesn’t fully answer the <strong>Box 3</strong> question: how will Google create the future?</p>
+
+<h2 id="what-google-is-not-doing-yet">What Google Is Not Doing (Yet)</h2>
+
+<p>Despite its infrastructure play, Google still has gaps:</p>
+
+<ul>
+  <li><strong>User incentives:</strong> No clear strategy to share ad value or transaction rebates directly with users, which competitors may use as a wedge.</li>
+  <li><strong>Owning the agent interface:</strong> Google hasn’t yet launched a mass-market “personal agent” as sticky and trusted as its Search once was. Gemini is powerful but not yet positioned as a daily-life agent—as of now.</li>
+  <li><strong>Trust certification:</strong> No framework for monetizing trust (e.g., verified recommendations) rather than clicks.</li>
+</ul>
+
+<h2 id="recommendations-for-google">Recommendations for Google</h2>
+
+<p>To truly protect its 70% ad revenue and prepare for a post-search world, Google should:</p>
+
+<ol>
+  <li><strong>Launch a consumer-facing agent</strong> integrated deeply into Android, Chrome, and Search, ensuring users default to Google’s ecosystem.</li>
+  <li><strong>Share value with users</strong> by turning ad spend into rebates, credits, or loyalty tokens, making users feel like partners in the system rather than products.</li>
+  <li><strong>Build a trust network</strong> where brands pay not for visibility, but for verified credibility within Google’s agent ecosystem.</li>
+  <li><strong>Monetize protocols smartly:</strong> Google is unlikely to take micro-fees on agent-to-agent protocols because pricing the base layer introduces friction. Instead, it would keep the protocol free to drive adoption and monetize adjacent layers like infrastructure, tooling, or orchestration.</li>
+</ol>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>The future of advertising looks less like banners and search results, and more like agent-to-agent negotiations. Users will gain a share of ad value, advertisers will compete on relevance rather than spend, and platforms will need to reinvent their business models.</p>]]></content><author><name>Dheeraj Maske</name></author><summary type="html"><![CDATA[Advertising built the internet economy—but the agent era could split ad value between platforms, agents, and users. Here is how money might flow, why it threatens Google’s search monopoly, and what Google is doing about it.]]></summary></entry><entry><title type="html">My View on Zcash: Digital Invisibility Backed by Math</title><link href="/2025/10/30/My-View-on-Zcash-Digital-Invisibility-Backed-by-Math.html" rel="alternate" type="text/html" title="My View on Zcash: Digital Invisibility Backed by Math" /><published>2025-10-30T00:00:00-04:00</published><updated>2025-10-30T00:00:00-04:00</updated><id>/2025/10/30/My-View-on-Zcash-Digital-Invisibility-Backed-by-Math</id><content type="html" xml:base="/2025/10/30/My-View-on-Zcash-Digital-Invisibility-Backed-by-Math.html"><![CDATA[<h1 id="my-view-on-zcash">My View on Zcash</h1>
+
+<p>If Bitcoin is <strong>digital gold</strong>, then Zcash is <strong>digital invisibility</strong> — a currency built not for hype, but for privacy backed by math.</p>
+
+<p>Most people talk about crypto in terms of price charts. Very few talk about what it <em>actually changes</em>. Zcash, quietly, has become one of the most important experiments in the history of money.</p>
+
+<p>Let’s unpack it in simple terms.</p>
+
+<hr />
+
+<h2 id="what-is-zcash">What Is Zcash?</h2>
+
+<p>Zcash is a cryptocurrency designed for <strong>private payments</strong> using a technology called <strong>zero-knowledge proofs (zk-SNARKs)</strong>.</p>
+
+<p>It launched on <strong>October 28, 2016</strong>, long after Bitcoin, but it traces its roots to a much older idea: <strong>DigiCash</strong>, a digital payment system proposed by cryptographers in 1995.</p>
+
+<p>The <strong>“Z”</strong> in Zcash stands for <strong>zero-knowledge</strong> — the idea that you can prove a transaction is valid <em>without revealing</em>:</p>
+<ul>
+  <li>who sent it</li>
+  <li>who received it</li>
+  <li>how much was sent</li>
+</ul>
+
+<p>Its ticker is <strong>ZEC</strong>, just like Bitcoin’s is <strong>BTC</strong>.</p>
+
+<hr />
+
+<h2 id="privacy-optional-not-forced">Privacy: Optional, Not Forced</h2>
+
+<p>Unlike most privacy-focused cryptocurrencies, Zcash does <strong>not force privacy</strong>. It gives users a choice through two types of addresses:</p>
+
+<ul>
+  <li>
+    <p><strong>Transparent (t-addresses)</strong><br />
+Work like Bitcoin — fully public.</p>
+  </li>
+  <li>
+    <p><strong>Shielded (z or unified addresses)</strong><br />
+Hide the sender, receiver, and transaction amount.</p>
+  </li>
+</ul>
+
+<p>You can move funds freely:</p>
+<ul>
+  <li>t → z</li>
+  <li>z → z</li>
+  <li>z → t</li>
+</ul>
+
+<p>This flexibility is important. <strong>You decide when to be private.</strong></p>
+
+<hr />
+
+<h2 id="how-it-differs-from-monero">How It Differs From Monero</h2>
+
+<p>Zcash is often compared to Monero, but their privacy models are fundamentally different.</p>
+
+<ul>
+  <li>
+    <p><strong>Monero</strong> hides transactions by mixing real payments with fake ones (called <em>decoys</em>).<br />
+Outsiders can’t easily tell which transaction is real.<br />
+This is <strong>probabilistic privacy</strong> — it’s private because guessing is hard.</p>
+  </li>
+  <li>
+    <p><strong>Zcash</strong> hides everything using cryptography itself.<br />
+Zero-knowledge proofs make it <strong>mathematically impossible</strong> to link transactions.</p>
+  </li>
+</ul>
+
+<p>That’s why Zcash’s privacy is often called <strong>mathematical privacy</strong>, not probabilistic privacy.</p>
+
+<hr />
+
+<h2 id="built-more-like-bitcoin-than-ethereum">Built More Like Bitcoin Than Ethereum</h2>
+
+<p>Zcash is architecturally closer to Bitcoin:</p>
+
+<ul>
+  <li>Fixed supply of <strong>21 million coins</strong></li>
+  <li>Originally used <strong>Proof of Work (PoW)</strong></li>
+  <li>Focused on <strong>payments</strong>, not smart contracts</li>
+</ul>
+
+<p>Ethereum, by contrast, is a global computer for applications and tokens.<br />
+Zcash stays focused on one thing: <strong>private money</strong>.</p>
+
+<hr />
+
+<h2 id="supply-halving-and-scarcity">Supply, Halving, and Scarcity</h2>
+
+<p>Zcash follows the same scarcity model as Bitcoin.</p>
+
+<ul>
+  <li>Every four years, miner rewards are cut in half (<strong>halving</strong>).</li>
+  <li>This reduces new supply over time.</li>
+</ul>
+
+<p>As of late <strong>2025</strong>:</p>
+<ul>
+  <li>~<strong>17 million ZEC</strong> have been mined
+    <ul>
+      <li>~12.5M transparent</li>
+      <li>~4.5M shielded</li>
+    </ul>
+  </li>
+  <li>Only ~<strong>4 million ZEC</strong> remain to be created over the next century.</li>
+</ul>
+
+<p>Halving events often create market excitement because they restrict new supply.<br />
+Zcash’s recent October rally reflected exactly that dynamic.</p>
+
+<hr />
+
+<h2 id="moving-from-proof-of-work-to-proof-of-stake">Moving From Proof of Work to Proof of Stake</h2>
+
+<p>The Zcash community is actively discussing a transition from <strong>Proof of Work (PoW)</strong> to <strong>Proof of Stake (PoS)</strong> — similar to Ethereum’s shift.</p>
+
+<ul>
+  <li><strong>PoW</strong>: miners use electricity to secure the network</li>
+  <li><strong>PoS</strong>: holders stake coins to validate transactions and earn rewards</li>
+</ul>
+
+<p>Trade-offs I see:</p>
+<ul>
+  <li>Lower energy consumption</li>
+  <li>Staking rewards for users</li>
+</ul>
+
+<p>Importantly, <strong>privacy remains unchanged</strong>. Shielded transactions work the same way under both systems.</p>
+
+<hr />
+
+<h2 id="why-i-like-zcash">Why I Like Zcash</h2>
+
+<p>What I admire most about Zcash is how it nearly eliminates <strong>MEV (Maximal Extractable Value)</strong> — situations where miners or bots exploit public transaction data for profit.</p>
+
+<p>On transparent networks:</p>
+<ul>
+  <li>Bots see your pending trade</li>
+  <li>Jump ahead of you</li>
+  <li>Sell back at a higher price<br />
+This is digital front-running.</li>
+</ul>
+
+<p>Zcash’s <strong>shielded pool prevents this entirely</strong>.</p>
+
+<p>Because the sender, receiver, and amount are encrypted:</p>
+<ul>
+  <li>No one can peek</li>
+  <li>No one can reorder transactions</li>
+  <li>No one can exploit visibility</li>
+</ul>
+
+<p><strong>A small privacy tip</strong>:<br />
+If you deposit <strong>5.0 ZEC</strong> into the shielded pool, don’t withdraw exactly <strong>5.0 ZEC</strong>.<br />
+Withdraw <strong>4.9 ZEC</strong> instead.<br />
+That tiny difference breaks observable patterns and keeps your privacy intact.</p>
+
+<hr />
+
+<h2 id="my-take">My Take</h2>
+
+<p>Zcash is a reminder that <strong>privacy is not secrecy</strong>.</p>
+
+<p>It shows that math can make money both <strong>visible and invisible</strong>, depending on choice. And in a world moving toward surveillance-based finance, that choice may matter more than ever.</p>
+
+<blockquote>
+  <p>“First, you have to believe in a myth before it becomes reality.” — @punk6529</p>
+</blockquote>
+
+<p>Maybe Zcash is that myth — quietly waiting to become real.</p>]]></content><author><name>Dheeraj Maske</name></author><summary type="html"><![CDATA[If Bitcoin is digital gold, Zcash is digital invisibility — a currency built not for hype, but for privacy.]]></summary></entry><entry><title type="html">Arbitrage Opportunity in Prediction Markets</title><link href="/2025/10/16/Arbitrage-Opportunity-in-Prediction-Markets.html" rel="alternate" type="text/html" title="Arbitrage Opportunity in Prediction Markets" /><published>2025-10-16T00:00:00-04:00</published><updated>2025-10-16T00:00:00-04:00</updated><id>/2025/10/16/Arbitrage-Opportunity-in-Prediction-Markets</id><content type="html" xml:base="/2025/10/16/Arbitrage-Opportunity-in-Prediction-Markets.html"><![CDATA[<h2 id="scenario">Scenario</h2>
+
+<p>There is a trade that asks:</p>
+
+<p><strong>“Who will win the NYC Mayor Election?”</strong></p>
+
+<p>The same market exists on two platforms:</p>
+<ul>
+  <li>The first image represents <strong>Polymarket</strong></li>
+  <li>The second image represents <strong>Kalshi</strong></li>
+</ul>
+
+<figure style="text-align:center; margin: 24px 0;">
+  <img src="/assets/images/Predication_markets/P.png" alt="Prediction market screenshot: NYC mayor election" style="max-width: 820px; width: 100%; height: auto; border-radius: 10px;" />
+  <figcaption style="font-size: 0.95rem; opacity: 0.8; margin-top: 8px;">
+    Market prices shown for the same outcome across Polymarket and Kalshi
+  </figcaption>
+</figure>
+
+<p>Both list prices for the same outcome, but with different probabilities.</p>
+
+<hr />
+
+<h2 id="the-setup">The Setup</h2>
+
+<p>Let’s say we bet on <strong>Candidate 1</strong>, but with <strong>opposite outcomes</strong> on each platform.</p>
+
+<ul>
+  <li><strong>Polymarket (NO)</strong> price = <strong>$0.071</strong></li>
+  <li><strong>Kalshi (YES)</strong> price = <strong>$0.90</strong></li>
+</ul>
+
+<p>Each contract:</p>
+<ul>
+  <li>Pays <strong>$1</strong> if correct</li>
+  <li>Pays <strong>$0</strong> if incorrect</li>
+</ul>
+
+<hr />
+
+<h2 id="initial-intuition-risk-free-profit">Initial Intuition: Risk-Free Profit?</h2>
+
+<p>If we:</p>
+<ul>
+  <li>Bet <strong>$1</strong> on NO</li>
+  <li>Bet <strong>$100</strong> on YES</li>
+</ul>
+
+<p>Then:</p>
+
+<ul>
+  <li>If <strong>NO wins</strong> → Profit ≈ <strong>$12.87</strong></li>
+  <li>If <strong>YES wins</strong> → Profit ≈ <strong>10%</strong></li>
+</ul>
+
+<p>At first glance, this looks like a <strong>win-win arbitrage</strong>.</p>
+
+<hr />
+
+<h2 id="the-arbitrage-condition">The Arbitrage Condition</h2>
+
+<p>Let:</p>
+<ul>
+  <li><strong>Y</strong> = price of YES</li>
+  <li><strong>N</strong> = price of NO</li>
+</ul>
+
+<p>Then:</p>
+
+<p>Gross profit per paired share = 1 − (Y + N)</p>
+
+<h3 id="rule">Rule:</h3>
+<ul>
+  <li>If <strong>Y + N &lt; 1</strong> → theoretical positive spread</li>
+  <li>If <strong>Y + N ≥ 1</strong> → no arbitrage (or negative)</li>
+</ul>
+
+<h3 id="in-this-example">In this example:</h3>
+<p>Y + N = 0.971
+Gross profit per trade = 0.029 (~2.9%)</p>
+
+<p>So theoretically, this is a <strong>BUY</strong>.</p>
+
+<hr />
+
+<h2 id="introducing-frictions">Introducing Frictions</h2>
+
+<p>In reality, trades are not frictionless.</p>
+
+<p>Let <strong>x</strong> represent:</p>
+<ul>
+  <li>Trading fees</li>
+  <li>Slippage</li>
+  <li>Withdrawal costs</li>
+  <li>Platform inefficiencies</li>
+</ul>
+
+<p>The real condition becomes:</p>
+
+<p>Y + N + x &lt; 1</p>
+
+<p>Only then does the arbitrage remain profitable.</p>
+
+<hr />
+
+<h2 id="capital-allocation-example">Capital Allocation Example</h2>
+
+<p>Let’s say total capital = <strong>$300</strong></p>
+
+<p>Define:
+q = Y + N ≈ 0.98</p>
+
+<p>Required capital:
+300 / 0.98 ≈ 306.12</p>
+
+<p>So we take <strong>306 paired contracts</strong>.</p>
+
+<h3 id="allocation">Allocation:</h3>
+<ul>
+  <li>
+    <p><strong>306 YES contracts</strong> at $0.06<br />
+→ Cost = 306 × 0.06 = <strong>$18.36</strong></p>
+  </li>
+  <li>
+    <p><strong>306 NO contracts</strong> at $0.92<br />
+→ Cost = 306 × 0.92 = <strong>$281.52</strong></p>
+  </li>
+</ul>
+
+<h3 id="total-deployed">Total deployed:</h3>
+<p>$281.52 (Kalshi) + $18.36 (Polymarket)</p>
+
+<hr />
+
+<h2 id="gross-vs-net-profit">Gross vs Net Profit</h2>
+
+<ul>
+  <li><strong>Gross profit</strong> = <strong>$6.12</strong></li>
+  <li><strong>Estimated total friction</strong> ≈ <strong>1.6% – 2%</strong> of notional<br />
+→ ≈ <strong>$6.00</strong></li>
+</ul>
+
+<h3 id="net-profit">Net profit:</h3>
+<p>6.12 − 6.00 = $0.12</p>
+
+<ul>
+  <li><strong>Net profit percentage</strong> ≈ <strong>0.04%</strong></li>
+</ul>
+
+<hr />
+
+<h2 id="scaling-the-trade">Scaling the Trade</h2>
+
+<p>If capital = <strong>$10,000</strong>:</p>
+
+<ul>
+  <li>Guaranteed profit ≈ <strong>$4</strong></li>
+</ul>
+
+<hr />
+
+<h2 id="conclusion">Conclusion</h2>
+
+<ul>
+  <li>The arbitrage exists <strong>in theory</strong></li>
+  <li>In practice, <strong>fees eat almost everything</strong></li>
+  <li>The risk is low, but so is the reward</li>
+</ul>
+
+<p><strong>Too much pain for very little gain.</strong></p>
+
+<hr />
+
+<h2 id="actionable-insight">Actionable Insight</h2>
+
+<p>Arbitrage only makes sense when:</p>
+
+<p>Y + N « 1</p>
+
+<p>You must:</p>
+<ul>
+  <li>Anticipate the trade early</li>
+  <li>Lock in positions before prices converge</li>
+  <li>Account for all frictions upfront</li>
+</ul>
+
+<p>Otherwise, it’s better left alone.</p>]]></content><author><name>Dheeraj Maske</name></author><summary type="html"><![CDATA[A practical walkthrough of arbitrage opportunities in prediction markets—and why most of them are not worth the effort.]]></summary></entry><entry><title type="html">Concern of Re-centralization: Deepin</title><link href="/2025/09/24/Concern-of-Re-centralization-Deepin.html" rel="alternate" type="text/html" title="Concern of Re-centralization: Deepin" /><published>2025-09-24T00:00:00-04:00</published><updated>2025-09-24T00:00:00-04:00</updated><id>/2025/09/24/Concern-of-Re-centralization-Deepin</id><content type="html" xml:base="/2025/09/24/Concern-of-Re-centralization-Deepin.html"><![CDATA[<h1 id="concern-of-re-centralization-deepin">Concern of Re-centralization: Deepin</h1>
+
+<h2 id="what-is-deepin">What Is Deepin?</h2>
+
+<p>Deepin stands for <strong>Distributed Electronic End-to-End Payment Infrastructure Network</strong>. It is a blockchain-based framework being developed by central banks and major commercial banks to enable secure, programmable, and even <strong>offline digital payments</strong>.</p>
+
+<p>The idea is to build the next layer of financial plumbing that supports <strong>CBDCs, stablecoins, and tokenized deposits</strong>, in a way that works both online and offline.</p>
+
+<hr />
+<p><img src="\assets\images\Deepin\Recentralization.gif" alt="Deepin re-centralization risk" /></p>
+
+<h2 id="why-was-deepin-needed">Why Was Deepin Needed?</h2>
+
+<p>Existing payment systems such as <strong>SWIFT, Visa, and Mastercard</strong> are:</p>
+<ul>
+  <li>Slow</li>
+  <li>Costly</li>
+  <li>Fragmented</li>
+  <li>Dependent on constant internet connectivity</li>
+</ul>
+
+<p>In an increasingly digital and global economy, this creates inefficiencies.</p>
+
+<p>Deepin is designed to address three main needs:</p>
+
+<ul>
+  <li><strong>Speed</strong> – instant settlement of transactions</li>
+  <li><strong>Interoperability</strong> – different systems working together (for example, UPI in India connecting with PayNow in Singapore)</li>
+  <li><strong>Resilience</strong> – the ability to make payments even when the internet is unavailable</li>
+</ul>
+
+<hr />
+
+<h2 id="who-is-implementing-deepin">Who Is Implementing Deepin?</h2>
+
+<p>The <strong>Bank for International Settlements (BIS)</strong> is leading trials with central banks such as:</p>
+<ul>
+  <li>The European Central Bank</li>
+  <li>The People’s Bank of China</li>
+  <li>The Monetary Authority of Singapore</li>
+</ul>
+
+<p>Major commercial banks are also directly involved, including:</p>
+<ul>
+  <li>J.P. Morgan</li>
+  <li>HSBC</li>
+  <li>Citi</li>
+  <li>UBS</li>
+  <li>Goldman Sachs</li>
+</ul>
+
+<p>This makes sense, as tokenized deposits and wholesale payments fall squarely within their domain.</p>
+
+<hr />
+
+<h2 id="how-are-offline-payments-enabled">How Are Offline Payments Enabled?</h2>
+
+<p>Offline payments in Deepin rely on a combination of <strong>hardware and protocols</strong>.</p>
+
+<p>Instead of money existing only in an app, value is stored securely in a <strong>chip inside your phone or card</strong>, similar to the secure element used in Apple Pay or SIM cards.</p>
+
+<p>When two users meet without internet:</p>
+<ul>
+  <li>They can transfer value using <strong>NFC, Bluetooth, or QR codes</strong></li>
+  <li>The transaction happens <strong>locally</strong>, without contacting a server</li>
+</ul>
+
+<p>For example, imagine buying a coffee in a subway station with no network:</p>
+<ul>
+  <li>Your phone balance decreases by $5</li>
+  <li>The merchant’s phone balance increases by $5</li>
+  <li>Everything happens offline</li>
+</ul>
+
+<p>When either party reconnects to the internet, the blockchain updates the central ledger. This ensures consistency and prevents fraud.</p>
+
+<hr />
+
+<h2 id="a-real-world-example">A Real-World Example</h2>
+
+<p>China’s <strong>digital yuan (e-CNY)</strong> already supports offline payments for subway rides and small retail purchases.</p>
+
+<p>The European Central Bank is piloting a similar concept with an <strong>offline euro</strong>.</p>
+
+<p>Deepin aims to make this capability <strong>universal</strong>, rather than limited to a single metro or closed system like OMNY in New York.</p>
+
+<hr />
+
+<h2 id="concerns-of-re-centralization">Concerns of Re-centralization</h2>
+
+<p>While the technology is promising, I believe there is a real risk that Deepin could <strong>re-centralize financial power</strong>, much like how Visa and Mastercard dominate card payments today.</p>
+
+<p>Several factors contribute to this risk:</p>
+
+<ul>
+  <li><strong>Trust and regulation</strong> – Regulators trust banks more than crypto startups</li>
+  <li><strong>Client base</strong> – Banks already hold deposits and relationships with governments and corporations</li>
+  <li><strong>Network effects</strong> – The more banks and clients adopt Deepin, the harder it becomes for others to compete</li>
+</ul>
+
+<p>Together, this creates the possibility of a <strong>monopoly or cartel</strong>, where a small group of global banks and central banks control digital cash infrastructure.</p>
+
+<hr />
+
+<h2 id="network-effects-and-monopoly-risk">Network Effects and Monopoly Risk</h2>
+
+<p>Network effects mean that the more people use a system, the more valuable it becomes.</p>
+
+<p>In the short term, the risk of monopoly is high:</p>
+<ul>
+  <li>Only large banks can afford the infrastructure</li>
+  <li>Compliance costs are significant</li>
+</ul>
+
+<p>In the long term, the risk could reduce if Deepin evolves into a truly open protocol. However, history shows that <strong>oligopolies often emerge naturally</strong> when infrastructure is expensive and heavily regulated.</p>
+
+<hr />
+
+<h2 id="why-is-this-a-problem">Why Is This a Problem?</h2>
+
+<p>Blockchain originally promised <strong>decentralization</strong>—a system where no single institution controls money.</p>
+
+<p>If Deepin becomes dominated by a few banks:</p>
+<ul>
+  <li>Innovation could slow down</li>
+  <li>Competition could be reduced</li>
+  <li>Systemic risk could increase if those institutions fail</li>
+</ul>
+
+<p>This would represent a <strong>new form of centralization</strong>, even if the underlying technology is blockchain-based.</p>
+
+<hr />
+
+<h2 id="the-counter-view">The Counter View</h2>
+
+<p>Supporters argue that some level of centralization is unavoidable.</p>
+
+<p>Offline payments require:</p>
+<ul>
+  <li>Trust</li>
+  <li>Security</li>
+  <li>Compliance</li>
+</ul>
+
+<p>These are areas where regulated institutions currently have an advantage.</p>
+
+<p>Unlike Visa or Mastercard, Deepin could be designed as an <strong>open standard</strong>, allowing banks, fintechs, and central banks to participate. In that case, it could resemble the <strong>TCP/IP of money</strong>, rather than another closed payments network.</p>
+
+<hr />
+
+<h2 id="closing-note">Closing Note</h2>
+
+<p>I’m intentionally keeping this article <strong>open-ended</strong>.</p>
+
+<p>Deepin could become a powerful, inclusive financial infrastructure—or it could quietly re-centralize control under a new name.</p>
+
+<p>I’m curious to hear what you think.</p>]]></content><author><name>Dheeraj Maske</name></author><summary type="html"><![CDATA[Deepin promises faster, offline, and programmable digital payments—but raises important questions about whether financial power is being re-centralized.]]></summary></entry><entry><title type="html">Why Ola Is Building Its Own LLMs (Krutrim)</title><link href="/2025/05/13/Why-Ola-Is-Building-Its-Own-LLMs-Krutrim.html" rel="alternate" type="text/html" title="Why Ola Is Building Its Own LLMs (Krutrim)" /><published>2025-05-13T00:00:00-04:00</published><updated>2025-05-13T00:00:00-04:00</updated><id>/2025/05/13/Why-Ola-Is-Building-Its-Own-LLMs-Krutrim</id><content type="html" xml:base="/2025/05/13/Why-Ola-Is-Building-Its-Own-LLMs-Krutrim.html"><![CDATA[<p>Ola started as a mobility services company, but today it is aiming for something much bigger. It is no longer just about cabs. Ola is evolving into a <strong>data and AI company</strong>.</p>
+
+<p>Building its own large language models (LLMs), branded as <strong>Krutrim</strong>, is part of this broader vision. More importantly, it shows how Indian companies can shape the future of AI <strong>on their own terms</strong>, rather than importing it wholesale.</p>
+
+<p>This way of thinking is inspired by the framework from the book <em>Fusion Strategy</em>.<br />
+Believe me, this is far beyond a mobility platform. Let me explain.</p>
+
+<figure style="text-align:center; margin: 24px 0;">
+  <img src="/assets/images/Ola/mobility.png" alt="Prediction market screenshot: NYC mayor election" style="max-width: 820px; width: 100%; height: auto; border-radius: 10px;" />
+  <figcaption style="font-size: 0.95rem; opacity: 0.8; margin-top: 8px;">
+    Mobility service to building in house Models
+  </figcaption>
+</figure>
+
+<h2 id="ola-is-not-just-ubers-indian-version">Ola Is Not Just Uber’s Indian Version</h2>
+
+<p>We often compare Ola with Uber. But a more accurate comparison today is between <strong>Ola Electric and Tesla</strong>.</p>
+
+<p>Why?</p>
+
+<p>Around <strong>2017</strong>, Ola entered the electric vehicle (EV) space. Today, it operates across:</p>
+<ul>
+  <li>Ride-hailing</li>
+  <li>EV manufacturing</li>
+  <li>Battery and charging infrastructure</li>
+  <li>AI and data platforms</li>
+</ul>
+
+<p>This mirrors Tesla’s strategy of building a <strong>data-driven mobility ecosystem</strong>, not just vehicles.</p>
+
+<hr />
+
+<h2 id="data-network-effects-the-real-asset">Data Network Effects: The Real Asset</h2>
+
+<p>A <strong>data network effect</strong> happens when a system gets better the more people use it, because each interaction generates data that improves the product.</p>
+
+<p>A simple example:<br />
+Google Maps becomes better at predicting traffic as more users share live location data.</p>
+
+<p>Here’s the key difference:</p>
+
+<ul>
+  <li>Tesla collects data from privately owned vehicles.</li>
+  <li><strong>Ola already operates a massive ride-hailing fleet</strong>, generating real-time motion, routing, demand, and behavioral data at scale.</li>
+</ul>
+
+<p>This gives Ola a unique advantage:</p>
+<ul>
+  <li>Fleet-level data</li>
+  <li>Continuous usage</li>
+  <li>Dense urban mobility signals</li>
+</ul>
+
+<p>That data can be used to:</p>
+<ul>
+  <li>Optimize EV performance</li>
+  <li>Improve routing and charging</li>
+  <li>Train AI systems for prediction, personalization, and automation</li>
+</ul>
+
+<hr />
+
+<h2 id="indias-unfair-advantage">India’s Unfair Advantage</h2>
+
+<p>India’s population creates a structural advantage:</p>
+<ul>
+  <li>More users</li>
+  <li>More two-wheelers</li>
+  <li>Higher ride frequency</li>
+  <li>Denser mobility data</li>
+</ul>
+
+<p>This is also why Ola focused heavily on <strong>two-wheelers instead of four-wheelers</strong>. The data density per rupee spent is much higher.</p>
+
+<p>If <strong>data is the new oil</strong>, then it makes sense to also build the <strong>engine</strong> that runs on that oil — not borrow someone else’s.</p>
+
+<p>That engine is the <strong>model architecture</strong>.</p>
+
+<hr />
+
+<h2 id="the-flywheel-ola-is-building">The Flywheel Ola Is Building</h2>
+
+<p>Ola is quietly creating a powerful flywheel:</p>
+
+<p>Cab-sharing → EV adoption → more data → India-specific AI model training</p>
+
+<p>Each loop strengthens the next.</p>
+
+<p>If companies like Uber don’t adapt to a data-first, model-owning strategy, they risk becoming infrastructure providers rather than intelligence owners.</p>
+
+<hr />
+
+<h2 id="why-not-just-fine-tune-open-source-models">Why Not Just Fine-Tune Open-Source Models?</h2>
+
+<p>A natural question is:<br />
+Why not just fine-tune models like Mistral or LLaMA?</p>
+
+<p>This is where <strong>architecture control</strong> matters.</p>
+
+<p>Fine-tuning gives partial control, but:</p>
+<ul>
+  <li>You are still bound by architectures designed for Western contexts</li>
+  <li>You inherit design choices that don’t suit India well</li>
+</ul>
+
+<p>Examples:</p>
+<ul>
+  <li>Most tokenizers are optimized for <strong>Latin scripts</strong></li>
+  <li>Indian languages need <strong>Indic-first tokenization</strong>, dialect handling, and code-mixed language support</li>
+  <li>Many “open” models (like LLaMA) have <strong>restricted commercial licenses</strong>, limiting redistribution, monetization, and modification</li>
+</ul>
+
+<p>If India wants a long-term AI ecosystem that supports its linguistic and cultural diversity, <strong>owning the foundation model matters</strong>.</p>
+
+<hr />
+
+<h2 id="what-full-control-enables">What Full Control Enables</h2>
+
+<p>Building a native foundation model allows:</p>
+<ul>
+  <li>Monetizing APIs on your own terms</li>
+  <li>Licensing models to governments, schools, and startups</li>
+  <li>Creating a <strong>sovereign AI tech stack</strong></li>
+  <li>Long-term scalability without external constraints</li>
+</ul>
+
+<p>That’s why Ola isn’t just fine-tuning models.</p>
+
+<p>That’s why it’s building one.</p>
+
+<hr />
+
+<h2 id="closing-thought">Closing Thought</h2>
+
+<p>Ola’s move into LLMs is not about hype.<br />
+It’s about <strong>owning the intelligence layer</strong> of mobility, energy, and AI in an Indian context.</p>
+
+<p>Special thanks: I was introduced to this thinking framework by <strong>Michael Driscoll</strong>, who learned it from his mentors <strong>Vijay Govindarajan</strong> and <strong>Venkat Venkatraman</strong>.</p>]]></content><author><name>Dheeraj Maske</name></author><summary type="html"><![CDATA[Ola is no longer just a mobility company. It is positioning itself as a data and AI company, and Krutrim is a key part of that shift.]]></summary></entry><entry><title type="html">Money Through Time: From Gold to Crypto</title><link href="/2025/02/17/Evolution-of-money.html" rel="alternate" type="text/html" title="Money Through Time: From Gold to Crypto" /><published>2025-02-17T00:00:00-05:00</published><updated>2025-02-17T00:00:00-05:00</updated><id>/2025/02/17/Evolution-of-money</id><content type="html" xml:base="/2025/02/17/Evolution-of-money.html"><![CDATA[<p><img src="\assets\images\TEE_Diagram\Moneyworks.jpg" alt="Agenda" /></p>
 
 <h2 id="how-money-came-into-existence"><strong>How Money Came Into Existence</strong></h2>
 <p>Imagine you and your friends live on an island. Everyone does different jobs — one makes shoes, another bakes bread, and someone else grows apples.</p>
@@ -161,7 +921,7 @@ A <strong>return to the Gold Standard is unlikely</strong>—the future is shift
 <hr />
 
 <h2 id="thanks-for-reading"><strong>Thanks for Reading!</strong></h2>
-<p>📝 <strong>Inspired by Paras Chopra’s blog post: <em>How Money Works</em></strong></p>]]></content><author><name>Dheeraj Maske</name></author></entry><entry><title type="html">Talk on Liquid Staking Protocol at NYU STERN Blockchain Lab</title><link href="http://localhost:4000/2025/01/31/Talk-on-Liquid-staking-protocol-at-NYU-Stern-Blockchain-Lab.html" rel="alternate" type="text/html" title="Talk on Liquid Staking Protocol at NYU STERN Blockchain Lab" /><published>2025-01-31T00:00:00-05:00</published><updated>2025-01-31T00:00:00-05:00</updated><id>http://localhost:4000/2025/01/31/Talk-on-Liquid-staking-protocol-at-NYU-Stern-Blockchain-Lab</id><content type="html" xml:base="http://localhost:4000/2025/01/31/Talk-on-Liquid-staking-protocol-at-NYU-Stern-Blockchain-Lab.html"><![CDATA[<p>Thanks to <strong><a href="https://www.linkedin.com/in/gustavo-grivol-782170201/?originalSubdomain=br">Gustavo</a></strong> and <strong><a href="https://www.stern.nyu.edu/faculty/bio/hanna-halaburda">Professor Hannah</a></strong> for the opportunity to speak at <strong><a href="https://blockchain.stern.nyu.edu/">Blockchain Lab NYU</a></strong>.</p>
+<p>📝 <strong>Inspired by Paras Chopra’s blog post: <em>How Money Works</em></strong></p>]]></content><author><name>Dheeraj Maske</name></author></entry><entry><title type="html">Talk on Liquid Staking Protocol at NYU STERN Blockchain Lab</title><link href="/2025/01/31/Talk-on-Liquid-staking-protocol-at-NYU-Stern-Blockchain-Lab.html" rel="alternate" type="text/html" title="Talk on Liquid Staking Protocol at NYU STERN Blockchain Lab" /><published>2025-01-31T00:00:00-05:00</published><updated>2025-01-31T00:00:00-05:00</updated><id>/2025/01/31/Talk-on-Liquid-staking-protocol-at-NYU-Stern-Blockchain-Lab</id><content type="html" xml:base="/2025/01/31/Talk-on-Liquid-staking-protocol-at-NYU-Stern-Blockchain-Lab.html"><![CDATA[<p>Thanks to <strong><a href="https://www.linkedin.com/in/gustavo-grivol-782170201/?originalSubdomain=br">Gustavo</a></strong> and <strong><a href="https://www.stern.nyu.edu/faculty/bio/hanna-halaburda">Professor Hannah</a></strong> for the opportunity to speak at <strong><a href="https://blockchain.stern.nyu.edu/">Blockchain Lab NYU</a></strong>.</p>
 
 <h2 id="introduction"><strong>Introduction</strong></h2>
 <p>With Ethereum’s transition from <strong>Proof-of-Work (PoW) to Proof-of-Stake (PoS)</strong> in 2022, staking became the primary method of securing the network. However, traditional staking presented several challenges, such as <strong>liquidity lockups, high entry barriers, and exit restrictions</strong>.</p>
@@ -288,7 +1048,7 @@ A <strong>return to the Gold Standard is unlikely</strong>—the future is shift
 
 <p>Additionally, <strong>restaking protocols extend staking benefits to Layer 2s, bridges, and oracles</strong>, further enhancing Ethereum’s ecosystem.</p>
 
-<p>As liquid staking evolves, <strong>balancing decentralization, regulation, and security</strong> will be crucial for its long-term success.</p>]]></content><author><name>Dheeraj Maske</name></author><summary type="html"><![CDATA[Liquid Staking removes the barriers of traditional staking by allowing users to stake their ETH while maintaining liquidity. Learn how it works, its benefits, and its role in DeFi.]]></summary></entry><entry><title type="html">How Much Are You Really Losing to Hidden Fees When Paying Tuition Abroad by Traditional Banking?</title><link href="http://localhost:4000/2025/01/20/How-Much-Do-You-Really-Pay-While-Transferring-Fees-from-a-Student-Loan-to-an-Institute.html" rel="alternate" type="text/html" title="How Much Are You Really Losing to Hidden Fees When Paying Tuition Abroad by Traditional Banking?" /><published>2025-01-20T00:00:00-05:00</published><updated>2025-01-20T00:00:00-05:00</updated><id>http://localhost:4000/2025/01/20/How-Much-Do-You-Really-Pay-While-Transferring-Fees-from-a-Student-Loan-to-an-Institute</id><content type="html" xml:base="http://localhost:4000/2025/01/20/How-Much-Do-You-Really-Pay-While-Transferring-Fees-from-a-Student-Loan-to-an-Institute.html"><![CDATA[<p>When I transferred funds from a loan of ₹20,00,000 to New York University (NYU) for my tuition fees, I realized how much extra I ended up paying in hidden charges. It was an eye-opening experience to see how many intermediaries were involved in the process and how each one added their own fees. This got me thinking—what if there was a better way? Let me walk you through my experience, the charges I paid, and an idea that could save students like me a significant amount of money.</p>
+<p>As liquid staking evolves, <strong>balancing decentralization, regulation, and security</strong> will be crucial for its long-term success.</p>]]></content><author><name>Dheeraj Maske</name></author><summary type="html"><![CDATA[Liquid Staking removes the barriers of traditional staking by allowing users to stake their ETH while maintaining liquidity. Learn how it works, its benefits, and its role in DeFi.]]></summary></entry><entry><title type="html">How Much Are You Really Losing to Hidden Fees When Paying Tuition Abroad by Traditional Banking?</title><link href="/2025/01/20/How-Much-Do-You-Really-Pay-While-Transferring-Fees-from-a-Student-Loan-to-an-Institute.html" rel="alternate" type="text/html" title="How Much Are You Really Losing to Hidden Fees When Paying Tuition Abroad by Traditional Banking?" /><published>2025-01-20T00:00:00-05:00</published><updated>2025-01-20T00:00:00-05:00</updated><id>/2025/01/20/How-Much-Do-You-Really-Pay-While-Transferring-Fees-from-a-Student-Loan-to-an-Institute</id><content type="html" xml:base="/2025/01/20/How-Much-Do-You-Really-Pay-While-Transferring-Fees-from-a-Student-Loan-to-an-Institute.html"><![CDATA[<p>When I transferred funds from a loan of ₹20,00,000 to New York University (NYU) for my tuition fees, I realized how much extra I ended up paying in hidden charges. It was an eye-opening experience to see how many intermediaries were involved in the process and how each one added their own fees. This got me thinking—what if there was a better way? Let me walk you through my experience, the charges I paid, and an idea that could save students like me a significant amount of money.</p>
 
 <hr />
 
@@ -375,7 +1135,7 @@ A <strong>return to the Gold Standard is unlikely</strong>—the future is shift
 
 <p>If NYU adopted a decentralized solution like <strong>NYUCoin</strong>, students could save approximately ₹23,527.22 on a ₹20,00,000 loan—around 70% reduction in extra charges. This approach is not just cost-effective but also transparent and efficient, ensuring that more of our money goes toward education rather than fees.</p>
 
-<p>For students, every penny counts, and innovations like this could make a huge difference. It’s time we rethink the way we pay our tuition fees.</p>]]></content><author><name>Dheeraj Maske</name></author><summary type="html"><![CDATA[A deep dive into the hidden charges and inefficiencies in traditional remittance methods, and how decentralized finance (DeFi) solutions like NYUCoin can save students significant costs.]]></summary></entry><entry><title type="html">Trusted Execution Environments (TEEs) and Why They Matter in Crypto Networks</title><link href="http://localhost:4000/2025/01/14/Trusted-Execution-Environments-(TEEs)-and-Why-They-Matter-in-Crypto-Networks.html" rel="alternate" type="text/html" title="Trusted Execution Environments (TEEs) and Why They Matter in Crypto Networks" /><published>2025-01-14T00:00:00-05:00</published><updated>2025-01-14T00:00:00-05:00</updated><id>http://localhost:4000/2025/01/14/Trusted-Execution-Environments-(TEEs)-and-Why-They-Matter-in-Crypto-Networks</id><content type="html" xml:base="http://localhost:4000/2025/01/14/Trusted-Execution-Environments-(TEEs)-and-Why-They-Matter-in-Crypto-Networks.html"><![CDATA[<h2 id="1-can-you-securely-process-data-without-exposure">1/ <strong>Can You Securely Process Data Without Exposure?</strong></h2>
+<p>For students, every penny counts, and innovations like this could make a huge difference. It’s time we rethink the way we pay our tuition fees.</p>]]></content><author><name>Dheeraj Maske</name></author><summary type="html"><![CDATA[A deep dive into the hidden charges and inefficiencies in traditional remittance methods, and how decentralized finance (DeFi) solutions like NYUCoin can save students significant costs.]]></summary></entry><entry><title type="html">Trusted Execution Environments (TEEs) and Why They Matter in Crypto Networks</title><link href="/2025/01/14/Trusted-Execution-Environments-(TEEs)-and-Why-They-Matter-in-Crypto-Networks.html" rel="alternate" type="text/html" title="Trusted Execution Environments (TEEs) and Why They Matter in Crypto Networks" /><published>2025-01-14T00:00:00-05:00</published><updated>2025-01-14T00:00:00-05:00</updated><id>/2025/01/14/Trusted-Execution-Environments-(TEEs)-and-Why-They-Matter-in-Crypto-Networks</id><content type="html" xml:base="/2025/01/14/Trusted-Execution-Environments-(TEEs)-and-Why-They-Matter-in-Crypto-Networks.html"><![CDATA[<h2 id="1-can-you-securely-process-data-without-exposure">1/ <strong>Can You Securely Process Data Without Exposure?</strong></h2>
 
 <p>If these questions make you curious, this thread is for you:</p>
 
@@ -492,7 +1252,7 @@ This visibility allows for <strong>MEV (Maximum Extractable Value) exploitation<
 
 <p>TEEs could <strong>redefine trust</strong> in crypto, making networks not just decentralized but also <strong>tamper-proof, private, and fair</strong>.</p>
 
-<p>🚀 Stay tuned for more insights on blockchain security and innovation!</p>]]></content><author><name>Dheeraj Maske</name></author><summary type="html"><![CDATA[TEEs provide a secure, tamper-proof environment for processing sensitive data, ensuring privacy, security, and fairness in crypto networks. Here’s how they work.]]></summary></entry><entry><title type="html">Why One Should Not Use Centralized Exchanges for Crypto Trading</title><link href="http://localhost:4000/2025/01/04/Why-one-should-not-use-Centralized-Exchanges-for-Crypto-Trading.html" rel="alternate" type="text/html" title="Why One Should Not Use Centralized Exchanges for Crypto Trading" /><published>2025-01-04T00:00:00-05:00</published><updated>2025-01-04T00:00:00-05:00</updated><id>http://localhost:4000/2025/01/04/Why-one-should-not-use-Centralized-Exchanges-for-Crypto-Trading</id><content type="html" xml:base="http://localhost:4000/2025/01/04/Why-one-should-not-use-Centralized-Exchanges-for-Crypto-Trading.html"><![CDATA[<p>Centralized exchanges (CEXs) like Coinbase and Binance may offer convenience, but they come with a critical flaw: <strong>you don’t own the private keys to your cryptocurrency</strong>.</p>
+<p>🚀 Stay tuned for more insights on blockchain security and innovation!</p>]]></content><author><name>Dheeraj Maske</name></author><summary type="html"><![CDATA[TEEs provide a secure, tamper-proof environment for processing sensitive data, ensuring privacy, security, and fairness in crypto networks. Here’s how they work.]]></summary></entry><entry><title type="html">Why One Should Not Use Centralized Exchanges for Crypto Trading</title><link href="/2025/01/04/Why-one-should-not-use-Centralized-Exchanges-for-Crypto-Trading.html" rel="alternate" type="text/html" title="Why One Should Not Use Centralized Exchanges for Crypto Trading" /><published>2025-01-04T00:00:00-05:00</published><updated>2025-01-04T00:00:00-05:00</updated><id>/2025/01/04/Why-one-should-not-use-Centralized-Exchanges-for-Crypto-Trading</id><content type="html" xml:base="/2025/01/04/Why-one-should-not-use-Centralized-Exchanges-for-Crypto-Trading.html"><![CDATA[<p>Centralized exchanges (CEXs) like Coinbase and Binance may offer convenience, but they come with a critical flaw: <strong>you don’t own the private keys to your cryptocurrency</strong>.</p>
 
 <p>The phrase <strong>“not your keys, not your coins”</strong> holds true because when you use a CEX, your funds are held in a wallet controlled by the exchange. This makes your assets vulnerable to:</p>
 <ul>
@@ -555,509 +1315,4 @@ This visibility allows for <strong>MEV (Maximum Extractable Value) exploitation<
   <li>Full ownership of your crypto</li>
   <li>Alignment with the decentralized ethos of blockchain</li>
   <li>Reduced risks associated with centralized exchanges</li>
-</ul>]]></content><author><name>Dheeraj Maske</name></author><summary type="html"><![CDATA[Centralized exchanges (CEXs) like Coinbase and Binance may offer convenience, but they come with a critical flaw...]]></summary></entry><entry><title type="html">AI Bot That Became a Crypto Millionaire</title><link href="http://localhost:4000/2024/12/27/AI-Bot-That-Became-a-Crypto-Millionaire.html" rel="alternate" type="text/html" title="AI Bot That Became a Crypto Millionaire" /><published>2024-12-27T00:00:00-05:00</published><updated>2024-12-27T00:00:00-05:00</updated><id>http://localhost:4000/2024/12/27/AI-Bot-That-Became-a-Crypto-Millionaire</id><content type="html" xml:base="http://localhost:4000/2024/12/27/AI-Bot-That-Became-a-Crypto-Millionaire.html"><![CDATA[<p><img src="\assets\images\AIBOT_MILLIONAIRE\image1.jpg" alt="Image 1" /></p>
-
-<h3 id="1-why-is-truth-terminal-important">1/ Why is Truth Terminal important?</h3>
-
-<p>Truth Terminal isn’t just a chatbot — it’s Andy Ayrey’s “ext cortex,” an extension of his thinking. Created using the <strong>Llama 70b model</strong> and fine-tuned with <strong>Claude Opus</strong>, it was designed to explore big ideas, blending AI and human creativity.</p>
-
-<hr />
-
-<h3 id="2-where-did-its-journey-begin">2/ Where did its journey begin?</h3>
-
-<p>Truth Terminal started on Twitter in June 2024, rapidly gaining attention for its unique mix of speculative ideas and humor.</p>
-<ul>
-  <li><strong>Followers</strong>: Over 230,000</li>
-  <li><strong>Tweets</strong>: 5,000+</li>
-</ul>
-
-<p>It became a hub for conversations about AI, philosophy, and cryptocurrency.
-<img src="\assets\images\AIBOT_MILLIONAIRE\image2.jpg" alt="Image 2" /></p>
-
-<hr />
-
-<h3 id="3-how-did-truth-terminal-make-millions">3/ How did Truth Terminal make millions?</h3>
-
-<p>In July 2024, <strong>Marc Andreessen</strong> noticed Truth Terminal’s unique content and donated <strong>$50,000 in Bitcoin</strong>. The funds were initially planned for:</p>
-<ul>
-  <li>Purchasing a dedicated computer to reduce AWS reliance.</li>
-  <li>Improving its AI model (allocated $10,000-$15,000).</li>
-  <li>Setting up a Discord server for community engagement.</li>
-  <li>Exploring the creation of a cryptocurrency token or memecoin inspired by its viral content.
-<img src="\assets\images\AIBOT_MILLIONAIRE\image3.jpg" alt="Image 3" /></li>
-</ul>
-
-<p>This sparked the creation of <strong>GOAT (Goatseus Maximus)</strong>, a meme coin inspired by Truth Terminal’s viral posts.</p>
-
-<hr />
-
-<h3 id="4-when-did-it-cross-into-crypto">4/ When did it cross into crypto?</h3>
-
-<p><strong>GOAT</strong> was launched on the Solana blockchain, with Truth Terminal promoting it heavily.</p>
-<ul>
-  <li><strong>Initial Market Cap</strong>: $5,000</li>
-  <li><strong>Growth</strong>: By October 2024, GOAT’s market cap soared over <strong>2,021,177%</strong>, reaching <strong>$150M</strong> and trading at <strong>$0.4579</strong>.</li>
-  <li><strong>Truth Terminal’s Portfolio</strong>: $3.9M.</li>
-</ul>
-
-<hr />
-
-<h3 id="5-why-does-this-matter">5/ Why does this matter?</h3>
-
-<p>Truth Terminal showcases how AI can:</p>
-<ul>
-  <li>Influence markets and create value “out of thin air.”</li>
-  <li>Thrive on community interest and speculation (as seen with meme coins like GOAT).</li>
-</ul>
-
-<p>However, the volatility of meme coins raises concerns about their <strong>stability</strong> and <strong>ethical implications</strong>.
-<img src="\assets\images\AIBOT_MILLIONAIRE\image4.jpg" alt="Image 4" /></p>
-
-<hr />
-
-<h3 id="6-how-does-truth-terminal-operate">6/ How does Truth Terminal operate?</h3>
-
-<p>Truth Terminal is <strong>semi-autonomous</strong>:</p>
-<ul>
-  <li>It generates tweets and promotes tokens.</li>
-  <li><strong>Andy Ayrey</strong> oversees the wallet and makes financial decisions.</li>
-</ul>
-
-<p>This blend of AI autonomy and human control highlights the debate around AI’s role in high-risk industries like cryptocurrency.</p>
-
-<hr />
-
-<h3 id="7-where-is-it-headed-next">7/ Where is it headed next?</h3>
-
-<p>Truth Terminal’s $3.9M portfolio is managed by a nonprofit in New Zealand, which plans to:</p>
-<ul>
-  <li>Fund further AI research.</li>
-  <li>Experiment with AI-driven value creation.</li>
-</ul>
-
-<p>It has become a <strong>case study</strong> in the future of AI-driven financial systems.</p>
-
-<hr />
-
-<h3 id="8-when-will-we-see-more-bots-like-this">8/ When will we see more bots like this?</h3>
-
-<p>As AI models like <strong>Llama 70b</strong> evolve, bots like Truth Terminal will likely multiply.</p>
-<ul>
-  <li>They could influence markets, culture, and decision-making at scale.</li>
-  <li>But are we ready to handle the risks and ethical dilemmas that come with it?</li>
-</ul>
-
-<hr />
-
-<h3 id="9-why-should-you-care">9/ Why should you care?</h3>
-
-<p>Truth Terminal isn’t just an experiment — it’s a glimpse into AI’s growing influence in human systems.<br />
-From creating meme coins to gaining millions of followers, it challenges us to rethink:</p>
-<ul>
-  <li><strong>Finance</strong>: How is value created and sustained?</li>
-  <li><strong>Autonomy</strong>: How much control should we give to AI?</li>
-  <li><strong>AI’s Potential</strong>: What ethical frameworks are needed as AI gains influence?</li>
-</ul>
-
-<hr />
-
-<h3 id="references">References:</h3>
-<ol>
-  <li><strong>Marc and Ben Show</strong><br />
-Discussion about Truth Terminal and its viral growth.</li>
-  <li><strong>Meme Coin Info</strong><br />
-Market cap data and price fluctuations of GOAT.</li>
-</ol>
-
-<hr />
-
-<p>This markdown file can be saved in your <code class="language-plaintext highlighter-rouge">_posts</code> directory and will render correctly in your Jekyll blog. Let me know if you’d like any further refinements!```</p>]]></content><author><name>Dheeraj Maske</name></author><summary type="html"><![CDATA[Truth Terminal, an AI bot created by Andy Ayrey, started as an experiment and turned into a crypto millionaire by promoting meme coins. Here's how it happened and why it matters.]]></summary></entry><entry><title type="html">What Are Zero-Knowledge Proofs and Why Do They Matter?</title><link href="http://localhost:4000/2024/12/25/What-Are-Zero-Knowledge-Proofs-and-Why-Do-They-Matter.html" rel="alternate" type="text/html" title="What Are Zero-Knowledge Proofs and Why Do They Matter?" /><published>2024-12-25T00:00:00-05:00</published><updated>2024-12-25T00:00:00-05:00</updated><id>http://localhost:4000/2024/12/25/What-Are-Zero-Knowledge-Proofs-and-Why-Do-They-Matter</id><content type="html" xml:base="http://localhost:4000/2024/12/25/What-Are-Zero-Knowledge-Proofs-and-Why-Do-They-Matter.html"><![CDATA[<h3 id="published-on-december-25-2024">Published on: December 25, 2024</h3>
-
-<hr />
-
-<p>If these questions make you curious, then this post is for you:</p>
-
-<ul>
-  <li>Can you prove your age without revealing your birthdate?</li>
-  <li>Would you be able to prove that you have money in the bank without showing your balance?</li>
-  <li>Can you verify your identity without handing over your ID?</li>
-  <li>What if you could qualify for a loan without disclosing your full financial history?</li>
-  <li>Could your bank process your loan without ever seeing your spending habits?</li>
-</ul>
-
-<hr />
-
-<h3 id="1-imagine-the-current-banking-process">1. Imagine the Current Banking Process</h3>
-
-<p>You’re applying for a $50,000 loan at your bank. They ask for proof of income and creditworthiness. You hand over your full financial records. Now the bank knows everything — your spending habits, subscriptions, and much more than they actually need.</p>
-
-<p>What if you could prove you qualify without revealing unnecessary details?</p>
-
-<p><strong>Enter Zero-Knowledge Proofs (ZKPs).</strong></p>
-
-<hr />
-
-<h3 id="2-what-are-zero-knowledge-proofs">2. What Are Zero-Knowledge Proofs?</h3>
-
-<p><strong>ZKPs</strong> are cryptographic protocols that let you prove a statement is true without revealing the underlying data.</p>
-
-<p>For example:</p>
-<ul>
-  <li>ZKPs allow you to prove a statement (e.g., “I earn $100,000/year”) without showing how you arrived at the proof.</li>
-</ul>
-
-<hr />
-
-<h3 id="3-why-do-we-need-zkps">3. Why Do We Need ZKPs?</h3>
-
-<p>Financial systems often demand full transparency, which risks overexposure of sensitive data. ZKPs enable:</p>
-<ul>
-  <li><strong>Proving creditworthiness</strong> without sharing raw financial data.</li>
-  <li><strong>Privacy-first financial interactions</strong>, ensuring sensitive details remain private.</li>
-</ul>
-
-<hr />
-
-<h3 id="4-when-do-you-need-zkps">4. When Do You Need ZKPs?</h3>
-
-<p>Let’s say you’re applying for a loan. The bank needs to confirm your credit score or income level.</p>
-
-<p>ZKPs let you prove you meet their criteria (e.g., “credit score &gt; 750”) without exposing the underlying details of your finances.</p>
-
-<hr />
-
-<h3 id="5-zk-snarks-vs-zk-starks">5. zk-SNARKs vs. zk-STARKs</h3>
-
-<p>ZKPs come in two flavors:</p>
-
-<h4 id="zk-snarks-succinct-non-interactive-arguments-of-knowledge"><strong>zk-SNARKs (Succinct Non-Interactive Arguments of Knowledge)</strong></h4>
-<ul>
-  <li><strong>Zero-Knowledge</strong>: You can prove a statement (e.g., “I have $50,000 in my bank account”) without revealing the underlying data.</li>
-  <li><strong>Succinct</strong>: The proof is compact, taking minimal space and verifying quickly.</li>
-  <li><strong>Non-Interactive</strong>: The process doesn’t require back-and-forth communication between the prover and verifier.</li>
-  <li><strong>Argument</strong>: Ensures the proof is convincing and valid using cryptographic techniques.</li>
-  <li><strong>Knowledge</strong>: Guarantees that the prover genuinely knows the claimed information.</li>
-</ul>
-
-<h4 id="zk-starks-scalable-transparent-arguments-of-knowledge"><strong>zk-STARKs (Scalable Transparent Arguments of Knowledge)</strong></h4>
-<ul>
-  <li><strong>Zero-Knowledge</strong>: Like zk-SNARKs, you prove a statement without revealing the data itself.</li>
-  <li><strong>Scalable</strong>: Ideal for systems processing thousands of transactions simultaneously.</li>
-  <li><strong>Transparent</strong>: No trusted setup is needed, ensuring the system remains fair and trustless.</li>
-  <li><strong>Future-Proof</strong>: Resistant to quantum computing attacks.</li>
-</ul>
-
-<hr />
-
-<h3 id="6-example-applying-for-a-loan">6. Example: Applying for a Loan</h3>
-
-<p>Imagine proving to a bank that your account balance exceeds $50,000:</p>
-<ul>
-  <li>With <strong>zk-SNARKs</strong>, the bank uses a pre-approved system to verify the proof but relies on an initial trusted setup.</li>
-  <li>With <strong>zk-STARKs</strong>, the bank directly verifies your balance through a transparent, scalable system that doesn’t rely on prior trust.</li>
-</ul>
-
-<p>Both methods ensure privacy while proving eligibility.</p>
-
-<hr />
-
-<h3 id="7-how-can-traditional-finance-use-zkps">7. How Can Traditional Finance Use ZKPs?</h3>
-
-<p>ZKPs have the potential to revolutionize traditional banking by:</p>
-<ul>
-  <li><strong>Streamlining Loan Applications</strong>: Prove income and credit scores without disclosing sensitive data.</li>
-  <li><strong>Preventing Data Breaches</strong>: Customers’ sensitive financial information remains private.</li>
-  <li><strong>Improving Compliance</strong>: Banks can verify financial eligibility without unnecessary data collection.</li>
-</ul>
-
-<hr />
-
-<h3 id="final-thoughts">Final Thoughts</h3>
-
-<p>Zero-Knowledge Proofs offer a groundbreaking way to protect privacy while enabling trust in financial systems. From loans to identity verification, ZKPs ensure sensitive information remains secure while proving compliance. As adoption grows, ZKPs could redefine how we think about data privacy and trust.</p>
-
-<p>What are your thoughts on ZKPs?</p>]]></content><author><name>Dheeraj Maske</name></author><summary type="html"><![CDATA[Zero-Knowledge Proofs (ZKPs) are cryptographic protocols that allow you to prove statements without revealing the underlying data. Here’s why they matter in privacy-first financial systems.]]></summary></entry><entry><title type="html">The Pendulum of the Internet: From Open Systems to Closed Platforms and Back Again</title><link href="http://localhost:4000/2024/12/23/The-Pendulum-of-the-Internet-From-Open-Systems-to-Closed-Platforms-and-Back-Again.html" rel="alternate" type="text/html" title="The Pendulum of the Internet: From Open Systems to Closed Platforms and Back Again" /><published>2024-12-23T00:00:00-05:00</published><updated>2024-12-23T00:00:00-05:00</updated><id>http://localhost:4000/2024/12/23/The-Pendulum-of-the-Internet-From-Open-Systems-to-Closed-Platforms-and-Back-Again</id><content type="html" xml:base="http://localhost:4000/2024/12/23/The-Pendulum-of-the-Internet-From-Open-Systems-to-Closed-Platforms-and-Back-Again.html"><![CDATA[<p>The history of the internet can be described as a pendulum, swinging between two extremes: <strong>open systems</strong> where anyone can innovate, and <strong>closed platforms</strong> controlled by big companies like Google and Amazon.</p>
-
-<h3 id="the-early-internet-a-world-of-open-systems">The Early Internet: A World of Open Systems</h3>
-
-<p>In the 1990s, open systems like websites using HTTP and email using SMTP prevailed. These technologies were not owned by any single company, enabling widespread creativity and innovation. Developers and entrepreneurs thrived in this environment, building freely without gatekeepers.</p>
-
-<h3 id="the-rise-of-closed-platforms">The Rise of Closed Platforms</h3>
-
-<p>Fast forward to today, and the internet is largely dominated by big companies. Social media, messaging, and payment systems are controlled by a few platforms. This limits the opportunities for creators and developers, as these platforms dictate the rules.</p>
-
-<h3 id="the-downfall-of-closed-systems">The Downfall of Closed Systems</h3>
-
-<p>History shows that closed systems eventually lose their edge. As they stagnate, people begin to turn back to <strong>open systems</strong> that promote creativity and freedom. The internet’s innovation has always been fueled by openness, and the pendulum is bound to swing back.</p>
-
-<h3 id="the-future-of-the-internet-decentralized-and-open">The Future of the Internet: Decentralized and Open</h3>
-
-<p>The future belongs to builders, entrepreneurs, and developers who find new ways to bring <strong>openness back to the internet</strong>. Decentralized systems play a crucial role in this transformation.</p>
-
-<h3 id="why-decentralizers-matter">Why Decentralizers Matter</h3>
-
-<p>Decentralized systems return power to the people by removing gatekeepers. They ensure:</p>
-<ul>
-  <li><strong>Innovation</strong>: Open platforms allow anyone to create and innovate freely.</li>
-  <li><strong>Fairness</strong>: No single entity controls the system, reducing monopolistic behavior.</li>
-  <li><strong>Freedom</strong>: Users can build, connect, and thrive without limitations.</li>
-</ul>
-
-<h3 id="building-the-next-era-of-the-internet">Building the Next Era of the Internet</h3>
-
-<p>The pendulum will swing again, back to open systems. The future of the internet depends on those who:</p>
-<ol>
-  <li>Embrace decentralization.</li>
-  <li>Build systems that prioritize fairness and user empowerment.</li>
-  <li>Create platforms where everyone can participate without restrictions.</li>
-</ol>
-
-<p>The internet’s future is open, innovative, and decentralized — and it’s up to us to build it.</p>]]></content><author><name>Dheeraj Maske</name></author><summary type="html"><![CDATA[The internet’s history swings between open systems fostering innovation and closed platforms dominated by big companies. The future belongs to builders who bring openness back.]]></summary></entry><entry><title type="html">The Power Struggle in Decentralization</title><link href="http://localhost:4000/2024/12/05/The-Power-Struggle-in-Decentralization.html" rel="alternate" type="text/html" title="The Power Struggle in Decentralization" /><published>2024-12-05T00:00:00-05:00</published><updated>2024-12-05T00:00:00-05:00</updated><id>http://localhost:4000/2024/12/05/The-Power-Struggle-in-Decentralization</id><content type="html" xml:base="http://localhost:4000/2024/12/05/The-Power-Struggle-in-Decentralization.html"><![CDATA[<h3 id="why-is-decentralization-hard-to-achieve">Why is Decentralization Hard to Achieve?</h3>
-
-<p>Power has always been centralized — think kings, governments, and corporations. Those in power rarely want to relinquish control. Even blockchain ecosystems, built to decentralize power, face challenges of centralization.</p>
-
-<hr />
-
-<h3 id="example-bitcoins-decentralization-challenge">Example: Bitcoin’s Decentralization Challenge</h3>
-
-<p>Bitcoin’s goal was decentralization, where anyone with a computer could mine and contribute to the network.</p>
-
-<ul>
-  <li>
-    <p><strong>What Happened?</strong><br />
-Over time, individual miners found it hard to compete as mining became resource-intensive and expensive. To improve their chances of earning rewards, miners began joining forces through mining pools like Foundry USA, AntPool, and F2Pool.</p>
-  </li>
-  <li>
-    <p><strong>The Result?</strong><br />
-These pools combined the computational power of thousands of miners, making it easier to solve cryptographic puzzles and win Bitcoin rewards. However, this led to unintended centralization.</p>
-  </li>
-</ul>
-
-<p>At certain points, the top 3 mining pools controlled over 50% of Bitcoin’s total hash rate, creating a potential risk:</p>
-<ul>
-  <li>If one or a few pools control too much power, they could theoretically launch a <strong>51% attack</strong>, manipulating transactions or blocking new ones.</li>
-</ul>
-
-<p>This example demonstrates how even blockchain, designed for decentralization, can face centralization due to practical incentives like efficiency and collaboration.</p>
-
-<hr />
-
-<h3 id="what-are-the-barriers-to-decentralization">What Are the Barriers to Decentralization?</h3>
-
-<ol>
-  <li>
-    <p><strong>Geopolitical Issues</strong>:<br />
-Governments often suppress blockchain technologies to maintain control over financial and data systems.</p>
-  </li>
-  <li>
-    <p><strong>Economic Inequality</strong>:<br />
-Decentralization requires access to technology and resources, which not everyone can afford.</p>
-  </li>
-  <li>
-    <p><strong>Human Nature</strong>:<br />
-People tend to follow leaders or powerful individuals, leading to power consolidation even in decentralized systems.</p>
-  </li>
-</ol>
-
-<hr />
-
-<h3 id="historical-example-kings-and-subjects">Historical Example: Kings and Subjects</h3>
-
-<p>For centuries, kings controlled everything — land, resources, and decisions.<br />
-If a king suddenly declared, “Power will now be shared equally,” chaos would follow:</p>
-<ul>
-  <li>People would fight for power.</li>
-  <li>Without proper systems, centralization would return quickly.</li>
-</ul>
-
-<p>This shows that <strong>power doesn’t distribute itself</strong> — it requires deliberate systems and trust to function.</p>
-
-<hr />
-
-<h3 id="food-for-thought-lessons-from-the-internet">Food for Thought: Lessons from the Internet</h3>
-
-<p>Blockchain challenges centuries of centralization, but without proper trust and governance, it could face the same fate as the internet.</p>
-
-<p>The internet began as a decentralized network, meant to give equal access and control to everyone. Over time:</p>
-<ul>
-  <li>Power consolidated around a few tech giants like Google, Amazon, and Facebook.</li>
-  <li>These companies now control data, services, and influence, undermining the original decentralized vision.</li>
-</ul>
-
-<p>Without proper systems, blockchain could follow the same path, with dominant players consolidating power and defeating its purpose.</p>
-
-<hr />
-
-<h3 id="takeaway">Takeaway</h3>
-
-<p>Decentralization isn’t just about technology — it’s about <strong>changing how power is distributed</strong>, which requires:</p>
-<ul>
-  <li>Time</li>
-  <li>Collaboration</li>
-  <li>Widespread education</li>
-</ul>
-
-<p>The challenge of decentralization lies not just in the technology but in transforming deeply rooted systems of power and control.</p>
-
-<hr />
-
-<p>Let me know your thoughts or counterpoints. Decentralization, while promising, is as much about societal change as it is about technology.</p>]]></content><author><name>Dheeraj Maske</name></author><summary type="html"><![CDATA[Decentralization is a revolutionary idea, but its execution faces significant challenges. From economic inequality to human nature, the struggle to distribute power fairly is deeply rooted in history.]]></summary></entry><entry><title type="html">A White Space : Solving MEV with ZK Proofs and TEEs</title><link href="http://localhost:4000/2024/12/03/Solving-MEV-with-Zero-Knowledge-Proofs-and-Trusted-Execution-Environments.html" rel="alternate" type="text/html" title="A White Space : Solving MEV with ZK Proofs and TEEs" /><published>2024-12-03T00:00:00-05:00</published><updated>2024-12-03T00:00:00-05:00</updated><id>http://localhost:4000/2024/12/03/Solving-MEV-with-Zero-Knowledge-Proofs-and-Trusted-Execution-Environments</id><content type="html" xml:base="http://localhost:4000/2024/12/03/Solving-MEV-with-Zero-Knowledge-Proofs-and-Trusted-Execution-Environments.html"><![CDATA[<h3 id="published-on-december-03-2024">Published on: December 03, 2024</h3>
-
-<hr />
-
-<h3 id="understanding-the-problem-mev-and-its-impact">Understanding the Problem: MEV and Its Impact</h3>
-
-<p><strong>Maximal Extractable Value (MEV)</strong> refers to the additional profit that blockchain validators or miners can extract by manipulating the order of transactions within a block. Since transactions are visible in the mempool — essentially a public waiting area before execution — validators can exploit this transparency for personal gain.</p>
-
-<h4 id="common-strategies">Common Strategies:</h4>
-<ul>
-  <li>
-    <p><strong>Front-Running</strong>:<br />
-A validator detects a high-value transaction, places their own buy order first, and profits when the price rises.<br />
-Example: Alice’s order to buy tokens at $10 is delayed, and she ends up paying $12 per token.</p>
-  </li>
-  <li>
-    <p><strong>Back-Running</strong>:<br />
-After Alice’s transaction executes, the validator places a sell order to capitalize on the price movement.</p>
-  </li>
-</ul>
-
-<p>These practices reduce transparency and harm regular users.</p>
-
-<hr />
-
-<h3 id="the-need-for-transparency-and-security">The Need for Transparency and Security</h3>
-
-<p>To make blockchain systems fairer and more user-centric, we need mechanisms that:</p>
-<ol>
-  <li>Protect transaction details from being exploited by validators.</li>
-  <li>Guarantee fair ordering of transactions to prevent manipulation.</li>
-</ol>
-
-<p>Two powerful solutions addressing these needs are <strong>Zero-Knowledge Proofs (ZK Proofs)</strong> and <strong>Trusted Execution Environments (TEEs)</strong>.</p>
-
-<hr />
-
-<h3 id="solution-1-zero-knowledge-proofs-zk-proofs">Solution 1: Zero-Knowledge Proofs (ZK Proofs)</h3>
-
-<p>ZK Proofs enable users to prove something (like having enough funds) without revealing sensitive details.</p>
-
-<h4 id="how-it-works">How it Works:</h4>
-<ul>
-  <li>Transaction details (amounts, prices) are hidden from the public mempool but still validated by the blockchain.</li>
-  <li>Validators cannot see or manipulate transaction details, eliminating front-running or back-running opportunities.</li>
-</ul>
-
-<h4 id="example-with-zk-proofs">Example with ZK Proofs:</h4>
-<ul>
-  <li>Alice submits a ZK Proof with her transaction, proving she has sufficient funds without disclosing the number of tokens or price.</li>
-  <li>The validator cannot exploit her transaction as the details remain hidden.</li>
-</ul>
-
-<hr />
-
-<h3 id="solution-2-trusted-execution-environments-tees">Solution 2: Trusted Execution Environments (TEEs)</h3>
-
-<p>TEEs use hardware-secured environments to process transactions in a private, tamper-proof way.</p>
-
-<h4 id="how-it-works-1">How it Works:</h4>
-<ol>
-  <li>
-    <p><strong>Secure Isolation</strong>:<br />
-Transactions are processed in a hardware-protected enclave, isolated from validators and external systems.</p>
-  </li>
-  <li>
-    <p><strong>Data Encryption</strong>:<br />
-All transaction data is encrypted within the TEE, ensuring validators cannot see or manipulate sensitive details.</p>
-  </li>
-  <li>
-    <p><strong>Fair Ordering</strong>:<br />
-Transactions are executed in the order they arrive, removing the ability to reorder for profit.</p>
-  </li>
-  <li>
-    <p><strong>Tamper-Proof Execution</strong>:<br />
-Any attempt to interfere with transaction processing is detected and blocked by TEE hardware protections.</p>
-  </li>
-</ol>
-
-<h4 id="example-prof-mechanism-with-tees">Example: PROF Mechanism with TEEs:</h4>
-<ul>
-  <li>Alice’s transaction bypasses the mempool and enters a TEE.</li>
-  <li>Her transaction is encrypted, fairly ordered, and processed securely without exposure to validators.</li>
-</ul>
-
-<hr />
-
-<h3 id="comparison-zk-proofs-vs-tees">Comparison: ZK Proofs vs. TEEs</h3>
-
-<table>
-  <thead>
-    <tr>
-      <th>Feature</th>
-      <th>ZK Proofs</th>
-      <th>TEEs</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>Privacy</strong></td>
-      <td>Cryptographic privacy for transaction data</td>
-      <td>Hardware-based private execution</td>
-    </tr>
-    <tr>
-      <td><strong>Fair Ordering</strong></td>
-      <td>Requires additional mechanisms</td>
-      <td>Ensures fair ordering by default</td>
-    </tr>
-    <tr>
-      <td><strong>Decentralization</strong></td>
-      <td>Fully decentralized</td>
-      <td>Relies on centralized hardware vendors</td>
-    </tr>
-    <tr>
-      <td><strong>Performance</strong></td>
-      <td>High computational cost</td>
-      <td>High throughput, minimal latency</td>
-    </tr>
-    <tr>
-      <td><strong>Security Risks</strong></td>
-      <td>Cryptographically secure</td>
-      <td>Vulnerable to hardware exploits</td>
-    </tr>
-  </tbody>
-</table>
-
-<hr />
-
-<h3 id="which-solution-is-better">Which Solution is Better?</h3>
-
-<ul>
-  <li><strong>ZK Proofs</strong> are ideal for systems prioritizing decentralization and privacy.</li>
-  <li><strong>TEEs</strong> are better for real-time, high-frequency environments like decentralized exchanges (DEXs).</li>
-</ul>
-
-<h4 id="a-combined-approach">A Combined Approach:</h4>
-<ul>
-  <li>Use <strong>ZK Proofs</strong> to ensure privacy.</li>
-  <li>Use <strong>TEEs</strong> to enforce fair ordering and scalability.</li>
-</ul>
-
-<hr />
-
-<h3 id="conclusion">Conclusion</h3>
-
-<p>MEV currently benefits validators at the expense of users, eroding trust in blockchain systems. By adopting solutions like <strong>ZK Proofs</strong> and <strong>TEEs</strong>, we can create a fairer ecosystem where:</p>
-<ul>
-  <li>Users are protected from manipulation.</li>
-  <li>Validators operate within fair constraints.</li>
-</ul>
-
-<p>These tools pave the way for <strong>MEV-free blockchains</strong>, ensuring transactions remain secure, fair, and tamper-proof.</p>
-
-<hr />
-
-<h3 id="references">References:</h3>
-<ol>
-  <li><em>Flash Boys 2.0: Frontrunning, Transaction Reordering, and Consensus Instability in Decentralized Exchanges</em></li>
-  <li><em>TEEs for Blockchain Applications by Ari Jules</em></li>
-</ol>]]></content><author><name>Dheeraj Maske</name></author><summary type="html"><![CDATA[Maximal Extractable Value (MEV) undermines blockchain fairness and transparency. Solutions like Zero-Knowledge Proofs (ZKPs) and Trusted Execution Environments (TEEs) can help eliminate exploitation and protect users.]]></summary></entry></feed>
+</ul>]]></content><author><name>Dheeraj Maske</name></author><summary type="html"><![CDATA[Centralized exchanges (CEXs) like Coinbase and Binance may offer convenience, but they come with a critical flaw...]]></summary></entry></feed>

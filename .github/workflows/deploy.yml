@@ -15,9 +15,9 @@ jobs:
 
     - name: Build Site
       run: |
-        # If you're using Jekyll, build the site
-        # Otherwise, adjust this step to your build process
-        jekyll build
+        gem install bundler
+        bundle install
+        bundle exec jekyll build
 
     - name: Deploy to GitHub Pages
       run: |
