@@ -4,7 +4,7 @@ title: "Projects"
 permalink: /projects/
 ---
 
-Explore them on my [GitHub profile](https://github.com/dheerajmaske7).
+Explore them on my [GitHub profile](https://github.com/dhru7777).
 
 ---
 ### Application based Research Proposals
