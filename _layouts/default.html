@@ -17,7 +17,18 @@
         </div>
         <nav>
             {% for item in site.navigation %}
-            <a href="{{ item.link }}">{{ item.name }}</a>
+            {% if item.name == "Talks" %}
+            <div class="nav-dropdown">
+                <a href="{{ item.link | relative_url }}" class="nav-dropdown-trigger">{{ item.name }}</a>
+                <div class="nav-dropdown-menu">
+                    <a href="{{ '/talks/' | relative_url }}">All Talks</a>
+                    <a href="{{ '/talks/crypto/' | relative_url }}">Crypto</a>
+                    <a href="{{ '/talks/toastmasters/' | relative_url }}">Toastmasters</a>
+                </div>
+            </div>
+            {% else %}
+            <a href="{{ item.link | relative_url }}">{{ item.name }}</a>
+            {% endif %}
             {% endfor %}
         </nav>
     </header>
