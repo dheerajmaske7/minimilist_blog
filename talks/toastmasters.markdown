@@ -4,9 +4,7 @@ title: "Talks - Toastmasters"
 permalink: /talks/toastmasters/
 ---
 
-### Toastmasters Talks
-
-I am one of the founding members of **NYC Tech Toastmasters**; view the community page here: [NYC Tech Toastmasters on Eventbrite](https://www.eventbrite.com/o/nyc-tech-toastmasters-78815734013).
+Founding member, **NYC Tech Toastmasters** · [Join us](https://www.eventbrite.com/o/nyc-tech-toastmasters-78815734013)
 
 ### Community Building Impact (till date)
 
@@ -31,7 +29,7 @@ I am one of the founding members of **NYC Tech Toastmasters**; view the communit
   </tbody>
 </table>
 
-As VP Education, I have guided **120+ members** across **300+ role assignments** for speeches and role-readiness across 8 core Toastmasters meeting roles (including Toastmaster, Timer, Ah-Counter, Grammarian, Table Topics, General Evaluator, and evaluator tracks).
+As VP Education, I prepared **120+ members** across **300+ role assignments** in **8 core roles**.
 
 ### Speaking Persona & Role Impact (till date)
 
