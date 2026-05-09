@@ -4,7 +4,7 @@ title: "Talks - Toastmasters"
 permalink: /talks/toastmasters/
 ---
 
-Founding member, **NYC Tech Toastmasters** · [Join us](https://www.eventbrite.com/o/nyc-tech-toastmasters-78815734013)
+Founding member, [**NYC Tech Toastmasters**](https://www.linkedin.com/company/nyc-tech-toastmasters/posts/) · [Join us](https://www.eventbrite.com/o/nyc-tech-toastmasters-78815734013)
 
 ### Community Building Impact (till date)
 
