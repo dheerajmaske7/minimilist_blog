@@ -196,8 +196,31 @@ article .highlight pre {
 .highlight .mi, .highlight .mf { color: #005cc5; }
 .highlight .p { color: #24292f; }
 
+.wire-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 1rem 0 1.25rem;
+  align-items: start;
+}
+
+.wire-panel > p:first-child {
+  margin-top: 0;
+}
+
+.wire-panel .highlight,
+.wire-panel pre {
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+  font-size: 0.78rem;
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
+  .wire-pair {
+    grid-template-columns: 1fr;
+  }
+
   .talk-entry, .talk-entry.reverse {
       flex-direction: column;
   }

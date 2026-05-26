@@ -187,9 +187,13 @@
 
 <h4 id="wire-format">Wire format</h4>
 
-<p><strong>Request — <code class="language-plaintext highlighter-rouge">initialize</code></strong></p>
+<div class="wire-pair">
 
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  <div class="wire-panel">
+
+    <p><strong>Request — <code class="language-plaintext highlighter-rouge">initialize</code></strong></p>
+
+    <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
   </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"initialize"</span><span class="p">,</span><span class="w">
@@ -209,11 +213,15 @@
     </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
+</span></code></pre></div>    </div>
 
-<p><strong>Response</strong></p>
+  </div>
 
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  <div class="wire-panel">
+
+    <p><strong>Response</strong></p>
+
+    <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
   </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -238,7 +246,11 @@
     </span><span class="nl">"authMethods"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
+</span></code></pre></div>    </div>
+
+  </div>
+
+</div>
 
 <p>The spec uses <code class="language-plaintext highlighter-rouge">clientCapabilities</code> / <code class="language-plaintext highlighter-rouge">clientInfo</code> on the request and <code class="language-plaintext highlighter-rouge">agentCapabilities</code> / <code class="language-plaintext highlighter-rouge">agentInfo</code> on the response. Those names map to <strong>buyer</strong> and <strong>seller</strong> roles in the handshake.</p>
 
@@ -353,9 +365,13 @@
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p><strong>Request — <code class="language-plaintext highlighter-rouge">authenticate</code></strong></p>
+<div class="wire-pair">
 
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  <div class="wire-panel">
+
+    <p><strong>Request — <code class="language-plaintext highlighter-rouge">authenticate</code></strong></p>
+
+    <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
   </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"authenticate"</span><span class="p">,</span><span class="w">
@@ -363,16 +379,24 @@
     </span><span class="nl">"methodId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"agent-login"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
+</span></code></pre></div>    </div>
 
-<p><strong>Response — <code class="language-plaintext highlighter-rouge">authenticate</code></strong></p>
+  </div>
 
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  <div class="wire-panel">
+
+    <p><strong>Response — <code class="language-plaintext highlighter-rouge">authenticate</code></strong></p>
+
+    <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
   </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
+</span></code></pre></div>    </div>
+
+  </div>
+
+</div>
 
 <p><strong>Optional — <code class="language-plaintext highlighter-rouge">logout</code></strong></p>
 
@@ -457,25 +481,37 @@
   </tbody>
 </table>
 
-<p><strong>Request — <code class="language-plaintext highlighter-rouge">session/new</code></strong></p>
+<div class="wire-pair">
 
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  <div class="wire-panel">
+
+    <p><strong>Request — <code class="language-plaintext highlighter-rouge">session/new</code></strong></p>
+
+    <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"session/new"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nl">"cwd"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/absolute/path"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
+</span></code></pre></div>    </div>
 
-<p><strong>Response</strong></p>
+  </div>
 
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  <div class="wire-panel">
+
+    <p><strong>Response</strong></p>
+
+    <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nl">"sessionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sess_abc123"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
+</span></code></pre></div>    </div>
+
+  </div>
+
+</div>
 
 <p>Use when starting a fresh conversation.</p>
 
@@ -503,27 +539,39 @@
   </tbody>
 </table>
 
-<p><strong>Request — <code class="language-plaintext highlighter-rouge">session/load</code></strong></p>
+<div class="wire-pair">
 
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  <div class="wire-panel">
+
+    <p><strong>Request — <code class="language-plaintext highlighter-rouge">session/load</code></strong></p>
+
+    <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"session/load"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nl">"sessionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sess_abc123"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"cwd"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/absolute/path"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
+</span></code></pre></div>    </div>
 
-<p><strong>Request — <code class="language-plaintext highlighter-rouge">session/resume</code></strong></p>
+  </div>
 
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  <div class="wire-panel">
+
+    <p><strong>Request — <code class="language-plaintext highlighter-rouge">session/resume</code></strong></p>
+
+    <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"session/resume"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nl">"sessionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sess_abc123"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"cwd"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/absolute/path"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
+</span></code></pre></div>    </div>
+
+  </div>
+
+</div>
 
 <p>During load, the seller streams past messages as <code class="language-plaintext highlighter-rouge">session/update</code> notifications until load completes.</p>
 
@@ -554,17 +602,25 @@
   </tbody>
 </table>
 
-<p><strong>Request — <code class="language-plaintext highlighter-rouge">session/list</code></strong></p>
+<div class="wire-pair">
 
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  <div class="wire-panel">
+
+    <p><strong>Request — <code class="language-plaintext highlighter-rouge">session/list</code></strong></p>
+
+    <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"session/list"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
+</span></code></pre></div>    </div>
 
-<p><strong>Response (example)</strong></p>
+  </div>
 
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  <div class="wire-panel">
+
+    <p><strong>Response (example)</strong></p>
+
+    <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nl">"sessions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
       </span><span class="p">{</span><span class="w">
@@ -575,7 +631,11 @@
     </span><span class="p">]</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
+</span></code></pre></div>    </div>
+
+  </div>
+
+</div>
 
 <h3 id="key-rules--session-setup">Key rules — session setup</h3>
 
@@ -695,9 +755,13 @@
 
 <h4 id="wire-format-2">Wire format</h4>
 
-<p><strong>Request — <code class="language-plaintext highlighter-rouge">session/prompt</code></strong></p>
+<div class="wire-pair">
 
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  <div class="wire-panel">
+
+    <p><strong>Request — <code class="language-plaintext highlighter-rouge">session/prompt</code></strong></p>
+
+    <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"session/prompt"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nl">"sessionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sess_abc"</span><span class="p">,</span><span class="w">
@@ -709,21 +773,25 @@
     </span><span class="p">]</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
+</span></code></pre></div>    </div>
 
-<p><strong>Cancel (notification)</strong></p>
+    <p><strong>Cancel (notification)</strong></p>
 
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"session/cancel"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nl">"sessionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sess_abc"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
+</span></code></pre></div>    </div>
 
-<p><strong>Notification — <code class="language-plaintext highlighter-rouge">session/update</code></strong></p>
+  </div>
 
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  <div class="wire-panel">
+
+    <p><strong>Notification — <code class="language-plaintext highlighter-rouge">session/update</code></strong></p>
+
+    <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"session/update"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nl">"sessionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sess_abc"</span><span class="p">,</span><span class="w">
@@ -736,36 +804,52 @@
     </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
+</span></code></pre></div>    </div>
 
-<p><strong>Turn complete — <code class="language-plaintext highlighter-rouge">stopReason: end_turn</code></strong></p>
+    <p><strong>Turn complete — <code class="language-plaintext highlighter-rouge">stopReason: end_turn</code></strong></p>
 
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
   </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nl">"stopReason"</span><span class="p">:</span><span class="w"> </span><span class="s2">"end_turn"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
+</span></code></pre></div>    </div>
 
-<p><strong>Turn complete — <code class="language-plaintext highlighter-rouge">stopReason: cancelled</code></strong></p>
+  </div>
 
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+</div>
+
+<div class="wire-pair">
+
+  <div class="wire-panel">
+
+    <p><strong>Turn complete — <code class="language-plaintext highlighter-rouge">stopReason: cancelled</code></strong></p>
+
+    <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nl">"stopReason"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cancelled"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
+</span></code></pre></div>    </div>
 
-<p><strong>Turn complete — <code class="language-plaintext highlighter-rouge">stopReason: needs_clarification</code></strong></p>
+  </div>
 
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  <div class="wire-panel">
+
+    <p><strong>Turn complete — <code class="language-plaintext highlighter-rouge">stopReason: needs_clarification</code></strong></p>
+
+    <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nl">"stopReason"</span><span class="p">:</span><span class="w"> </span><span class="s2">"needs_clarification"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"What is your budget?"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
+</span></code></pre></div>    </div>
+
+  </div>
+
+</div>
 
 <h3 id="key-rules--prompt-turn">Key rules — prompt turn</h3>
 

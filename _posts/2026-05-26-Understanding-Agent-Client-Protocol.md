@@ -153,6 +153,10 @@ Initialization is how every connection starts. The buyer-side agent sends `initi
 
 #### Wire format
 
+<div class="wire-pair" markdown="1">
+
+<div class="wire-panel" markdown="1">
+
 **Request — `initialize`**
 
 ```json
@@ -177,6 +181,10 @@ Initialization is how every connection starts. The buyer-side agent sends `initi
   }
 }
 ```
+
+</div>
+
+<div class="wire-panel" markdown="1">
 
 **Response**
 
@@ -207,6 +215,10 @@ Initialization is how every connection starts. The buyer-side agent sends `initi
   }
 }
 ```
+
+</div>
+
+</div>
 
 The spec uses `clientCapabilities` / `clientInfo` on the request and `agentCapabilities` / `agentInfo` on the response. Those names map to **buyer** and **seller** roles in the handshake.
 
@@ -326,6 +338,10 @@ Authentication establishes trust **after** initialization. The seller advertises
 }
 ```
 
+<div class="wire-pair" markdown="1">
+
+<div class="wire-panel" markdown="1">
+
 **Request — `authenticate`**
 
 ```json
@@ -339,6 +355,10 @@ Authentication establishes trust **after** initialization. The seller advertises
 }
 ```
 
+</div>
+
+<div class="wire-panel" markdown="1">
+
 **Response — `authenticate`**
 
 ```json
@@ -348,6 +368,10 @@ Authentication establishes trust **after** initialization. The seller advertises
   "result": {}
 }
 ```
+
+</div>
+
+</div>
 
 **Optional — `logout`**
 
@@ -437,6 +461,10 @@ All paths below assume **Initialized** (and **authenticated**, if required).
   </tbody>
 </table>
 
+<div class="wire-pair" markdown="1">
+
+<div class="wire-panel" markdown="1">
+
 **Request — `session/new`**
 
 ```json
@@ -449,6 +477,10 @@ All paths below assume **Initialized** (and **authenticated**, if required).
 }
 ```
 
+</div>
+
+<div class="wire-panel" markdown="1">
+
 **Response**
 
 ```json
@@ -458,6 +490,10 @@ All paths below assume **Initialized** (and **authenticated**, if required).
   }
 }
 ```
+
+</div>
+
+</div>
 
 Use when starting a fresh conversation.
 
@@ -485,6 +521,10 @@ Use when starting a fresh conversation.
   </tbody>
 </table>
 
+<div class="wire-pair" markdown="1">
+
+<div class="wire-panel" markdown="1">
+
 **Request — `session/load`**
 
 ```json
@@ -497,6 +537,10 @@ Use when starting a fresh conversation.
 }
 ```
 
+</div>
+
+<div class="wire-panel" markdown="1">
+
 **Request — `session/resume`**
 
 ```json
@@ -508,6 +552,10 @@ Use when starting a fresh conversation.
   }
 }
 ```
+
+</div>
+
+</div>
 
 During load, the seller streams past messages as `session/update` notifications until load completes.
 
@@ -538,6 +586,10 @@ During load, the seller streams past messages as `session/update` notifications 
   </tbody>
 </table>
 
+<div class="wire-pair" markdown="1">
+
+<div class="wire-panel" markdown="1">
+
 **Request — `session/list`**
 
 ```json
@@ -546,6 +598,10 @@ During load, the seller streams past messages as `session/update` notifications 
   "params": {}
 }
 ```
+
+</div>
+
+<div class="wire-panel" markdown="1">
 
 **Response (example)**
 
@@ -562,6 +618,10 @@ During load, the seller streams past messages as `session/update` notifications 
   }
 }
 ```
+
+</div>
+
+</div>
 
 ### Key rules — session setup
 
@@ -685,6 +745,10 @@ A **prompt turn** is one cycle from a user message to a final `stopReason` on th
 
 #### Wire format
 
+<div class="wire-pair" markdown="1">
+
+<div class="wire-panel" markdown="1">
+
 **Request — `session/prompt`**
 
 ```json
@@ -712,6 +776,10 @@ A **prompt turn** is one cycle from a user message to a final `stopReason` on th
   }
 }
 ```
+
+</div>
+
+<div class="wire-panel" markdown="1">
 
 **Notification — `session/update`**
 
@@ -742,6 +810,14 @@ A **prompt turn** is one cycle from a user message to a final `stopReason` on th
 }
 ```
 
+</div>
+
+</div>
+
+<div class="wire-pair" markdown="1">
+
+<div class="wire-panel" markdown="1">
+
 **Turn complete — `stopReason: cancelled`**
 
 ```json
@@ -751,6 +827,10 @@ A **prompt turn** is one cycle from a user message to a final `stopReason` on th
   }
 }
 ```
+
+</div>
+
+<div class="wire-panel" markdown="1">
 
 **Turn complete — `stopReason: needs_clarification`**
 
@@ -762,6 +842,10 @@ A **prompt turn** is one cycle from a user message to a final `stopReason` on th
   }
 }
 ```
+
+</div>
+
+</div>
 
 ### Key rules — prompt turn
 
