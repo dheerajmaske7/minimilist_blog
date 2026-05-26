@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding Agent Client Protocol</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Dheeraj Maske</h1>
+        <nav>
+            
+                
+                <a href="/">Blogs</a>
+                
+            
+                
+                <a href="/projects/">Projects</a>
+                
+            
+                
+                <div class="nav-dropdown">
+                    <a href="/talks/" class="nav-dropdown-trigger">Talks</a>
+                    <div class="nav-dropdown-menu">
+                        <a href="/talks/">All Talks</a>
+                        <a href="/talks/crypto/">Crypto</a>
+                        <a href="/talks/toastmasters/">Toastmasters</a>
+                    </div>
+                </div>
+                
+            
+                
+                <a href="/about/">About</a>
+                
+            
+        </nav>
+    </header>
+    <main>
+        <article>
+            <h2>Understanding Agent Client Protocol</h2>
+            <p><small>Published on May 26, 2026</small></p>
+            <div>
+                <p>Imagine you are coordinating a project with a remote team of specialists. You do not re-introduce yourself on every call. You pick up where you left off: what was decided, what is pending, what you are still waiting on.</p>
+
+<p>Your specialists come from different companies. One uses Slack, one uses email, one has their own system. You need a shared language before any real work can happen. Before you assign anything, you ask what they can actually do. Some tasks take hours or days, so you do not block on every reply. When priorities shift, you send <strong>stop</strong> on an existing thread, not a brand-new conversation. Handoffs must stay visible, and access must match trust.</p>
+
+<p>Agentic communication on the internet has the same shape of problems:</p>
+
+<table style="width:100%; border-collapse:collapse; font-size:0.95rem; margin: 1rem 0; table-layout:fixed;">
+  <thead>
+    <tr>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:28%;">Problem</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:72%;">Question</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">State</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Do agents remember what was said before?</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Interoperability</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Can my agent talk to yours in a shared format?</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Discovery</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Is my agent talking to the right agent?</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Async work</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">What happens when a task runs for a long time?</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Control</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Who can say stop, and will the other side listen?</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Trust</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Should every agent trust every other agent by default?</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Agent Client Protocol (ACP)</strong> is the JSON-RPC layer that addresses these points: handshake, optional auth, named sessions, prompt turns, progress updates, permissions, and cancellation.</p>
+
+<hr />
+
+<h2 id="what-acp-is">What ACP is</h2>
+
+<p>ACP is a set of <strong>JSON-RPC 2.0</strong> messages between:</p>
+
+<table style="width:100%; border-collapse:collapse; font-size:0.95rem; margin: 1rem 0; table-layout:fixed;">
+  <thead>
+    <tr>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:18%;">Role</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:28%;">Reference in the diagram</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:54%;">Responsibility</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><strong>Client</strong></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Buyer-side agent</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Initiates requests</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><strong>Agent</strong></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Seller-side agent</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Holds session state, runs work, returns results</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The client role is structural, not necessarily human. One agent acting for a user can be the client; another agent’s endpoint can be the agent. The protocol defines <strong>requester and responder</strong>.</p>
+
+<p>Typical stack for a single conversation:</p>
+
+<ol>
+  <li><strong>Initialize</strong> — agree version and capabilities</li>
+  <li><strong>Authenticate</strong> (if required)</li>
+  <li><strong>Session setup</strong> — create or restore a thread</li>
+  <li><strong>Prompt turns</strong> — user messages, updates, permissions, cancel</li>
+</ol>
+
+<hr />
+
+<h2 id="initialization">Initialization</h2>
+
+<p>Initialization is how every connection starts. The buyer-side agent sends <code class="language-plaintext highlighter-rouge">initialize</code> with a protocol version and capabilities; the seller-side agent replies with the agreed version and what it supports. <strong>No session exists yet</strong> — only after this handshake can the buyer call <code class="language-plaintext highlighter-rouge">session/new</code>.</p>
+
+<figure style="text-align:center; margin: 0 0 1.5rem;">
+  <img src="/assets/images/ACP_Article_assets/initialization.png" alt="Initialization sequence diagram" style="max-width: 820px; width: 100%; height: auto; border-radius: 10px;" />
+  <figcaption style="font-size: 0.95rem; opacity: 0.8; margin-top: 8px;">
+    Figure 1 — Initialization.
+  </figcaption>
+</figure>
+
+<table style="width:100%; border-collapse:collapse; font-size:0.95rem; margin: 1rem 0; table-layout:fixed;">
+  <thead>
+    <tr>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:6%;">Step</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:12%;">Stage</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:18%;">Buyer-side agent</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:18%;">Seller-side agent</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:46%;">Meaning</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">1</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Connection</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Opens transport</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Accepts transport</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">HTTP (or similar) to a JSON-RPC endpoint. ACP defines messages, not transport.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">2</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Request</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Sends <code>initialize</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Receives request</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">First ACP message. Not a session yet.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">3</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Check</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Waits</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Validates version and capabilities</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Seller-side internal step; not a separate wire message.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">4</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Response</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Receives result</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Sends <code>initialize</code> response</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Buyer must finish this before any session method.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">5</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Ready</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">May call <code>session/new</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Ready for sessions</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Handshake complete. No user prompts exchanged yet.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="wire-format">Wire format</h4>
+
+<p><strong>Request — <code class="language-plaintext highlighter-rouge">initialize</code></strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"initialize"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"protocolVersion"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"clientCapabilities"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"fs"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"readTextFile"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"writeTextFile"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"terminal"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"clientInfo"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"buyer-side-agent"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Buyer-side Agent"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0.0"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Response</strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"protocolVersion"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"agentCapabilities"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"loadSession"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"promptCapabilities"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"image"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"audio"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"embeddedContext"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"mcpCapabilities"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"http"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"sse"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"agentInfo"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"seller-side-agent"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Seller-side Agent"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0.0"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"authMethods"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The spec uses <code class="language-plaintext highlighter-rouge">clientCapabilities</code> / <code class="language-plaintext highlighter-rouge">clientInfo</code> on the request and <code class="language-plaintext highlighter-rouge">agentCapabilities</code> / <code class="language-plaintext highlighter-rouge">agentInfo</code> on the response. Those names map to <strong>buyer</strong> and <strong>seller</strong> roles in the handshake.</p>
+
+<h3 id="key-rules--initialization">Key rules — initialization</h3>
+
+<table style="width:100%; border-collapse:collapse; font-size:0.95rem; margin: 1rem 0; table-layout:fixed;">
+  <thead>
+    <tr>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:22%;">Rule</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:78%;">Requirement</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Version</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>protocolVersion</code> is a major integer; both sides must agree.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Capabilities</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Omitted capability means unsupported.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Baseline</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">After init, the seller must support <code>session/new</code>, <code>session/prompt</code>, <code>session/cancel</code>, and <code>session/update</code>.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Scope</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Initialization does not create a session or carry user prompts.</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="authentication">Authentication</h2>
+
+<p>Authentication establishes trust <strong>after</strong> initialization. The seller advertises methods in <code class="language-plaintext highlighter-rouge">authMethods</code> on the initialize response. If required, the buyer calls <code class="language-plaintext highlighter-rouge">authenticate</code> with a matching <code class="language-plaintext highlighter-rouge">methodId</code> before session work continues.</p>
+
+<figure style="text-align:center; margin: 0 0 1.5rem;">
+  <img src="/assets/images/ACP_Article_assets/authentication.png" alt="Authentication sequence diagram" style="max-width: 820px; width: 100%; height: auto; border-radius: 10px;" />
+  <figcaption style="font-size: 0.95rem; opacity: 0.8; margin-top: 8px;">
+    Figure 2 — Authentication.
+  </figcaption>
+</figure>
+
+<table style="width:100%; border-collapse:collapse; font-size:0.95rem; margin: 1rem 0; table-layout:fixed;">
+  <thead>
+    <tr>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:8%;">Step</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:14%;">Stage</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:26%;">Buyer-side agent</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:22%;">Seller-side agent</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:30%;">Meaning</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">1–2</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Handshake</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>initialize</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>initialize</code> response</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Seller returns <code>authMethods</code>.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">3</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Auth request</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>authenticate</code> with <code>methodId</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Validates method</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Buyer picks one advertised method.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">4</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Auth response</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Receives empty <code>result</code> on success</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Sends response</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Link is authenticated.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">5</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Proceed</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">May call <code>session/new</code>, <code>session/prompt</code>, …</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Accepts protected calls</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Session and prompt work allowed.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">6</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Re-auth</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>authenticate</code> again if needed</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">May require it</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">New connection or seller policy may reset auth.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="wire-format-1">Wire format</h4>
+
+<p><strong>Advertised at init</strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"authMethods"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"agent-login"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Agent login"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Sign in using the agent login flow"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"agentCapabilities"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"auth"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"logout"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Request — <code class="language-plaintext highlighter-rouge">authenticate</code></strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"authenticate"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"methodId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"agent-login"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Response — <code class="language-plaintext highlighter-rouge">authenticate</code></strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Optional — <code class="language-plaintext highlighter-rouge">logout</code></strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"logout"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="key-rules--authentication">Key rules — authentication</h3>
+
+<table style="width:100%; border-collapse:collapse; font-size:0.95rem; margin: 1rem 0; table-layout:fixed;">
+  <thead>
+    <tr>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:22%;">Rule</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:78%;">Requirement</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Methods</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>methodId</code> in <code>authenticate</code> must match an <code>id</code> from <code>authMethods</code>.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Optional</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Empty <code>authMethods</code> means the seller may not require <code>authenticate</code>.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Logout</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Buyer must not call <code>logout</code> unless <code>agentCapabilities.auth.logout</code> was advertised.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">After logout</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Handle possible <code>auth_required</code> errors; re-authenticate when the seller requires it.</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="session-setup">Session setup</h2>
+
+<p>A <strong>session</strong> is a named conversation with its own <code class="language-plaintext highlighter-rouge">sessionId</code>, history, and working state. Multi-step flows (ask → clarify → answer) stay on one thread instead of resending the full transcript every time.</p>
+
+<p><strong>Example:</strong> Turn 1 — buyer says “running shoes.” Turn 2 — seller asks for budget. Both turns use the same <code class="language-plaintext highlighter-rouge">sessionId</code> so the seller can rely on stored context.</p>
+
+<figure style="text-align:center; margin: 0 0 1.5rem;">
+  <img src="/assets/images/ACP_Article_assets/session-setup.png" alt="Session setup sequence diagram" style="max-width: 820px; width: 100%; height: auto; border-radius: 10px;" />
+  <figcaption style="font-size: 0.95rem; opacity: 0.8; margin-top: 8px;">
+    Figure 3 — Session setup. MCP Servers are seller-side backends, not a third ACP peer.
+  </figcaption>
+</figure>
+
+<p>All paths below assume <strong>Initialized</strong> (and <strong>authenticated</strong>, if required).</p>
+
+<h3 id="create-a-new-session">Create a new session</h3>
+
+<table style="width:100%; border-collapse:collapse; font-size:0.95rem; margin: 1rem 0; table-layout:fixed;">
+  <thead>
+    <tr>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:8%;">Step</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:28%;">Buyer-side agent</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:28%;">Seller-side agent</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:36%;">Meaning</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">1</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>session/new</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Creates session (may attach MCP)</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">New thread.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">2</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Stores <code>sessionId</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Returns <code>sessionId</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">ID used on every later turn.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Request — <code class="language-plaintext highlighter-rouge">session/new</code></strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"session/new"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"cwd"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/absolute/path"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Response</strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"sessionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sess_abc123"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Use when starting a fresh conversation.</p>
+
+<h3 id="load-vs-resume">Load vs resume</h3>
+
+<table style="width:100%; border-collapse:collapse; font-size:0.95rem; margin: 1rem 0; table-layout:fixed;">
+  <thead>
+    <tr>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:22%;">Method</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:38%;">Buyer gets</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:40%;">When to use</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>session/load</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Full history replay via <code>session/update</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Reconnect after restart; UI needs the full thread.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>session/resume</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Quiet reconnect, no full replay</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Short disconnect; seller still has context.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Request — <code class="language-plaintext highlighter-rouge">session/load</code></strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"session/load"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"sessionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sess_abc123"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"cwd"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/absolute/path"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Request — <code class="language-plaintext highlighter-rouge">session/resume</code></strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"session/resume"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"sessionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sess_abc123"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"cwd"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/absolute/path"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>During load, the seller streams past messages as <code class="language-plaintext highlighter-rouge">session/update</code> notifications until load completes.</p>
+
+<h3 id="list-sessions">List sessions</h3>
+
+<table style="width:100%; border-collapse:collapse; font-size:0.95rem; margin: 1rem 0; table-layout:fixed;">
+  <thead>
+    <tr>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:8%;">Step</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:28%;">Buyer-side agent</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:28%;">Seller-side agent</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:36%;">Meaning</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">1</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>session/list</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Queries stored sessions</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Discovery only; does not open a session.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">2</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Receives list</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Returns metadata</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Buyer picks a <code>sessionId</code>, then calls <code>load</code> or <code>resume</code>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Request — <code class="language-plaintext highlighter-rouge">session/list</code></strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"session/list"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Response (example)</strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"sessions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"sessionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sess_abc123"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Running shoes"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"cwd"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/absolute/path"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="key-rules--session-setup">Key rules — session setup</h3>
+
+<table style="width:100%; border-collapse:collapse; font-size:0.95rem; margin: 1rem 0; table-layout:fixed;">
+  <thead>
+    <tr>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:22%;">Rule</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:78%;">Requirement</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Order</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Complete <code>initialize</code> (and <code>authenticate</code> if required) first.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">ID</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Every <code>session/prompt</code> and <code>session/cancel</code> uses the same <code>sessionId</code>.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>session/new</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Creates a new thread; returns a new <code>sessionId</code>.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>session/load</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Requires <code>loadSession</code> capability; replays history.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>session/resume</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Requires <code>sessionCapabilities.resume</code>.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>session/list</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Requires <code>sessionCapabilities.list</code>; discovery only.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>cwd</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Absolute path for the session working context.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>mcpServers</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Tells the seller which tool or data backends to attach.</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="prompt-turn">Prompt turn</h2>
+
+<p>A <strong>prompt turn</strong> is one cycle from a user message to a final <code class="language-plaintext highlighter-rouge">stopReason</code> on the same <code class="language-plaintext highlighter-rouge">session/prompt</code> request. The seller may use an LLM, push <code class="language-plaintext highlighter-rouge">session/update</code> progress, request permission for tools, and the buyer may cancel mid-turn. Requires init and a <strong>ready</strong> session.</p>
+
+<p><strong>Prompt content:</strong> Each item in <code class="language-plaintext highlighter-rouge">params.prompt</code> is a content block with a <code class="language-plaintext highlighter-rouge">type</code> (for example <code class="language-plaintext highlighter-rouge">text</code>, <code class="language-plaintext highlighter-rouge">image</code>, or <code class="language-plaintext highlighter-rouge">resource</code>). The buyer must only send types the two sides agreed at <code class="language-plaintext highlighter-rouge">initialize</code> under <code class="language-plaintext highlighter-rouge">promptCapabilities</code>.</p>
+
+<figure style="text-align:center; margin: 0 0 1.5rem;">
+  <img src="/assets/images/ACP_Article_assets/prompt-turn.png" alt="Prompt turn sequence diagram" style="max-width: 820px; width: 100%; height: auto; border-radius: 10px;" />
+  <figcaption style="font-size: 0.95rem; opacity: 0.8; margin-top: 8px;">
+    Figure 4 — Prompt turn. Solid lines = requests; dashed = seller notifications. LLM work is seller-internal.
+  </figcaption>
+</figure>
+
+<table style="width:100%; border-collapse:collapse; font-size:0.95rem; margin: 1rem 0; table-layout:fixed;">
+  <thead>
+    <tr>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:6%;">Step</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:12%;">Phase</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:22%;">Buyer-side agent</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:26%;">Seller-side agent</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:34%;">Method</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">0</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Ready</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Active session</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Active session</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">—</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">1</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Prompt</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Sends user message</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Receives, runs LLM</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>session/prompt</code></td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">2</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Progress</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Renders updates</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Streams plan, text, tool calls</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>session/update</code></td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">3</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Permission</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">User grants or denies</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Runs tool if allowed</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>session/request_permission</code> + response</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">4</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Cancel</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">User aborts</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Stops LLM and tools</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>session/cancel</code></td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">5</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">End</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Receives outcome</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Completes turn</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>session/prompt</code> result (<code>stopReason</code>)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="wire-format-2">Wire format</h4>
+
+<p><strong>Request — <code class="language-plaintext highlighter-rouge">session/prompt</code></strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"session/prompt"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"sessionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sess_abc"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"prompt"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Running shoes under $150"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Cancel (notification)</strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"session/cancel"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"sessionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sess_abc"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Notification — <code class="language-plaintext highlighter-rouge">session/update</code></strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"session/update"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"sessionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sess_abc"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"update"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"sessionUpdate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"agent_message_chunk"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"content"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"…"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Turn complete — <code class="language-plaintext highlighter-rouge">stopReason: end_turn</code></strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"stopReason"</span><span class="p">:</span><span class="w"> </span><span class="s2">"end_turn"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Turn complete — <code class="language-plaintext highlighter-rouge">stopReason: cancelled</code></strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"stopReason"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cancelled"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Turn complete — <code class="language-plaintext highlighter-rouge">stopReason: needs_clarification</code></strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"stopReason"</span><span class="p">:</span><span class="w"> </span><span class="s2">"needs_clarification"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"What is your budget?"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="key-rules--prompt-turn">Key rules — prompt turn</h3>
+
+<table style="width:100%; border-collapse:collapse; font-size:0.95rem; margin: 1rem 0; table-layout:fixed;">
+  <thead>
+    <tr>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:22%;">Rule</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:78%;">Requirement</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Order</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Initialize, session ready, then <code>session/prompt</code>.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Content</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Block <code>type</code> must match negotiated <code>promptCapabilities</code>.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Updates</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>session/update</code> is progress; <code>stopReason</code> closes the turn.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Permission</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Seller may ask; buyer responds before sensitive tools.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Cancel</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Aborts the turn; session may stay open.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Cancel + permission</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Pending permissions get outcome <code>cancelled</code>.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Next message</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">New user input = new <code>session/prompt</code>, same <code>sessionId</code>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Spec: <a href="https://agentclientprotocol.com/protocol/prompt-turn.md">Prompt turn</a></p>
+
+<hr />
+
+<h2 id="protocol-map">Protocol map</h2>
+
+<table style="width:100%; border-collapse:collapse; font-size:0.95rem; margin: 1rem 0; table-layout:fixed;">
+  <thead>
+    <tr>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:22%;">Phase</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:78%;">Primary methods</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Handshake</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>initialize</code></td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Trust</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>authenticate</code>, <code>logout</code></td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Thread</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>session/new</code>, <code>session/load</code>, <code>session/resume</code>, <code>session/list</code>, <code>session/close</code></td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Conversation</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>session/prompt</code>, <code>session/update</code>, <code>session/request_permission</code>, <code>session/cancel</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="thank-you-for-reading">Thank you for reading</h2>
+
+<p><strong>Acknowledgement:</strong> Pratik Ratadiya — thank you for reading the initial draft.</p>
+
+            </div>
+        </article>
+    </main>
+    <footer>
+        <p>© 2026 Dheeraj Maske</p>
+    </footer>
+</body>
+</html>

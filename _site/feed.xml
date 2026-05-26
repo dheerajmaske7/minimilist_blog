@@ -1,4 +1,994 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2026-05-09T10:17:22-04:00</updated><id>/feed.xml</id><title type="html">Dheeraj Maske</title><subtitle>Minimalist blog with blogs, projects, and more.</subtitle><author><name>Dheeraj Maske</name></author><entry><title type="html">Google: Capturing Attention Is All You Need</title><link href="/2025/12/15/Google-Capturing-Attention-Is-All-You-Need.html" rel="alternate" type="text/html" title="Google: Capturing Attention Is All You Need" /><published>2025-12-15T00:00:00-05:00</published><updated>2025-12-15T00:00:00-05:00</updated><id>/2025/12/15/Google-Capturing-Attention-Is-All-You-Need</id><content type="html" xml:base="/2025/12/15/Google-Capturing-Attention-Is-All-You-Need.html"><![CDATA[<figure style="text-align:center; margin: 0 0 1.5rem;">
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2026-05-26T02:31:32-04:00</updated><id>/feed.xml</id><title type="html">Dheeraj Maske</title><subtitle>Minimalist blog with blogs, projects, and more.</subtitle><author><name>Dheeraj Maske</name></author><entry><title type="html">Understanding Agent Client Protocol</title><link href="/2026/05/26/Understanding-Agent-Client-Protocol.html" rel="alternate" type="text/html" title="Understanding Agent Client Protocol" /><published>2026-05-26T00:00:00-04:00</published><updated>2026-05-26T00:00:00-04:00</updated><id>/2026/05/26/Understanding-Agent-Client-Protocol</id><content type="html" xml:base="/2026/05/26/Understanding-Agent-Client-Protocol.html"><![CDATA[<p>Imagine you are coordinating a project with a remote team of specialists. You do not re-introduce yourself on every call. You pick up where you left off: what was decided, what is pending, what you are still waiting on.</p>
+
+<p>Your specialists come from different companies. One uses Slack, one uses email, one has their own system. You need a shared language before any real work can happen. Before you assign anything, you ask what they can actually do. Some tasks take hours or days, so you do not block on every reply. When priorities shift, you send <strong>stop</strong> on an existing thread, not a brand-new conversation. Handoffs must stay visible, and access must match trust.</p>
+
+<p>Agentic communication on the internet has the same shape of problems:</p>
+
+<table style="width:100%; border-collapse:collapse; font-size:0.95rem; margin: 1rem 0; table-layout:fixed;">
+  <thead>
+    <tr>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:28%;">Problem</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:72%;">Question</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">State</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Do agents remember what was said before?</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Interoperability</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Can my agent talk to yours in a shared format?</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Discovery</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Is my agent talking to the right agent?</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Async work</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">What happens when a task runs for a long time?</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Control</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Who can say stop, and will the other side listen?</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Trust</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Should every agent trust every other agent by default?</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Agent Client Protocol (ACP)</strong> is the JSON-RPC layer that addresses these points: handshake, optional auth, named sessions, prompt turns, progress updates, permissions, and cancellation.</p>
+
+<hr />
+
+<h2 id="what-acp-is">What ACP is</h2>
+
+<p>ACP is a set of <strong>JSON-RPC 2.0</strong> messages between:</p>
+
+<table style="width:100%; border-collapse:collapse; font-size:0.95rem; margin: 1rem 0; table-layout:fixed;">
+  <thead>
+    <tr>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:18%;">Role</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:28%;">Reference in the diagram</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:54%;">Responsibility</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><strong>Client</strong></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Buyer-side agent</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Initiates requests</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><strong>Agent</strong></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Seller-side agent</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Holds session state, runs work, returns results</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The client role is structural, not necessarily human. One agent acting for a user can be the client; another agent’s endpoint can be the agent. The protocol defines <strong>requester and responder</strong>.</p>
+
+<p>Typical stack for a single conversation:</p>
+
+<ol>
+  <li><strong>Initialize</strong> — agree version and capabilities</li>
+  <li><strong>Authenticate</strong> (if required)</li>
+  <li><strong>Session setup</strong> — create or restore a thread</li>
+  <li><strong>Prompt turns</strong> — user messages, updates, permissions, cancel</li>
+</ol>
+
+<hr />
+
+<h2 id="initialization">Initialization</h2>
+
+<p>Initialization is how every connection starts. The buyer-side agent sends <code class="language-plaintext highlighter-rouge">initialize</code> with a protocol version and capabilities; the seller-side agent replies with the agreed version and what it supports. <strong>No session exists yet</strong> — only after this handshake can the buyer call <code class="language-plaintext highlighter-rouge">session/new</code>.</p>
+
+<figure style="text-align:center; margin: 0 0 1.5rem;">
+  <img src="/assets/images/ACP_Article_assets/initialization.png" alt="Initialization sequence diagram" style="max-width: 820px; width: 100%; height: auto; border-radius: 10px;" />
+  <figcaption style="font-size: 0.95rem; opacity: 0.8; margin-top: 8px;">
+    Figure 1 — Initialization.
+  </figcaption>
+</figure>
+
+<table style="width:100%; border-collapse:collapse; font-size:0.95rem; margin: 1rem 0; table-layout:fixed;">
+  <thead>
+    <tr>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:6%;">Step</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:12%;">Stage</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:18%;">Buyer-side agent</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:18%;">Seller-side agent</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:46%;">Meaning</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">1</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Connection</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Opens transport</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Accepts transport</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">HTTP (or similar) to a JSON-RPC endpoint. ACP defines messages, not transport.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">2</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Request</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Sends <code>initialize</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Receives request</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">First ACP message. Not a session yet.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">3</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Check</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Waits</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Validates version and capabilities</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Seller-side internal step; not a separate wire message.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">4</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Response</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Receives result</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Sends <code>initialize</code> response</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Buyer must finish this before any session method.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">5</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Ready</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">May call <code>session/new</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Ready for sessions</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Handshake complete. No user prompts exchanged yet.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="wire-format">Wire format</h4>
+
+<p><strong>Request — <code class="language-plaintext highlighter-rouge">initialize</code></strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"initialize"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"protocolVersion"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"clientCapabilities"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"fs"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"readTextFile"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"writeTextFile"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"terminal"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"clientInfo"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"buyer-side-agent"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Buyer-side Agent"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0.0"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Response</strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"protocolVersion"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"agentCapabilities"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"loadSession"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"promptCapabilities"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"image"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"audio"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"embeddedContext"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"mcpCapabilities"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"http"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"sse"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"agentInfo"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"seller-side-agent"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Seller-side Agent"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0.0"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"authMethods"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The spec uses <code class="language-plaintext highlighter-rouge">clientCapabilities</code> / <code class="language-plaintext highlighter-rouge">clientInfo</code> on the request and <code class="language-plaintext highlighter-rouge">agentCapabilities</code> / <code class="language-plaintext highlighter-rouge">agentInfo</code> on the response. Those names map to <strong>buyer</strong> and <strong>seller</strong> roles in the handshake.</p>
+
+<h3 id="key-rules--initialization">Key rules — initialization</h3>
+
+<table style="width:100%; border-collapse:collapse; font-size:0.95rem; margin: 1rem 0; table-layout:fixed;">
+  <thead>
+    <tr>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:22%;">Rule</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:78%;">Requirement</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Version</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>protocolVersion</code> is a major integer; both sides must agree.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Capabilities</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Omitted capability means unsupported.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Baseline</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">After init, the seller must support <code>session/new</code>, <code>session/prompt</code>, <code>session/cancel</code>, and <code>session/update</code>.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Scope</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Initialization does not create a session or carry user prompts.</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="authentication">Authentication</h2>
+
+<p>Authentication establishes trust <strong>after</strong> initialization. The seller advertises methods in <code class="language-plaintext highlighter-rouge">authMethods</code> on the initialize response. If required, the buyer calls <code class="language-plaintext highlighter-rouge">authenticate</code> with a matching <code class="language-plaintext highlighter-rouge">methodId</code> before session work continues.</p>
+
+<figure style="text-align:center; margin: 0 0 1.5rem;">
+  <img src="/assets/images/ACP_Article_assets/authentication.png" alt="Authentication sequence diagram" style="max-width: 820px; width: 100%; height: auto; border-radius: 10px;" />
+  <figcaption style="font-size: 0.95rem; opacity: 0.8; margin-top: 8px;">
+    Figure 2 — Authentication.
+  </figcaption>
+</figure>
+
+<table style="width:100%; border-collapse:collapse; font-size:0.95rem; margin: 1rem 0; table-layout:fixed;">
+  <thead>
+    <tr>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:8%;">Step</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:14%;">Stage</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:26%;">Buyer-side agent</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:22%;">Seller-side agent</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:30%;">Meaning</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">1–2</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Handshake</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>initialize</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>initialize</code> response</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Seller returns <code>authMethods</code>.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">3</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Auth request</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>authenticate</code> with <code>methodId</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Validates method</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Buyer picks one advertised method.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">4</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Auth response</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Receives empty <code>result</code> on success</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Sends response</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Link is authenticated.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">5</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Proceed</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">May call <code>session/new</code>, <code>session/prompt</code>, …</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Accepts protected calls</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Session and prompt work allowed.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">6</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Re-auth</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>authenticate</code> again if needed</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">May require it</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">New connection or seller policy may reset auth.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="wire-format-1">Wire format</h4>
+
+<p><strong>Advertised at init</strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"authMethods"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"agent-login"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Agent login"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Sign in using the agent login flow"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"agentCapabilities"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"auth"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"logout"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Request — <code class="language-plaintext highlighter-rouge">authenticate</code></strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"authenticate"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"methodId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"agent-login"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Response — <code class="language-plaintext highlighter-rouge">authenticate</code></strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Optional — <code class="language-plaintext highlighter-rouge">logout</code></strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"logout"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="key-rules--authentication">Key rules — authentication</h3>
+
+<table style="width:100%; border-collapse:collapse; font-size:0.95rem; margin: 1rem 0; table-layout:fixed;">
+  <thead>
+    <tr>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:22%;">Rule</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:78%;">Requirement</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Methods</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>methodId</code> in <code>authenticate</code> must match an <code>id</code> from <code>authMethods</code>.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Optional</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Empty <code>authMethods</code> means the seller may not require <code>authenticate</code>.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Logout</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Buyer must not call <code>logout</code> unless <code>agentCapabilities.auth.logout</code> was advertised.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">After logout</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Handle possible <code>auth_required</code> errors; re-authenticate when the seller requires it.</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="session-setup">Session setup</h2>
+
+<p>A <strong>session</strong> is a named conversation with its own <code class="language-plaintext highlighter-rouge">sessionId</code>, history, and working state. Multi-step flows (ask → clarify → answer) stay on one thread instead of resending the full transcript every time.</p>
+
+<p><strong>Example:</strong> Turn 1 — buyer says “running shoes.” Turn 2 — seller asks for budget. Both turns use the same <code class="language-plaintext highlighter-rouge">sessionId</code> so the seller can rely on stored context.</p>
+
+<figure style="text-align:center; margin: 0 0 1.5rem;">
+  <img src="/assets/images/ACP_Article_assets/session-setup.png" alt="Session setup sequence diagram" style="max-width: 820px; width: 100%; height: auto; border-radius: 10px;" />
+  <figcaption style="font-size: 0.95rem; opacity: 0.8; margin-top: 8px;">
+    Figure 3 — Session setup. MCP Servers are seller-side backends, not a third ACP peer.
+  </figcaption>
+</figure>
+
+<p>All paths below assume <strong>Initialized</strong> (and <strong>authenticated</strong>, if required).</p>
+
+<h3 id="create-a-new-session">Create a new session</h3>
+
+<table style="width:100%; border-collapse:collapse; font-size:0.95rem; margin: 1rem 0; table-layout:fixed;">
+  <thead>
+    <tr>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:8%;">Step</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:28%;">Buyer-side agent</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:28%;">Seller-side agent</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:36%;">Meaning</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">1</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>session/new</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Creates session (may attach MCP)</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">New thread.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">2</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Stores <code>sessionId</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Returns <code>sessionId</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">ID used on every later turn.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Request — <code class="language-plaintext highlighter-rouge">session/new</code></strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"session/new"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"cwd"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/absolute/path"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Response</strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"sessionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sess_abc123"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Use when starting a fresh conversation.</p>
+
+<h3 id="load-vs-resume">Load vs resume</h3>
+
+<table style="width:100%; border-collapse:collapse; font-size:0.95rem; margin: 1rem 0; table-layout:fixed;">
+  <thead>
+    <tr>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:22%;">Method</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:38%;">Buyer gets</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:40%;">When to use</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>session/load</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Full history replay via <code>session/update</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Reconnect after restart; UI needs the full thread.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>session/resume</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Quiet reconnect, no full replay</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Short disconnect; seller still has context.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Request — <code class="language-plaintext highlighter-rouge">session/load</code></strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"session/load"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"sessionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sess_abc123"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"cwd"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/absolute/path"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Request — <code class="language-plaintext highlighter-rouge">session/resume</code></strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"session/resume"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"sessionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sess_abc123"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"cwd"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/absolute/path"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>During load, the seller streams past messages as <code class="language-plaintext highlighter-rouge">session/update</code> notifications until load completes.</p>
+
+<h3 id="list-sessions">List sessions</h3>
+
+<table style="width:100%; border-collapse:collapse; font-size:0.95rem; margin: 1rem 0; table-layout:fixed;">
+  <thead>
+    <tr>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:8%;">Step</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:28%;">Buyer-side agent</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:28%;">Seller-side agent</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:36%;">Meaning</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">1</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>session/list</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Queries stored sessions</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Discovery only; does not open a session.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">2</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Receives list</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Returns metadata</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Buyer picks a <code>sessionId</code>, then calls <code>load</code> or <code>resume</code>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Request — <code class="language-plaintext highlighter-rouge">session/list</code></strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"session/list"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Response (example)</strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"sessions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"sessionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sess_abc123"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Running shoes"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"cwd"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/absolute/path"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="key-rules--session-setup">Key rules — session setup</h3>
+
+<table style="width:100%; border-collapse:collapse; font-size:0.95rem; margin: 1rem 0; table-layout:fixed;">
+  <thead>
+    <tr>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:22%;">Rule</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:78%;">Requirement</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Order</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Complete <code>initialize</code> (and <code>authenticate</code> if required) first.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">ID</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Every <code>session/prompt</code> and <code>session/cancel</code> uses the same <code>sessionId</code>.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>session/new</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Creates a new thread; returns a new <code>sessionId</code>.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>session/load</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Requires <code>loadSession</code> capability; replays history.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>session/resume</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Requires <code>sessionCapabilities.resume</code>.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>session/list</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Requires <code>sessionCapabilities.list</code>; discovery only.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>cwd</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Absolute path for the session working context.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>mcpServers</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Tells the seller which tool or data backends to attach.</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="prompt-turn">Prompt turn</h2>
+
+<p>A <strong>prompt turn</strong> is one cycle from a user message to a final <code class="language-plaintext highlighter-rouge">stopReason</code> on the same <code class="language-plaintext highlighter-rouge">session/prompt</code> request. The seller may use an LLM, push <code class="language-plaintext highlighter-rouge">session/update</code> progress, request permission for tools, and the buyer may cancel mid-turn. Requires init and a <strong>ready</strong> session.</p>
+
+<p><strong>Prompt content:</strong> Each item in <code class="language-plaintext highlighter-rouge">params.prompt</code> is a content block with a <code class="language-plaintext highlighter-rouge">type</code> (for example <code class="language-plaintext highlighter-rouge">text</code>, <code class="language-plaintext highlighter-rouge">image</code>, or <code class="language-plaintext highlighter-rouge">resource</code>). The buyer must only send types the two sides agreed at <code class="language-plaintext highlighter-rouge">initialize</code> under <code class="language-plaintext highlighter-rouge">promptCapabilities</code>.</p>
+
+<figure style="text-align:center; margin: 0 0 1.5rem;">
+  <img src="/assets/images/ACP_Article_assets/prompt-turn.png" alt="Prompt turn sequence diagram" style="max-width: 820px; width: 100%; height: auto; border-radius: 10px;" />
+  <figcaption style="font-size: 0.95rem; opacity: 0.8; margin-top: 8px;">
+    Figure 4 — Prompt turn. Solid lines = requests; dashed = seller notifications. LLM work is seller-internal.
+  </figcaption>
+</figure>
+
+<table style="width:100%; border-collapse:collapse; font-size:0.95rem; margin: 1rem 0; table-layout:fixed;">
+  <thead>
+    <tr>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:6%;">Step</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:12%;">Phase</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:22%;">Buyer-side agent</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:26%;">Seller-side agent</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:34%;">Method</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">0</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Ready</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Active session</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Active session</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">—</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">1</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Prompt</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Sends user message</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Receives, runs LLM</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>session/prompt</code></td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">2</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Progress</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Renders updates</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Streams plan, text, tool calls</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>session/update</code></td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">3</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Permission</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">User grants or denies</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Runs tool if allowed</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>session/request_permission</code> + response</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">4</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Cancel</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">User aborts</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Stops LLM and tools</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>session/cancel</code></td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">5</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">End</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Receives outcome</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Completes turn</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>session/prompt</code> result (<code>stopReason</code>)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="wire-format-2">Wire format</h4>
+
+<p><strong>Request — <code class="language-plaintext highlighter-rouge">session/prompt</code></strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"session/prompt"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"sessionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sess_abc"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"prompt"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Running shoes under $150"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Cancel (notification)</strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"session/cancel"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"sessionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sess_abc"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Notification — <code class="language-plaintext highlighter-rouge">session/update</code></strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"session/update"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"sessionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sess_abc"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"update"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"sessionUpdate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"agent_message_chunk"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"content"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"…"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Turn complete — <code class="language-plaintext highlighter-rouge">stopReason: end_turn</code></strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"stopReason"</span><span class="p">:</span><span class="w"> </span><span class="s2">"end_turn"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Turn complete — <code class="language-plaintext highlighter-rouge">stopReason: cancelled</code></strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"stopReason"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cancelled"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Turn complete — <code class="language-plaintext highlighter-rouge">stopReason: needs_clarification</code></strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"stopReason"</span><span class="p">:</span><span class="w"> </span><span class="s2">"needs_clarification"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"What is your budget?"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="key-rules--prompt-turn">Key rules — prompt turn</h3>
+
+<table style="width:100%; border-collapse:collapse; font-size:0.95rem; margin: 1rem 0; table-layout:fixed;">
+  <thead>
+    <tr>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:22%;">Rule</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:78%;">Requirement</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Order</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Initialize, session ready, then <code>session/prompt</code>.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Content</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Block <code>type</code> must match negotiated <code>promptCapabilities</code>.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Updates</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>session/update</code> is progress; <code>stopReason</code> closes the turn.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Permission</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Seller may ask; buyer responds before sensitive tools.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Cancel</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Aborts the turn; session may stay open.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Cancel + permission</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Pending permissions get outcome <code>cancelled</code>.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Next message</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">New user input = new <code>session/prompt</code>, same <code>sessionId</code>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Spec: <a href="https://agentclientprotocol.com/protocol/prompt-turn.md">Prompt turn</a></p>
+
+<hr />
+
+<h2 id="protocol-map">Protocol map</h2>
+
+<table style="width:100%; border-collapse:collapse; font-size:0.95rem; margin: 1rem 0; table-layout:fixed;">
+  <thead>
+    <tr>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:22%;">Phase</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:78%;">Primary methods</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Handshake</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>initialize</code></td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Trust</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>authenticate</code>, <code>logout</code></td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Thread</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>session/new</code>, <code>session/load</code>, <code>session/resume</code>, <code>session/list</code>, <code>session/close</code></td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Conversation</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>session/prompt</code>, <code>session/update</code>, <code>session/request_permission</code>, <code>session/cancel</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="thank-you-for-reading">Thank you for reading</h2>
+
+<p><strong>Acknowledgement:</strong> Pratik Ratadiya — thank you for reading the initial draft.</p>]]></content><author><name>Dheeraj Maske</name></author><summary type="html"><![CDATA[Agent Client Protocol (ACP) is the JSON-RPC layer for agent-to-agent communication — covering handshake, auth, named sessions, prompt turns, progress updates, permissions, and cancellation.]]></summary></entry><entry><title type="html">Capturing Intent Over Attention in Agentic Payments</title><link href="/2026/05/16/Capturing-Intent-Over-Attention-in-Agentic-Payments.html" rel="alternate" type="text/html" title="Capturing Intent Over Attention in Agentic Payments" /><published>2026-05-16T00:00:00-04:00</published><updated>2026-05-16T00:00:00-04:00</updated><id>/2026/05/16/Capturing-Intent-Over-Attention-in-Agentic-Payments</id><content type="html" xml:base="/2026/05/16/Capturing-Intent-Over-Attention-in-Agentic-Payments.html"><![CDATA[<h2 id="hypothesis">Hypothesis</h2>
+
+<p>As AI agents begin transacting for users, the bottleneck will shift from moving money to deciding <strong>who to trust</strong>, <strong>what to authorize</strong>, and <strong>how to recover</strong> when transactions fail.</p>
+
+<h2 id="the-pattern">The Pattern</h2>
+
+<p>I saw that Google captured human <strong>intent</strong> through search. Social media captured human <strong>attention</strong> through feeds and short-form content. The next layer may capture <strong>delegated user intent</strong> through trusted personal agents that can filter, decide, and transact on behalf of users.</p>
+
+<hr />
+
+<h2 id="the-2027-infrastructure-diagram">The 2027 Infrastructure Diagram</h2>
+
+<figure style="text-align:center; margin: 0 0 1.5rem;">
+  <img src="/assets/images/Agentic_Payments/2027-infrastructure-diagram.png" alt="2027 Agentic Payments Infrastructure — buyer-side personal agents and seller-side vendor agents communicate through a central Intent + Trust Layer before Payments are executed" style="max-width: 820px; width: 100%; height: auto; border-radius: 10px;" />
+  <figcaption style="font-size: 0.95rem; opacity: 0.8; margin-top: 8px;">
+    2027 Infrastructure: Buyer-side and seller-side agents interact through a central Intent + Trust Layer before payment execution.
+  </figcaption>
+</figure>
+
+<h3 id="walking-through-the-flow">Walking Through the Flow</h3>
+
+<table style="width:100%; border-collapse:collapse; font-size:0.95rem; margin: 1rem 0;">
+  <thead>
+    <tr>
+      <th style="text-align:left; padding:10px 14px; border: 1px solid #aaa;">Node</th>
+      <th style="text-align:left; padding:10px 14px; border: 1px solid #aaa;">Side</th>
+      <th style="text-align:left; padding:10px 14px; border: 1px solid #aaa;">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:9px 14px; border: 1px solid #aaa;"><strong>(a) Human / User</strong></td>
+      <td style="padding:9px 14px; border: 1px solid #aaa;">Buyer</td>
+      <td style="padding:9px 14px; border: 1px solid #aaa;">A person who wants to buy something. They do not touch the transaction directly.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border: 1px solid #aaa;"><strong>(b) User Trust Layer</strong></td>
+      <td style="padding:9px 14px; border: 1px solid #aaa;">Buyer</td>
+      <td style="padding:9px 14px; border: 1px solid #aaa;">Governs what the personal agent is allowed to do. For micropayments, this trust is pre-delegated hence no per-transaction permission needed.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border: 1px solid #aaa;"><strong>(c) Personal Agent</strong></td>
+      <td style="padding:9px 14px; border: 1px solid #aaa;">Buyer</td>
+      <td style="padding:9px 14px; border: 1px solid #aaa;">Acts on behalf of the human. Holds the user's preferences, spending rules, and intent.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border: 1px solid #aaa;"><strong>(d) Intent Request</strong></td>
+      <td style="padding:9px 14px; border: 1px solid #aaa;">Center</td>
+      <td style="padding:9px 14px; border: 1px solid #aaa;">The personal agent sends a structured signal outward: "I want to buy X, within budget Y, with preference Z."</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border: 1px solid #aaa;"><strong>(I) Intent + Trust Layer</strong></td>
+      <td style="padding:9px 14px; border: 1px solid #aaa;">Center</td>
+      <td style="padding:9px 14px; border: 1px solid #aaa;">The critical middle column. Where discovery, credentialing, and matching must happen before any offer is returned.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border: 1px solid #aaa;"><strong>(e) Verified Offer</strong></td>
+      <td style="padding:9px 14px; border: 1px solid #aaa;">Center</td>
+      <td style="padding:9px 14px; border: 1px solid #aaa;">The vendor agent responds with a credentialed offer back through the same layer.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border: 1px solid #aaa;"><strong>(f) Vendor Agent</strong></td>
+      <td style="padding:9px 14px; border: 1px solid #aaa;">Seller</td>
+      <td style="padding:9px 14px; border: 1px solid #aaa;">Represents the merchant. Knows the catalog, pricing, availability, and deal parameters.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border: 1px solid #aaa;"><strong>(g) Vendor Trust Layer</strong></td>
+      <td style="padding:9px 14px; border: 1px solid #aaa;">Seller</td>
+      <td style="padding:9px 14px; border: 1px solid #aaa;">The boundary between a vendor and its agent. The vendor's agent is authorized to negotiate and fulfill on the vendor's behalf.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border: 1px solid #aaa;"><strong>(h) Vendor (e.g. Amazon)</strong></td>
+      <td style="padding:9px 14px; border: 1px solid #aaa;">Seller</td>
+      <td style="padding:9px 14px; border: 1px solid #aaa;">A merchant or service provider.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border: 1px solid #aaa;"><strong>Payments</strong></td>
+      <td style="padding:9px 14px; border: 1px solid #aaa;">Bottom</td>
+      <td style="padding:9px 14px; border: 1px solid #aaa;">Only after intent is matched and trust is verified does a payment execute.</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="the-unsolved-problem-who-sits-in-the-middle">The Unsolved Problem: Who Sits in the Middle?</h2>
+
+<p><small><em>Assumption 1 — <strong>Vendor ↔ Vendor Agent trust is solved</strong>. Merchants have already authorized their agents to act. ACP handles merchant onboarding and connectivity.</em></small></p>
+
+<p><small><em>Assumption 2 — <strong>Human ↔ Personal Agent trust is solved</strong>. For small and micropayments, users pre-delegate authority. The agent acts within a policy envelope without interrupting the user.</em></small></p>
+
+<p><strong>What is not solved: Personal Agent ↔ Vendor Agent trust.</strong></p>
+
+<p>When a personal agent sends an intent request toward a vendor agent, several questions have no structural answer today:</p>
+
+<ul>
+  <li>How does the personal agent know this vendor agent is legitimate and not spoofed?</li>
+  <li>How does the vendor agent know the personal agent’s intent is real and carries valid authorization?</li>
+  <li>Who surfaces and ranks vendor agents to personal agents in the first place? (The <strong>“SEO for agents”</strong> gap. ACP solves connectivity, not discovery or ranking.)</li>
+  <li>If the transaction fails, who arbitrates between two agents when neither human was watching in real time?</li>
+</ul>
+
+<p>In human-to-human commerce these problems were solved by platforms: Google ranked vendors, Amazon certified sellers, Stripe verified merchants, Visa arbitrated disputes. But all of that infrastructure was designed for a human clicking a button and not for an agent making an autonomous sub-second decision.</p>
+
+<h3 id="does-this-need-a-middle-layer">Does This Need a Middle Layer?</h3>
+
+<p>I believe yes and that is the opportunity. The Intent + Trust Layer shown in the diagram. It is missing infrastructure. A matchmaking layer between agents would have three core jobs:</p>
+
+<ol>
+  <li><strong>Discovery and ranking</strong> — Surfaces the right vendor agents to a personal agent based on structured intent. The equivalent of a search index, but for agents rather than pages.</li>
+  <li><strong>Trust credentialing</strong> — Provides verifiable signals that a vendor agent is legitimate and that a personal agent’s intent is authentic and authorized. This will reduce the settlement duration and I think better money company is building something similar as a clearing houses infrastaructure for stablecoin payments.</li>
+  <li><strong>Dispute scaffolding</strong> — When a transaction executed by two agents fails or is contested, provides a structured recovery path without requiring the human to reconstruct what happened.</li>
+</ol>
+
+<hr />
+
+<h2 id="the-timeline">The Timeline</h2>
+
+<table style="width:100%; border-collapse:collapse; font-size:0.95rem; margin: 1rem 0;">
+  <thead>
+    <tr>
+      <th style="text-align:left; padding:10px 14px; border: 1px solid #aaa;">Year</th>
+      <th style="text-align:left; padding:10px 14px; border: 1px solid #aaa;">Status</th>
+      <th style="text-align:left; padding:10px 14px; border: 1px solid #aaa;">What Is Happening</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:9px 14px; border: 1px solid #aaa;"><strong>2025</strong></td>
+      <td style="padding:9px 14px; border: 1px solid #aaa;">Underway</td>
+      <td style="padding:9px 14px; border: 1px solid #aaa;">OpenAI and Stripe co-launched the <strong>Agentic Commerce Protocol (ACP)</strong>, enabling agents to discover products, negotiate checkout, and complete transactions. Salesforce joined a month later. <strong>48% of shoppers</strong> who already use AI are open to having an agent make purchases for them.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border: 1px solid #aaa;"><strong>2026</strong></td>
+      <td style="padding:9px 14px; border: 1px solid #aaa;">Underway</td>
+      <td style="padding:9px 14px; border: 1px solid #aaa;">Agents help users find and buy products, but trust, authorization, and recovery still rely on existing checkout infrastructure. The plumbing is borrowed from a pre-agent world.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border: 1px solid #aaa;"><strong>2027</strong></td>
+      <td style="padding:9px 14px; border: 1px solid #aaa;">The Gap</td>
+      <td style="padding:9px 14px; border: 1px solid #aaa;">As agent-to-agent commerce scales, the bottleneck shifts from payment execution to the layer above it — deciding who to trust, what to authorize, and how to recover when things fail.</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="friction-points">Friction Points</h2>
+
+<table style="width:100%; border-collapse:collapse; font-size:0.95rem; margin: 1rem 0;">
+  <thead>
+    <tr>
+      <th style="text-align:left; padding:10px 14px; border: 1px solid #aaa;">Friction</th>
+      <th style="text-align:left; padding:10px 14px; border: 1px solid #aaa;">Why It Matters</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:9px 14px; border: 1px solid #aaa;"><strong>Intent translation</strong></td>
+      <td style="padding:9px 14px; border: 1px solid #aaa;">Human preferences are messy; agents need structured buying instructions or protocols to act reliably on a user's behalf.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border: 1px solid #aaa;"><strong>Recovery</strong></td>
+      <td style="padding:9px 14px; border: 1px solid #aaa;">ServiceNow launched an AI Control Tower in 2026 specifically to govern agent actions and flag violations in real time but dispute resolution for commerce transactions remains unsolved.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border: 1px solid #aaa;"><strong>Merchant trust</strong></td>
+      <td style="padding:9px 14px; border: 1px solid #aaa;">Agents need proof that a vendor is reliable before selecting them. There is currently no standardized credentialing layer for merchants in agentic flows.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border: 1px solid #aaa;"><strong>Auditability</strong></td>
+      <td style="padding:9px 14px; border: 1px solid #aaa;">Businesses will need records of why an agent made a transaction for compliance, dispute resolution, and internal governance.</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+<h2 id="why-this-matters">Why This Matters</h2>
+
+<p>The previous two platform shifts search and social were won by whoever controlled the interface between human intent and the internet.</p>
+
+<p>Search won by structuring <em>what people wanted to find</em>. 
+Social won by structuring <em>what people paid attention to</em>.</p>
+
+<p>Now the question is who captures the attention and value through intent here.</p>
+
+<p>Thankyou for reading</p>]]></content><author><name>Dheeraj Maske</name></author><summary type="html"><![CDATA[As AI agents begin transacting for users, the bottleneck will shift from moving money to deciding who to trust, what to authorize, and how to recover when transactions fail. The next platform layer may not capture attention—it may capture delegated intent.]]></summary></entry><entry><title type="html">Google: Capturing Attention Is All You Need</title><link href="/2025/12/15/Google-Capturing-Attention-Is-All-You-Need.html" rel="alternate" type="text/html" title="Google: Capturing Attention Is All You Need" /><published>2025-12-15T00:00:00-05:00</published><updated>2025-12-15T00:00:00-05:00</updated><id>/2025/12/15/Google-Capturing-Attention-Is-All-You-Need</id><content type="html" xml:base="/2025/12/15/Google-Capturing-Attention-Is-All-You-Need.html"><![CDATA[<figure style="text-align:center; margin: 0 0 1.5rem;">
   <img src="/assets/images/Google_AI_Mode_search/title-attention-megaphone.png" alt="Pop-art style megaphone shouting ATTENTION — the attention economy in one image" style="max-width: 820px; width: 100%; height: auto; border-radius: 10px;" />
 </figure>
 
@@ -1135,184 +2125,4 @@ A <strong>return to the Gold Standard is unlikely</strong>—the future is shift
 
 <p>If NYU adopted a decentralized solution like <strong>NYUCoin</strong>, students could save approximately ₹23,527.22 on a ₹20,00,000 loan—around 70% reduction in extra charges. This approach is not just cost-effective but also transparent and efficient, ensuring that more of our money goes toward education rather than fees.</p>
 
-<p>For students, every penny counts, and innovations like this could make a huge difference. It’s time we rethink the way we pay our tuition fees.</p>]]></content><author><name>Dheeraj Maske</name></author><summary type="html"><![CDATA[A deep dive into the hidden charges and inefficiencies in traditional remittance methods, and how decentralized finance (DeFi) solutions like NYUCoin can save students significant costs.]]></summary></entry><entry><title type="html">Trusted Execution Environments (TEEs) and Why They Matter in Crypto Networks</title><link href="/2025/01/14/Trusted-Execution-Environments-(TEEs)-and-Why-They-Matter-in-Crypto-Networks.html" rel="alternate" type="text/html" title="Trusted Execution Environments (TEEs) and Why They Matter in Crypto Networks" /><published>2025-01-14T00:00:00-05:00</published><updated>2025-01-14T00:00:00-05:00</updated><id>/2025/01/14/Trusted-Execution-Environments-(TEEs)-and-Why-They-Matter-in-Crypto-Networks</id><content type="html" xml:base="/2025/01/14/Trusted-Execution-Environments-(TEEs)-and-Why-They-Matter-in-Crypto-Networks.html"><![CDATA[<h2 id="1-can-you-securely-process-data-without-exposure">1/ <strong>Can You Securely Process Data Without Exposure?</strong></h2>
-
-<p>If these questions make you curious, this thread is for you:</p>
-
-<ul>
-  <li>Can you process sensitive data on your device without worrying about hackers or malware?</li>
-  <li>What if your bank could approve your loan without ever seeing your financial data?</li>
-  <li>Could your crypto wallet execute secure transactions without exposing private keys?</li>
-  <li>Would it be possible for dApps to guarantee privacy while still being publicly verifiable?</li>
-  <li>Can blockchain validators process transactions without knowing transaction amounts?</li>
-</ul>
-
-<p>The solution? <strong>Trusted Execution Environments (TEEs).</strong> Let’s dive in. 🧵</p>
-
-<hr />
-
-<h2 id="2-the-problem-in-blockchain-systems">2/ <strong>The Problem in Blockchain Systems</strong></h2>
-
-<p>In traditional blockchain systems, <strong>validators have access to pending transactions</strong> in the mempool.<br />
-This visibility allows for <strong>MEV (Maximum Extractable Value) exploitation</strong>, where validators can:</p>
-
-<ul>
-  <li><strong>Reorder</strong> transactions for profit.</li>
-  <li><strong>Front-run</strong> transactions (place their orders before yours).</li>
-  <li><strong>Back-run</strong> transactions (execute orders based on your trade).</li>
-</ul>
-
-<p>This undermines <strong>fairness</strong> and <strong>privacy</strong> in crypto networks.</p>
-
-<hr />
-<p><img src="/assets/images/TEE_Diagram/tee-diagram.jpg" alt="Trusted Execution Environments (TEE) Diagram" /></p>
-
-<hr />
-<h2 id="3-what-are-trusted-execution-environments-tees">3/ <strong>What Are Trusted Execution Environments (TEEs)?</strong></h2>
-
-<p>TEEs are <strong>secure hardware-based environments</strong> within a processor.</p>
-
-<p>Think of them as a <strong>vault</strong> inside your computer that:</p>
-<ul>
-  <li><strong>Isolates</strong> sensitive transactions.</li>
-  <li><strong>Prevents tampering</strong> (even from system administrators).</li>
-  <li><strong>Ensures private execution</strong> of data.</li>
-</ul>
-
-<h3 id="-example-secure-biometric-authentication">🔒 Example: Secure Biometric Authentication</h3>
-
-<p>When you unlock your phone using <strong>fingerprint or face recognition</strong>:</p>
-<ul>
-  <li>The <strong>Non-Secure World</strong> (your phone’s OS) collects biometric data.</li>
-  <li>The <strong>Secure World (TEE)</strong> processes and verifies it <strong>without exposing</strong> the raw data.</li>
-</ul>
-
-<p>This ensures your biometric information remains <strong>secure and untouchable</strong> by external threats.</p>
-
-<hr />
-
-<h2 id="4-why-do-tees-matter-for-crypto">4/ <strong>Why Do TEEs Matter for Crypto?</strong></h2>
-
-<p>TEEs solve critical issues in blockchain networks:</p>
-
-<p>✅ <strong>Privacy</strong>: Encrypts transaction data, keeping details hidden from validators.<br />
-✅ <strong>Fairness</strong>: Prevents MEV attacks by enforcing strict transaction ordering.<br />
-✅ <strong>Security</strong>: Ensures tamper-proof execution, protecting users from exploits.</p>
-
-<hr />
-
-<h2 id="5-how-tees-work-in-blockchain-networks">5/ <strong>How TEEs Work in Blockchain Networks</strong></h2>
-
-<h3 id="a-secure-isolation-of-transactions">a. <strong>Secure Isolation of Transactions</strong></h3>
-<p>🔹 Instead of entering the <strong>public mempool</strong>, transactions go directly into a <strong>TEE</strong>.<br />
-🔹 Transaction details (amount, recipient) are <strong>isolated</strong> from validators and external access.<br />
-🔹 Even <strong>admin-level access</strong> cannot modify or view these transactions.</p>
-
-<h3 id="b-data-encryption">b. <strong>Data Encryption</strong></h3>
-<p>🔹 Inside the TEE, transactions are <strong>encrypted</strong> into unreadable code.<br />
-🔹 Example: If <strong>Alice buys tokens</strong>, TEEs <strong>hide</strong> the amount and price from validators, preventing exploitation.</p>
-
-<h3 id="c-fair-transaction-ordering">c. <strong>Fair Transaction Ordering</strong></h3>
-<p>🔹 Traditional systems allow validators to <strong>reorder</strong> transactions for profit.<br />
-🔹 TEEs enforce a <strong>strict sequence</strong> based on real-time order arrival.</p>
-
-<h3 id="d-tamper-proof-execution">d. <strong>Tamper-Proof Execution</strong></h3>
-<p>🔹 If someone tries to <strong>hack</strong> or modify a transaction, the TEE detects and <strong>blocks</strong> the attempt.</p>
-
-<h3 id="e-secure-finalization">e. <strong>Secure Finalization</strong></h3>
-<p>🔹 Once processed, the <strong>TEE submits</strong> the final transaction to the blockchain.<br />
-🔹 The result <strong>cannot be altered or viewed</strong> by validators.</p>
-
-<hr />
-
-<h2 id="6-why-hardware-matters-in-tees">6/ <strong>Why Hardware Matters in TEEs</strong></h2>
-
-<p>Unlike <strong>software-based security</strong>, TEEs operate at the <strong>hardware level</strong>, making them:</p>
-
-<p>🔹 <strong>Highly resistant to advanced attacks</strong><br />
-🔹 <strong>More reliable than software encryption</strong><br />
-🔹 <strong>Less dependent on trust in third parties</strong></p>
-
-<h3 id="-example-secure-crypto-transactions">🔎 Example: Secure Crypto Transactions</h3>
-
-<p>Instead of sending transactions to a <strong>public mempool</strong>, TEEs enable:<br />
-✅ <strong>Confidentiality</strong>: Transactions remain encrypted inside the TEE.<br />
-✅ <strong>Fair Ordering</strong>: Transactions process in the exact order they arrive.<br />
-✅ <strong>Secure Execution</strong>: The final transaction is added to the blockchain without revealing details.</p>
-
-<p>This prevents <strong>MEV exploitation</strong>, ensuring <strong>private, tamper-proof transactions</strong>.</p>
-
-<hr />
-
-<h2 id="7-why-tees-are-a-game-changer-for-crypto-networks">7/ <strong>Why TEEs Are a Game-Changer for Crypto Networks</strong></h2>
-
-<p>🔹 <strong>Enhanced Privacy</strong>: Keeps user data and transactions private.<br />
-🔹 <strong>Fairness</strong>: Prevents validators from <strong>manipulating</strong> transactions for profit.<br />
-🔹 <strong>Security</strong>: Strengthens blockchain integrity with <strong>hardware-level safeguards</strong>.</p>
-
-<p>TEEs could <strong>redefine trust</strong> in crypto, making networks not just decentralized but also <strong>tamper-proof, private, and fair</strong>.</p>
-
-<p>🚀 Stay tuned for more insights on blockchain security and innovation!</p>]]></content><author><name>Dheeraj Maske</name></author><summary type="html"><![CDATA[TEEs provide a secure, tamper-proof environment for processing sensitive data, ensuring privacy, security, and fairness in crypto networks. Here’s how they work.]]></summary></entry><entry><title type="html">Why One Should Not Use Centralized Exchanges for Crypto Trading</title><link href="/2025/01/04/Why-one-should-not-use-Centralized-Exchanges-for-Crypto-Trading.html" rel="alternate" type="text/html" title="Why One Should Not Use Centralized Exchanges for Crypto Trading" /><published>2025-01-04T00:00:00-05:00</published><updated>2025-01-04T00:00:00-05:00</updated><id>/2025/01/04/Why-one-should-not-use-Centralized-Exchanges-for-Crypto-Trading</id><content type="html" xml:base="/2025/01/04/Why-one-should-not-use-Centralized-Exchanges-for-Crypto-Trading.html"><![CDATA[<p>Centralized exchanges (CEXs) like Coinbase and Binance may offer convenience, but they come with a critical flaw: <strong>you don’t own the private keys to your cryptocurrency</strong>.</p>
-
-<p>The phrase <strong>“not your keys, not your coins”</strong> holds true because when you use a CEX, your funds are held in a wallet controlled by the exchange. This makes your assets vulnerable to:</p>
-<ul>
-  <li>Hacks</li>
-  <li>Operational failures</li>
-  <li>Regulatory freezes</li>
-</ul>
-
-<p>Additionally, relying on a single entity undermines the decentralized principles of cryptocurrencies, where the core idea is to have control over your own funds.</p>
-
-<h3 id="why-avoid-centralized-exchanges">Why Avoid Centralized Exchanges?</h3>
-
-<p>Instead of CEXs, consider using <strong>non-custodial wallets</strong> and <strong>decentralized exchanges (DEXs)</strong>, which allow you to:</p>
-<ol>
-  <li>Maintain ownership of your private keys.</li>
-  <li>Have full control over your crypto.</li>
-</ol>
-
-<p>A <strong>non-custodial wallet</strong> is like having your own locker, where only you have the key.</p>
-<ul>
-  <li>You control your cryptocurrency, and no one else can access it unless they have your private key.</li>
-  <li>However, if you lose the key, you lose access forever.</li>
-</ul>
-
-<hr />
-
-<h3 id="how-to-transition-to-decentralized-exchanges-dex-and-trustworthy-methods">How to Transition to Decentralized Exchanges (DEX) and Trustworthy Methods</h3>
-
-<p>Switching to a decentralized approach is simple but requires some setup:</p>
-
-<h4 id="1-set-up-a-non-custodial-wallet">1. Set Up a Non-Custodial Wallet</h4>
-<ul>
-  <li>Download and set up a wallet like <strong>MetaMask</strong>, <strong>Trust Wallet</strong>, or a hardware wallet like <strong>Ledger</strong>.</li>
-  <li>Ensure you securely back up your private keys or seed phrase. <em>Losing these means losing access to your funds permanently.</em></li>
-</ul>
-
-<h4 id="2-transfer-crypto-from-cex-to-your-wallet">2. Transfer Crypto from CEX to Your Wallet</h4>
-<ul>
-  <li>Use your non-custodial wallet’s public address to withdraw your funds from the centralized exchange.</li>
-  <li>Double-check network compatibility (e.g., Ethereum Mainnet for ETH).</li>
-</ul>
-
-<h4 id="3-use-decentralized-exchanges-dexs">3. Use Decentralized Exchanges (DEXs)</h4>
-<ul>
-  <li>Platforms like <strong>Uniswap</strong>, <strong>PancakeSwap</strong>, or <strong>SushiSwap</strong> allow you to trade directly from your wallet.</li>
-  <li>Simply connect your wallet to the DEX and start trading without creating accounts or sharing personal information.</li>
-</ul>
-
-<h4 id="4-ensure-security">4. Ensure Security</h4>
-<ul>
-  <li>Use a <strong>VPN</strong> for added privacy.</li>
-  <li>Double-check website URLs to avoid phishing scams.</li>
-  <li>Keep your private keys offline in a secure location.</li>
-</ul>
-
-<hr />
-
-<p>By using <strong>non-custodial wallets</strong> and <strong>DEXs</strong>, you regain:</p>
-<ul>
-  <li>Full ownership of your crypto</li>
-  <li>Alignment with the decentralized ethos of blockchain</li>
-  <li>Reduced risks associated with centralized exchanges</li>
-</ul>]]></content><author><name>Dheeraj Maske</name></author><summary type="html"><![CDATA[Centralized exchanges (CEXs) like Coinbase and Binance may offer convenience, but they come with a critical flaw...]]></summary></entry></feed>
+<p>For students, every penny counts, and innovations like this could make a huge difference. It’s time we rethink the way we pay our tuition fees.</p>]]></content><author><name>Dheeraj Maske</name></author><summary type="html"><![CDATA[A deep dive into the hidden charges and inefficiencies in traditional remittance methods, and how decentralized finance (DeFi) solutions like NYUCoin can save students significant costs.]]></summary></entry></feed>
