@@ -89,7 +89,7 @@ Typical stack for a single conversation:
 
 ## Initialization
 
-Initialization is how every connection starts. The buyer-side agent sends `initialize` with a protocol version and capabilities; the seller-side agent replies with the agreed version and what it supports. **No session exists yet** — only after this handshake can the buyer call `session/new`.
+Initialization is how every connection starts. The buyer-side agent sends `initialize` with a protocol version and capabilities; the seller-side agent replies with the agreed version and what it supports. **No session exists yet.** Only after this handshake can the buyer call `session/new`.
 
 <figure style="text-align:center; margin: 0 0 1.5rem;">
   <img
@@ -114,36 +114,29 @@ Initialization is how every connection starts. The buyer-side agent sends `initi
   </thead>
   <tbody>
     <tr>
-      <td style="padding:9px 14px; border:1px solid #aaa;">1</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;">Connection</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">—</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Connection established</td>
       <td style="padding:9px 14px; border:1px solid #aaa;">Opens transport</td>
       <td style="padding:9px 14px; border:1px solid #aaa;">Accepts transport</td>
       <td style="padding:9px 14px; border:1px solid #aaa;">HTTP (or similar) to a JSON-RPC endpoint. ACP defines messages, not transport.</td>
     </tr>
     <tr>
-      <td style="padding:9px 14px; border:1px solid #aaa;">2</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;">Request</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">1</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Initialize</td>
       <td style="padding:9px 14px; border:1px solid #aaa;">Sends <code>initialize</code></td>
-      <td style="padding:9px 14px; border:1px solid #aaa;">Receives request</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Receives request; runs protocol version and capabilities check</td>
       <td style="padding:9px 14px; border:1px solid #aaa;">First ACP message. Not a session yet.</td>
     </tr>
     <tr>
-      <td style="padding:9px 14px; border:1px solid #aaa;">3</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;">Check</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;">Waits</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;">Validates version and capabilities</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;">Seller-side internal step; not a separate wire message.</td>
-    </tr>
-    <tr>
-      <td style="padding:9px 14px; border:1px solid #aaa;">4</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;">Response</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">2</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Initialize response</td>
       <td style="padding:9px 14px; border:1px solid #aaa;">Receives result</td>
       <td style="padding:9px 14px; border:1px solid #aaa;">Sends <code>initialize</code> response</td>
       <td style="padding:9px 14px; border:1px solid #aaa;">Buyer must finish this before any session method.</td>
     </tr>
     <tr>
-      <td style="padding:9px 14px; border:1px solid #aaa;">5</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;">Ready</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">—</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Ready for session setup</td>
       <td style="padding:9px 14px; border:1px solid #aaa;">May call <code>session/new</code></td>
       <td style="padding:9px 14px; border:1px solid #aaa;">Ready for sessions</td>
       <td style="padding:9px 14px; border:1px solid #aaa;">Handshake complete. No user prompts exchanged yet.</td>
@@ -280,39 +273,53 @@ Authentication establishes trust **after** initialization. The seller advertises
   </thead>
   <tbody>
     <tr>
-      <td style="padding:9px 14px; border:1px solid #aaa;">1–2</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;">Handshake</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;"><code>initialize</code></td>
-      <td style="padding:9px 14px; border:1px solid #aaa;"><code>initialize</code> response</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;">Seller returns <code>authMethods</code>.</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">—</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Connection established</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Connected</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Connected</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Transport is open before authentication begins.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">1</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Initialize</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Sends <code>initialize</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Receives request</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Starts the authentication handshake.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">2</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Initialize response</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Receives response</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Sends <code>initialize</code> response with <code>authMethods</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Seller advertises available authentication methods.</td>
     </tr>
     <tr>
       <td style="padding:9px 14px; border:1px solid #aaa;">3</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;">Auth request</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;"><code>authenticate</code> with <code>methodId</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Authentication method</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Sends <code>authenticate</code> with <code>methodId</code></td>
       <td style="padding:9px 14px; border:1px solid #aaa;">Validates method</td>
       <td style="padding:9px 14px; border:1px solid #aaa;">Buyer picks one advertised method.</td>
     </tr>
     <tr>
       <td style="padding:9px 14px; border:1px solid #aaa;">4</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;">Auth response</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Authentication response</td>
       <td style="padding:9px 14px; border:1px solid #aaa;">Receives empty <code>result</code> on success</td>
       <td style="padding:9px 14px; border:1px solid #aaa;">Sends response</td>
       <td style="padding:9px 14px; border:1px solid #aaa;">Link is authenticated.</td>
     </tr>
     <tr>
-      <td style="padding:9px 14px; border:1px solid #aaa;">5</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;">Proceed</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;">May call <code>session/new</code>, <code>session/prompt</code>, …</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">—</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Authenticated</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">May call protected session methods</td>
       <td style="padding:9px 14px; border:1px solid #aaa;">Accepts protected calls</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;">Session and prompt work allowed.</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Authenticated requests may proceed.</td>
     </tr>
     <tr>
-      <td style="padding:9px 14px; border:1px solid #aaa;">6</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;">Re-auth</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;"><code>authenticate</code> again if needed</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">—</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Re-auth note</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">May need to authenticate again</td>
       <td style="padding:9px 14px; border:1px solid #aaa;">May require it</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;">New connection or seller policy may reset auth.</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">A new session may require authentication again.</td>
     </tr>
   </tbody>
 </table>
@@ -329,12 +336,7 @@ Authentication establishes trust **after** initialization. The seller advertises
       "name": "Agent login",
       "description": "Sign in using the agent login flow"
     }
-  ],
-  "agentCapabilities": {
-    "auth": {
-      "logout": {}
-    }
-  }
+  ]
 }
 ```
 
@@ -373,17 +375,6 @@ Authentication establishes trust **after** initialization. The seller advertises
 
 </div>
 
-**Optional — `logout`**
-
-```json
-{
-  "jsonrpc": "2.0",
-  "id": 2,
-  "method": "logout",
-  "params": {}
-}
-```
-
 ### Key rules — authentication
 
 <table style="width:100%; border-collapse:collapse; font-size:0.95rem; margin: 1rem 0; table-layout:fixed;">
@@ -403,12 +394,8 @@ Authentication establishes trust **after** initialization. The seller advertises
       <td style="padding:9px 14px; border:1px solid #aaa;">Empty <code>authMethods</code> means the seller may not require <code>authenticate</code>.</td>
     </tr>
     <tr>
-      <td style="padding:9px 14px; border:1px solid #aaa;">Logout</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;">Buyer must not call <code>logout</code> unless <code>agentCapabilities.auth.logout</code> was advertised.</td>
-    </tr>
-    <tr>
-      <td style="padding:9px 14px; border:1px solid #aaa;">After logout</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;">Handle possible <code>auth_required</code> errors; re-authenticate when the seller requires it.</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Re-auth</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">A new session may require authentication again.</td>
     </tr>
   </tbody>
 </table>
@@ -434,32 +421,91 @@ A **session** is a named conversation with its own `sessionId`, history, and wor
 
 All paths below assume **Initialized** (and **authenticated**, if required).
 
-### Create a new session
-
 <table style="width:100%; border-collapse:collapse; font-size:0.95rem; margin: 1rem 0; table-layout:fixed;">
   <thead>
     <tr>
-      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:8%;">Step</th>
-      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:28%;">Buyer-side agent</th>
-      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:28%;">Seller-side agent</th>
-      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:36%;">Meaning</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:6%;">Step</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:14%;">Phase</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:24%;">Buyer-side agent</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:24%;">Seller-side agent</th>
+      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:32%;">Meaning</th>
     </tr>
   </thead>
   <tbody>
     <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">—</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Initialized</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Ready for session work</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Ready for session work</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Initialization (and authentication, if required) is complete.</td>
+    </tr>
+    <tr>
       <td style="padding:9px 14px; border:1px solid #aaa;">1</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;"><code>session/new</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Create session</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Sends <code>session/new</code></td>
       <td style="padding:9px 14px; border:1px solid #aaa;">Creates session (may attach MCP)</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;">New thread.</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Starts a new thread.</td>
     </tr>
     <tr>
       <td style="padding:9px 14px; border:1px solid #aaa;">2</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Create response</td>
       <td style="padding:9px 14px; border:1px solid #aaa;">Stores <code>sessionId</code></td>
       <td style="padding:9px 14px; border:1px solid #aaa;">Returns <code>sessionId</code></td>
       <td style="padding:9px 14px; border:1px solid #aaa;">ID used on every later turn.</td>
     </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">3</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Load session</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Sends <code>session/load</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Restores session</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Reconnect after restart; UI needs the full thread.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">4</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Load response</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Receives load response</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Returns load response</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">History replay begins.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">4′</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">History update</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Receives updates</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Streams past messages as <code>session/update</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Conversation history is replayed during load.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">5</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Resume session</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Sends <code>session/resume</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Restores session quietly</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Short disconnect; seller still has context.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">6</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Resume response</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Receives confirmation</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Returns resume response</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">No full history replay.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">7</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">List sessions</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Sends <code>session/list</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Queries stored sessions</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Discovery only; does not open a session.</td>
+    </tr>
+    <tr>
+      <td style="padding:9px 14px; border:1px solid #aaa;">8</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">List response</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Receives list</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Returns session metadata</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Buyer picks a <code>sessionId</code>, then calls <code>load</code> or <code>resume</code>.</td>
+    </tr>
   </tbody>
 </table>
+
+### Create a new session
 
 <div class="wire-pair" markdown="1">
 
@@ -560,31 +606,6 @@ Use when starting a fresh conversation.
 During load, the seller streams past messages as `session/update` notifications until load completes.
 
 ### List sessions
-
-<table style="width:100%; border-collapse:collapse; font-size:0.95rem; margin: 1rem 0; table-layout:fixed;">
-  <thead>
-    <tr>
-      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:8%;">Step</th>
-      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:28%;">Buyer-side agent</th>
-      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:28%;">Seller-side agent</th>
-      <th style="text-align:left; padding:10px 14px; border:1px solid #aaa; width:36%;">Meaning</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="padding:9px 14px; border:1px solid #aaa;">1</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;"><code>session/list</code></td>
-      <td style="padding:9px 14px; border:1px solid #aaa;">Queries stored sessions</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;">Discovery only; does not open a session.</td>
-    </tr>
-    <tr>
-      <td style="padding:9px 14px; border:1px solid #aaa;">2</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;">Receives list</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;">Returns metadata</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;">Buyer picks a <code>sessionId</code>, then calls <code>load</code> or <code>resume</code>.</td>
-    </tr>
-  </tbody>
-</table>
 
 <div class="wire-pair" markdown="1">
 
@@ -699,46 +720,39 @@ A **prompt turn** is one cycle from a user message to a final `stopReason` on th
   </thead>
   <tbody>
     <tr>
-      <td style="padding:9px 14px; border:1px solid #aaa;">0</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;">Ready</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">—</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Session ready</td>
       <td style="padding:9px 14px; border:1px solid #aaa;">Active session</td>
       <td style="padding:9px 14px; border:1px solid #aaa;">Active session</td>
       <td style="padding:9px 14px; border:1px solid #aaa;">—</td>
     </tr>
     <tr>
       <td style="padding:9px 14px; border:1px solid #aaa;">1</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;">Prompt</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Prompt creation</td>
       <td style="padding:9px 14px; border:1px solid #aaa;">Sends user message</td>
       <td style="padding:9px 14px; border:1px solid #aaa;">Receives, runs LLM</td>
       <td style="padding:9px 14px; border:1px solid #aaa;"><code>session/prompt</code></td>
     </tr>
     <tr>
       <td style="padding:9px 14px; border:1px solid #aaa;">2</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;">Progress</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Prompt response</td>
       <td style="padding:9px 14px; border:1px solid #aaa;">Renders updates</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;">Streams plan, text, tool calls</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Streams plan, text, tool calls, permissions</td>
       <td style="padding:9px 14px; border:1px solid #aaa;"><code>session/update</code></td>
     </tr>
     <tr>
-      <td style="padding:9px 14px; border:1px solid #aaa;">3</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;">Permission</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;">User grants or denies</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;">Runs tool if allowed</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">—</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">User grants</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Sends permission response</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Requests permission; runs tool if allowed</td>
       <td style="padding:9px 14px; border:1px solid #aaa;"><code>session/request_permission</code> + response</td>
     </tr>
     <tr>
-      <td style="padding:9px 14px; border:1px solid #aaa;">4</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;">Cancel</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;">User aborts</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;">Stops LLM and tools</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;"><code>session/cancel</code></td>
-    </tr>
-    <tr>
-      <td style="padding:9px 14px; border:1px solid #aaa;">5</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;">End</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;">Receives outcome</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;">Completes turn</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;"><code>session/prompt</code> result (<code>stopReason</code>)</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">—</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">User denies</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Sends cancel</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;">Stops LLM and tools; sends cancel response</td>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>session/cancel</code> + response</td>
     </tr>
   </tbody>
 </table>
@@ -908,7 +922,7 @@ Spec: [Prompt turn](https://agentclientprotocol.com/protocol/prompt-turn.md)
     </tr>
     <tr>
       <td style="padding:9px 14px; border:1px solid #aaa;">Trust</td>
-      <td style="padding:9px 14px; border:1px solid #aaa;"><code>authenticate</code>, <code>logout</code></td>
+      <td style="padding:9px 14px; border:1px solid #aaa;"><code>authenticate</code></td>
     </tr>
     <tr>
       <td style="padding:9px 14px; border:1px solid #aaa;">Thread</td>
