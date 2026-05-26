@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2026-05-26T02:54:05-04:00</updated><id>/feed.xml</id><title type="html">Dheeraj Maske</title><subtitle>Minimalist blog with blogs, projects, and more.</subtitle><author><name>Dheeraj Maske</name></author><entry><title type="html">Understanding Agent Client Protocol</title><link href="/2026/05/26/Understanding-Agent-Client-Protocol.html" rel="alternate" type="text/html" title="Understanding Agent Client Protocol" /><published>2026-05-26T00:00:00-04:00</published><updated>2026-05-26T00:00:00-04:00</updated><id>/2026/05/26/Understanding-Agent-Client-Protocol</id><content type="html" xml:base="/2026/05/26/Understanding-Agent-Client-Protocol.html"><![CDATA[<p>Imagine you are coordinating a project with a remote team of specialists. You do not re-introduce yourself on every call. You pick up where you left off: what was decided, what is pending, what you are still waiting on.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2026-05-26T02:57:40-04:00</updated><id>/feed.xml</id><title type="html">Dheeraj Maske</title><subtitle>Minimalist blog with blogs, projects, and more.</subtitle><author><name>Dheeraj Maske</name></author><entry><title type="html">Understanding Agent Client Protocol</title><link href="/2026/05/26/Understanding-Agent-Client-Protocol.html" rel="alternate" type="text/html" title="Understanding Agent Client Protocol" /><published>2026-05-26T00:00:00-04:00</published><updated>2026-05-26T00:00:00-04:00</updated><id>/2026/05/26/Understanding-Agent-Client-Protocol</id><content type="html" xml:base="/2026/05/26/Understanding-Agent-Client-Protocol.html"><![CDATA[<p>Imagine you are coordinating a project with a remote team of specialists. You do not re-introduce yourself on every call. You pick up where you left off: what was decided, what is pending, what you are still waiting on.</p>
 
 <p>Your specialists come from different companies. One uses Slack, one uses email, one has their own system. You need a shared language before any real work can happen. Before you assign anything, you ask what they can actually do. Some tasks take hours or days, so you do not block on every reply. When priorities shift, you send <strong>stop</strong> on an existing thread, not a brand-new conversation. Handoffs must stay visible, and access must match trust.</p>
 
@@ -906,6 +906,14 @@
     </tr>
   </tbody>
 </table>
+
+<hr />
+
+<h2 id="try-the-demo">Try the demo</h2>
+
+<p>Still struggling to see how the phases connect? Walk through a live, step-by-step visualization: <a href="https://dheeraj-acp-demo.netlify.app/">Agentic Commerce Protocol — Phase 1 Demo</a>.</p>
+
+<p>The demo runs handshake, session, intent, offer, and payment between a buyer-side agent and a seller-side agent. Step through it once, then come back to this post — the sequence diagrams and wire formats should click more easily.</p>
 
 <hr />
 
