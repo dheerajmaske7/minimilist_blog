@@ -46,13 +46,21 @@ Agentic communication on the internet has the same shape of problems:
   </tbody>
 </table>
 
-**Agent Client Protocol (ACP)** is the JSON-RPC layer that addresses these points: handshake, optional auth, named sessions, prompt turns, progress updates, permissions, and cancellation.
+Think of **JSON-RPC** as the shared request format those coordinators use when they call each other. Instead of a vague Slack message (“can you look into shoes?”), every exchange is a structured note with three parts:
+
+- **Method** — what you want done (`initialize`, `session/prompt`, …)
+- **Params** — the details for that action (session id, user message, …)
+- **Id** — a receipt number so the reply matches the right request
+
+The other side answers in the same shape: either a **result** (success) or an **error** (failure), tied to that same id. Nobody has to guess what the message meant, and nobody has to invent a new envelope for every vendor.
+
+**Agent Client Protocol (ACP)** sits on top of JSON-RPC 2.0. It is the vocabulary and sequence rules for agent-to-agent work: handshake, optional auth, named sessions, prompt turns, progress updates, permissions, and cancellation.
 
 ---
 
 ## What ACP is
 
-ACP is a set of **JSON-RPC 2.0** messages between:
+ACP defines which JSON-RPC methods exist, what order they run in, and what each side may assume after every reply. Those messages flow between:
 
 <table style="width:100%; border-collapse:collapse; font-size:0.95rem; margin: 1rem 0; table-layout:fixed;">
   <thead>

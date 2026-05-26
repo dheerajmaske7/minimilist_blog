@@ -82,13 +82,23 @@
   </tbody>
 </table>
 
-<p><strong>Agent Client Protocol (ACP)</strong> is the JSON-RPC layer that addresses these points: handshake, optional auth, named sessions, prompt turns, progress updates, permissions, and cancellation.</p>
+<p>Think of <strong>JSON-RPC</strong> as the shared request format those coordinators use when they call each other. Instead of a vague Slack message (“can you look into shoes?”), every exchange is a structured note with three parts:</p>
+
+<ul>
+  <li><strong>Method</strong> — what you want done (<code class="language-plaintext highlighter-rouge">initialize</code>, <code class="language-plaintext highlighter-rouge">session/prompt</code>, …)</li>
+  <li><strong>Params</strong> — the details for that action (session id, user message, …)</li>
+  <li><strong>Id</strong> — a receipt number so the reply matches the right request</li>
+</ul>
+
+<p>The other side answers in the same shape: either a <strong>result</strong> (success) or an <strong>error</strong> (failure), tied to that same id. Nobody has to guess what the message meant, and nobody has to invent a new envelope for every vendor.</p>
+
+<p><strong>Agent Client Protocol (ACP)</strong> sits on top of JSON-RPC 2.0. It is the vocabulary and sequence rules for agent-to-agent work: handshake, optional auth, named sessions, prompt turns, progress updates, permissions, and cancellation.</p>
 
 <hr />
 
 <h2 id="what-acp-is">What ACP is</h2>
 
-<p>ACP is a set of <strong>JSON-RPC 2.0</strong> messages between:</p>
+<p>ACP defines which JSON-RPC methods exist, what order they run in, and what each side may assume after every reply. Those messages flow between:</p>
 
 <table style="width:100%; border-collapse:collapse; font-size:0.95rem; margin: 1rem 0; table-layout:fixed;">
   <thead>
