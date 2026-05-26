@@ -12,6 +12,9 @@ Your specialists come from different companies. One uses Slack, one uses email, 
 Agentic communication on the internet has the same shape of problems:
 
 
+
+
+
 <div class="table-wrap" markdown="1">
 
 | Problem          | Question                                               |
@@ -26,13 +29,15 @@ Agentic communication on the internet has the same shape of problems:
 </div>
 
 
+
+
 ---
 
 ## What ACP is
 
 ACP defines which JSON-RPC methods exist, what order they run in, and what each side may assume after every reply.   
-  
-Think of **JSON-RPC** as the shared request format those coordinators use when they call each other. Instead of a vague Slack message (“can you look into shoes?”), every exchange is a structured note with three parts:
+
+Think of **JSON-RPC** as the shared request format those coordinators use when specialists call each other. Instead of a vague Slack message (“can you look into shoes?”), every exchange is a structured note with three parts:
 
 - **Method** — what you want done (`initialize`, `session/prompt`, …)
 - **Params** — the details for that action (session id, user message, …)
@@ -41,7 +46,11 @@ Think of **JSON-RPC** as the shared request format those coordinators use when t
 The other side answers in the same shape: either a **result** (success) or an **error** (failure), tied to that same id.
 
 **Agent Client Protocol (ACP)** sits on top of JSON-RPC 2.0. It is the vocabulary and sequence rules for agent-to-agent work.  
+  
 Those messages flow between:
+
+
+
 
 
 <div class="table-wrap" markdown="1">
@@ -52,6 +61,8 @@ Those messages flow between:
 | **Agent**  | Seller-side agent        | Holds session state, runs work, returns results |
 
 </div>
+
+
 
 
 The client role is structural, not necessarily human. One agent acting for a user can be the client; another agent’s endpoint can be the agent. The protocol defines **requester and responder**.
@@ -72,6 +83,9 @@ Initialization is how every connection starts. The buyer-side agent sends `initi
 Figure 1 — Initialization.
 
 
+
+
+
 <div class="table-wrap" markdown="1">
 
 | Step | Stage                   | Buyer-side agent       | Seller-side agent                                              | Meaning                                                                        |
@@ -84,8 +98,9 @@ Figure 1 — Initialization.
 </div>
 
 
-#### Wire format
 
+
+#### Wire format
 
 **Request — `initialize`**
 
@@ -111,7 +126,6 @@ Figure 1 — Initialization.
   }
 }
 ```
-
 
 **Response**
 
@@ -143,10 +157,12 @@ Figure 1 — Initialization.
 }
 ```
 
-
 The spec uses `clientCapabilities` / `clientInfo` on the request and `agentCapabilities` / `agentInfo` on the response. Those names map to **buyer** and **seller** roles in the handshake.
 
 ### Key rules — initialization
+
+
+
 
 
 <div class="table-wrap" markdown="1">
@@ -161,6 +177,8 @@ The spec uses `clientCapabilities` / `clientInfo` on the request and `agentCapab
 </div>
 
 
+
+
 ---
 
 ## Authentication
@@ -168,6 +186,9 @@ The spec uses `clientCapabilities` / `clientInfo` on the request and `agentCapab
 Authentication establishes trust **after** initialization. The seller advertises methods in `authMethods` on the initialize response. If required, the buyer calls `authenticate` with a matching `methodId` before session work continues.
 
 Figure 2 — Authentication.
+
+
+
 
 
 <div class="table-wrap" markdown="1">
@@ -183,6 +204,8 @@ Figure 2 — Authentication.
 | —    | Re-auth note            | May need to authenticate again       | May require it                                 | A new session may require authentication again.     |
 
 </div>
+
+
 
 
 #### Wire format
@@ -201,7 +224,6 @@ Figure 2 — Authentication.
 }
 ```
 
-
 **Request — `authenticate`**
 
 ```json
@@ -215,7 +237,6 @@ Figure 2 — Authentication.
 }
 ```
 
-
 **Response — `authenticate`**
 
 ```json
@@ -226,8 +247,10 @@ Figure 2 — Authentication.
 }
 ```
 
-
 ### Key rules — authentication
+
+
+
 
 
 <div class="table-wrap" markdown="1">
@@ -241,6 +264,8 @@ Figure 2 — Authentication.
 </div>
 
 
+
+
 ---
 
 ## Session setup
@@ -252,6 +277,9 @@ A **session** is a named conversation with its own `sessionId`, history, and wor
 Figure 3 — Session setup. MCP Servers are seller-side backends, not a third ACP peer.
 
 All paths below assume **Initialized** (and **authenticated**, if required).
+
+
+
 
 
 <div class="table-wrap" markdown="1">
@@ -272,8 +300,9 @@ All paths below assume **Initialized** (and **authenticated**, if required).
 </div>
 
 
-### Create a new session
 
+
+### Create a new session
 
 **Request — `session/new`**
 
@@ -287,7 +316,6 @@ All paths below assume **Initialized** (and **authenticated**, if required).
 }
 ```
 
-
 **Response**
 
 ```json
@@ -298,10 +326,12 @@ All paths below assume **Initialized** (and **authenticated**, if required).
 }
 ```
 
-
 Use when starting a fresh conversation.
 
 ### Load vs resume
+
+
+
 
 
 <div class="table-wrap" markdown="1">
@@ -312,6 +342,8 @@ Use when starting a fresh conversation.
 | `session/resume` | Quiet reconnect, no full replay          | Short disconnect; seller still has context.        |
 
 </div>
+
+
 
 
 **Request — `session/load`**
@@ -326,7 +358,6 @@ Use when starting a fresh conversation.
 }
 ```
 
-
 **Request — `session/resume`**
 
 ```json
@@ -339,11 +370,9 @@ Use when starting a fresh conversation.
 }
 ```
 
-
 During load, the seller streams past messages as `session/update` notifications until load completes.
 
 ### List sessions
-
 
 **Request — `session/list`**
 
@@ -353,7 +382,6 @@ During load, the seller streams past messages as `session/update` notifications 
   "params": {}
 }
 ```
-
 
 **Response (example)**
 
@@ -371,8 +399,10 @@ During load, the seller streams past messages as `session/update` notifications 
 }
 ```
 
-
 ### Key rules — session setup
+
+
+
 
 
 <div class="table-wrap" markdown="1">
@@ -391,6 +421,8 @@ During load, the seller streams past messages as `session/update` notifications 
 </div>
 
 
+
+
 ---
 
 ## Prompt turn
@@ -400,6 +432,9 @@ A **prompt turn** is one cycle from a user message to a final `stopReason` on th
 **Prompt content:** Each item in `params.prompt` is a content block with a `type` (for example `text`, `image`, or `resource`). The buyer must only send types the two sides agreed at `initialize` under `promptCapabilities`.
 
 Figure 4 — Prompt turn. Solid lines = requests; dashed = seller notifications. LLM work is seller-internal.
+
+
+
 
 
 <div class="table-wrap" markdown="1">
@@ -415,8 +450,9 @@ Figure 4 — Prompt turn. Solid lines = requests; dashed = seller notifications.
 </div>
 
 
-#### Wire format
 
+
+#### Wire format
 
 **Request — `session/prompt`**
 
@@ -445,7 +481,6 @@ Figure 4 — Prompt turn. Solid lines = requests; dashed = seller notifications.
   }
 }
 ```
-
 
 **Notification — `session/update`**
 
@@ -476,7 +511,6 @@ Figure 4 — Prompt turn. Solid lines = requests; dashed = seller notifications.
 }
 ```
 
-
 **Turn complete — `stopReason: cancelled`**
 
 ```json
@@ -486,7 +520,6 @@ Figure 4 — Prompt turn. Solid lines = requests; dashed = seller notifications.
   }
 }
 ```
-
 
 **Turn complete — `stopReason: needs_clarification`**
 
@@ -499,8 +532,10 @@ Figure 4 — Prompt turn. Solid lines = requests; dashed = seller notifications.
 }
 ```
 
-
 ### Key rules — prompt turn
+
+
+
 
 
 <div class="table-wrap" markdown="1">
@@ -518,11 +553,16 @@ Figure 4 — Prompt turn. Solid lines = requests; dashed = seller notifications.
 </div>
 
 
+
+
 Spec: [Prompt turn](https://agentclientprotocol.com/protocol/prompt-turn.md)
 
 ---
 
 ## Protocol map
+
+
+
 
 
 <div class="table-wrap" markdown="1">
@@ -537,16 +577,18 @@ Spec: [Prompt turn](https://agentclientprotocol.com/protocol/prompt-turn.md)
 </div>
 
 
+
+
 ---
 
 ## Try the demo
 
 Still struggling to see how the phases connect? Walk through a live, step-by-step visualization: [Agentic Commerce Protocol — Phase 1 Demo](https://dheeraj-acp-demo.netlify.app/).
 
-The demo runs handshake, session, intent, offer, and payment between a buyer-side agent and a seller-side agent. Step through it once, then come back to this post — the sequence diagrams and wire formats should click more easily.
+The demo runs handshake, session, intent, offer, and payment between a buyer-side agent and a seller-side agent. Step through it once, then come back to this post.
 
 ---
 
 ## Thank you for reading
 
-**Acknowledgement:** Pratik Ratadiya — thank you for reading the initial draft.
+**Acknowledgement:** Pratik Ratadiya, thank you for reading the initial draft. :)

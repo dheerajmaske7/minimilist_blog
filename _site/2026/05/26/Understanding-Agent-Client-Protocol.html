@@ -92,7 +92,7 @@
 
 <p>ACP defines which JSON-RPC methods exist, what order they run in, and what each side may assume after every reply.</p>
 
-<p>Think of <strong>JSON-RPC</strong> as the shared request format those coordinators use when they call each other. Instead of a vague Slack message (“can you look into shoes?”), every exchange is a structured note with three parts:</p>
+<p>Think of <strong>JSON-RPC</strong> as the shared request format those coordinators use when specialists call each other. Instead of a vague Slack message (“can you look into shoes?”), every exchange is a structured note with three parts:</p>
 
 <ul>
   <li><strong>Method</strong> — what you want done (<code class="language-plaintext highlighter-rouge">initialize</code>, <code class="language-plaintext highlighter-rouge">session/prompt</code>, …)</li>
@@ -102,8 +102,9 @@
 
 <p>The other side answers in the same shape: either a <strong>result</strong> (success) or an <strong>error</strong> (failure), tied to that same id.</p>
 
-<p><strong>Agent Client Protocol (ACP)</strong> sits on top of JSON-RPC 2.0. It is the vocabulary and sequence rules for agent-to-agent work.<br />
-Those messages flow between:</p>
+<p><strong>Agent Client Protocol (ACP)</strong> sits on top of JSON-RPC 2.0. It is the vocabulary and sequence rules for agent-to-agent work.</p>
+
+<p>Those messages flow between:</p>
 
 <div class="table-wrap">
 
@@ -901,13 +902,13 @@ Those messages flow between:</p>
 
 <p>Still struggling to see how the phases connect? Walk through a live, step-by-step visualization: <a href="https://dheeraj-acp-demo.netlify.app/">Agentic Commerce Protocol — Phase 1 Demo</a>.</p>
 
-<p>The demo runs handshake, session, intent, offer, and payment between a buyer-side agent and a seller-side agent. Step through it once, then come back to this post — the sequence diagrams and wire formats should click more easily.</p>
+<p>The demo runs handshake, session, intent, offer, and payment between a buyer-side agent and a seller-side agent. Step through it once, then come back to this post.</p>
 
 <hr />
 
 <h2 id="thank-you-for-reading">Thank you for reading</h2>
 
-<p><strong>Acknowledgement:</strong> Pratik Ratadiya — thank you for reading the initial draft.</p>
+<p><strong>Acknowledgement:</strong> Pratik Ratadiya, thank you for reading the initial draft. :)</p>
 
             </div>
         </article>
