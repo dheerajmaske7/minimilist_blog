@@ -218,6 +218,18 @@ article .highlight pre {
 article figure img {
   max-width: 100%;
   height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.post-content figure {
+  width: 100%;
+  margin: 0 0 1.5rem;
+}
+
+.post-content figure img {
+  width: 100%;
+  max-width: 820px;
 }
 
 /* Markdown / HTML tables in posts */
@@ -295,6 +307,23 @@ article figure img {
   .post-content .table-wrap {
     border-radius: 6px;
     box-shadow: inset -10px 0 10px -10px rgba(0, 0, 0, 0.06);
+  }
+
+  /* Let diagrams use the full screen width on phones */
+  .post-content figure {
+    margin-left: -14px;
+    margin-right: -14px;
+    width: calc(100% + 28px);
+  }
+
+  .post-content figure img {
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 0 !important;
+  }
+
+  .post-content figure figcaption {
+    padding: 0 14px;
   }
 
   .post-content table {
