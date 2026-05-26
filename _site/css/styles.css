@@ -215,10 +215,67 @@ article .highlight pre {
   font-size: 0.78rem;
 }
 
+article figure img {
+  max-width: 100%;
+  height: auto;
+}
+
+article table {
+  width: 100%;
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
+  main {
+    padding: 12px 14px;
+    margin: 12px auto;
+  }
+
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 14px;
+  }
+
+  header nav {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
   .wire-pair {
     grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .wire-panel .highlight,
+  .wire-panel pre {
+    font-size: 0.8rem;
+  }
+
+  article table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  article table thead,
+  article table tbody,
+  article table tr {
+    display: table;
+    width: 100%;
+    min-width: 560px;
+    table-layout: fixed;
+  }
+
+  article pre,
+  article .highlight {
+    padding: 12px;
+    font-size: 0.8rem;
+  }
+
+  article code {
+    word-break: break-word;
   }
 
   .talk-entry, .talk-entry.reverse {
