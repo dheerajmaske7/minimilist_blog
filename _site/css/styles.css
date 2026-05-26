@@ -220,8 +220,40 @@ article figure img {
   height: auto;
 }
 
-article table {
+/* Markdown / HTML tables in posts */
+.post-content .table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 1rem 0;
   width: 100%;
+  max-width: 100%;
+}
+
+.post-content table {
+  width: 100%;
+  min-width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  table-layout: auto;
+}
+
+.post-content table th,
+.post-content table td {
+  border: 1px solid #aaa;
+  padding: 9px 14px;
+  text-align: left;
+  vertical-align: top;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+}
+
+.post-content table th {
+  background: #f6f8fa;
+  font-weight: bold;
+}
+
+.post-content table code {
+  word-break: break-word;
 }
 
 /* Mobile Responsiveness */
@@ -253,19 +285,19 @@ article table {
     font-size: 0.8rem;
   }
 
-  article table {
-    display: block;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+  .post-content .table-wrap {
+    border-radius: 6px;
+    box-shadow: inset -10px 0 10px -10px rgba(0, 0, 0, 0.06);
   }
 
-  article table thead,
-  article table tbody,
-  article table tr {
-    display: table;
-    width: 100%;
-    min-width: 560px;
-    table-layout: fixed;
+  .post-content table {
+    font-size: 0.84rem;
+    min-width: 520px;
+  }
+
+  .post-content table th,
+  .post-content table td {
+    padding: 8px 10px;
   }
 
   article pre,
