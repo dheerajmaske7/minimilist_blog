@@ -80,7 +80,16 @@ Typical stack for a single conversation:
 
 Initialization is how every connection starts. The buyer-side agent sends `initialize` with a protocol version and capabilities; the seller-side agent replies with the agreed version and what it supports. **No session exists yet.** Only after this handshake can the buyer call `session/new`.
 
-Figure 1 — Initialization.
+<figure style="text-align:center; margin: 0 0 1.5rem;">
+  <img
+    src="/assets/images/ACP_Article_assets/initialization.png"
+    alt="Initialization sequence diagram"
+    style="max-width: 820px; width: 100%; height: auto; border-radius: 10px;"
+  />
+  <figcaption style="font-size: 0.95rem; opacity: 0.8; margin-top: 8px;">
+    Figure 1 — Initialization.
+  </figcaption>
+</figure>
 
 
 
@@ -185,7 +194,16 @@ The spec uses `clientCapabilities` / `clientInfo` on the request and `agentCapab
 
 Authentication establishes trust **after** initialization. The seller advertises methods in `authMethods` on the initialize response. If required, the buyer calls `authenticate` with a matching `methodId` before session work continues.
 
-Figure 2 — Authentication.
+<figure style="text-align:center; margin: 0 0 1.5rem;">
+  <img
+    src="/assets/images/ACP_Article_assets/authentication.png"
+    alt="Authentication sequence diagram"
+    style="max-width: 820px; width: 100%; height: auto; border-radius: 10px;"
+  />
+  <figcaption style="font-size: 0.95rem; opacity: 0.8; margin-top: 8px;">
+    Figure 2 — Authentication.
+  </figcaption>
+</figure>
 
 
 
@@ -274,7 +292,16 @@ A **session** is a named conversation with its own `sessionId`, history, and wor
 
 **Example:** Turn 1 — buyer says “running shoes.” Turn 2 — seller asks for budget. Both turns use the same `sessionId` so the seller can rely on stored context.
 
-Figure 3 — Session setup. MCP Servers are seller-side backends, not a third ACP peer.
+<figure style="text-align:center; margin: 0 0 1.5rem;">
+  <img
+    src="/assets/images/ACP_Article_assets/session-setup.png"
+    alt="Session setup sequence diagram"
+    style="max-width: 820px; width: 100%; height: auto; border-radius: 10px;"
+  />
+  <figcaption style="font-size: 0.95rem; opacity: 0.8; margin-top: 8px;">
+    Figure 3 — Session setup. MCP Servers are seller-side backends, not a third ACP peer.
+  </figcaption>
+</figure>
 
 All paths below assume **Initialized** (and **authenticated**, if required).
 
@@ -431,7 +458,16 @@ A **prompt turn** is one cycle from a user message to a final `stopReason` on th
 
 **Prompt content:** Each item in `params.prompt` is a content block with a `type` (for example `text`, `image`, or `resource`). The buyer must only send types the two sides agreed at `initialize` under `promptCapabilities`.
 
-Figure 4 — Prompt turn. Solid lines = requests; dashed = seller notifications. LLM work is seller-internal.
+<figure style="text-align:center; margin: 0 0 1.5rem;">
+  <img
+    src="/assets/images/ACP_Article_assets/prompt-turn.png"
+    alt="Prompt turn sequence diagram"
+    style="max-width: 820px; width: 100%; height: auto; border-radius: 10px;"
+  />
+  <figcaption style="font-size: 0.95rem; opacity: 0.8; margin-top: 8px;">
+    Figure 4 — Prompt turn. Solid lines = requests; dashed = seller notifications. LLM work is seller-internal.
+  </figcaption>
+</figure>
 
 
 

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2026-05-26T03:09:10-04:00</updated><id>/feed.xml</id><title type="html">Dheeraj Maske</title><subtitle>Minimalist blog with blogs, projects, and more.</subtitle><author><name>Dheeraj Maske</name></author><entry><title type="html">Understanding Agent Client Protocol</title><link href="/2026/05/26/Understanding-Agent-Client-Protocol.html" rel="alternate" type="text/html" title="Understanding Agent Client Protocol" /><published>2026-05-26T00:00:00-04:00</published><updated>2026-05-26T00:00:00-04:00</updated><id>/2026/05/26/Understanding-Agent-Client-Protocol</id><content type="html" xml:base="/2026/05/26/Understanding-Agent-Client-Protocol.html"><![CDATA[<p>Imagine you are coordinating a project with a remote team of specialists. You do not re-introduce yourself on every call. You pick up where you left off: what was decided, what is pending, what you are still waiting on.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2026-05-26T03:11:00-04:00</updated><id>/feed.xml</id><title type="html">Dheeraj Maske</title><subtitle>Minimalist blog with blogs, projects, and more.</subtitle><author><name>Dheeraj Maske</name></author><entry><title type="html">Understanding Agent Client Protocol</title><link href="/2026/05/26/Understanding-Agent-Client-Protocol.html" rel="alternate" type="text/html" title="Understanding Agent Client Protocol" /><published>2026-05-26T00:00:00-04:00</published><updated>2026-05-26T00:00:00-04:00</updated><id>/2026/05/26/Understanding-Agent-Client-Protocol</id><content type="html" xml:base="/2026/05/26/Understanding-Agent-Client-Protocol.html"><![CDATA[<p>Imagine you are coordinating a project with a remote team of specialists. You do not re-introduce yourself on every call. You pick up where you left off: what was decided, what is pending, what you are still waiting on.</p>
 
 <p>Your specialists come from different companies. One uses Slack, one uses email, one has their own system. You need a shared language before any real work can happen. Before you assign anything, you ask what they can actually do. Some tasks take hours or days, so you do not block on every reply. When priorities shift, you send <strong>stop</strong> on an existing thread, not a brand-new conversation. Handoffs must stay visible, and access must match trust.</p>
 
@@ -106,7 +106,12 @@
 
 <p>Initialization is how every connection starts. The buyer-side agent sends <code class="language-plaintext highlighter-rouge">initialize</code> with a protocol version and capabilities; the seller-side agent replies with the agreed version and what it supports. <strong>No session exists yet.</strong> Only after this handshake can the buyer call <code class="language-plaintext highlighter-rouge">session/new</code>.</p>
 
-<p>Figure 1 — Initialization.</p>
+<figure style="text-align:center; margin: 0 0 1.5rem;">
+  <img src="/assets/images/ACP_Article_assets/initialization.png" alt="Initialization sequence diagram" style="max-width: 820px; width: 100%; height: auto; border-radius: 10px;" />
+  <figcaption style="font-size: 0.95rem; opacity: 0.8; margin-top: 8px;">
+    Figure 1 — Initialization.
+  </figcaption>
+</figure>
 
 <div class="table-wrap">
 
@@ -250,7 +255,12 @@
 
 <p>Authentication establishes trust <strong>after</strong> initialization. The seller advertises methods in <code class="language-plaintext highlighter-rouge">authMethods</code> on the initialize response. If required, the buyer calls <code class="language-plaintext highlighter-rouge">authenticate</code> with a matching <code class="language-plaintext highlighter-rouge">methodId</code> before session work continues.</p>
 
-<p>Figure 2 — Authentication.</p>
+<figure style="text-align:center; margin: 0 0 1.5rem;">
+  <img src="/assets/images/ACP_Article_assets/authentication.png" alt="Authentication sequence diagram" style="max-width: 820px; width: 100%; height: auto; border-radius: 10px;" />
+  <figcaption style="font-size: 0.95rem; opacity: 0.8; margin-top: 8px;">
+    Figure 2 — Authentication.
+  </figcaption>
+</figure>
 
 <div class="table-wrap">
 
@@ -392,7 +402,12 @@
 
 <p><strong>Example:</strong> Turn 1 — buyer says “running shoes.” Turn 2 — seller asks for budget. Both turns use the same <code class="language-plaintext highlighter-rouge">sessionId</code> so the seller can rely on stored context.</p>
 
-<p>Figure 3 — Session setup. MCP Servers are seller-side backends, not a third ACP peer.</p>
+<figure style="text-align:center; margin: 0 0 1.5rem;">
+  <img src="/assets/images/ACP_Article_assets/session-setup.png" alt="Session setup sequence diagram" style="max-width: 820px; width: 100%; height: auto; border-radius: 10px;" />
+  <figcaption style="font-size: 0.95rem; opacity: 0.8; margin-top: 8px;">
+    Figure 3 — Session setup. MCP Servers are seller-side backends, not a third ACP peer.
+  </figcaption>
+</figure>
 
 <p>All paths below assume <strong>Initialized</strong> (and <strong>authenticated</strong>, if required).</p>
 
@@ -642,7 +657,12 @@
 
 <p><strong>Prompt content:</strong> Each item in <code class="language-plaintext highlighter-rouge">params.prompt</code> is a content block with a <code class="language-plaintext highlighter-rouge">type</code> (for example <code class="language-plaintext highlighter-rouge">text</code>, <code class="language-plaintext highlighter-rouge">image</code>, or <code class="language-plaintext highlighter-rouge">resource</code>). The buyer must only send types the two sides agreed at <code class="language-plaintext highlighter-rouge">initialize</code> under <code class="language-plaintext highlighter-rouge">promptCapabilities</code>.</p>
 
-<p>Figure 4 — Prompt turn. Solid lines = requests; dashed = seller notifications. LLM work is seller-internal.</p>
+<figure style="text-align:center; margin: 0 0 1.5rem;">
+  <img src="/assets/images/ACP_Article_assets/prompt-turn.png" alt="Prompt turn sequence diagram" style="max-width: 820px; width: 100%; height: auto; border-radius: 10px;" />
+  <figcaption style="font-size: 0.95rem; opacity: 0.8; margin-top: 8px;">
+    Figure 4 — Prompt turn. Solid lines = requests; dashed = seller notifications. LLM work is seller-internal.
+  </figcaption>
+</figure>
 
 <div class="table-wrap">
 
