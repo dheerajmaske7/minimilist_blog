@@ -12,6 +12,14 @@ sections:
         description: A Chainlink Runtime Environment (CRE) workflow that reads token prices from Chainlink Data Feeds on Sepolia and writes verified on-chain snapshots in a single HTTP-triggered execution.
         github: https://github.com/dhru7777/Chainlink-Assignment-CRE
 
+  - name: Ongoing Projects
+    items:
+      - title: ACP Demo — Agentic Commerce
+        date: Ongoing · 2026
+        description: A Nike-themed buyer–seller demo where two AI agents negotiate offers over ACP, settle with x402 USDC or Stripe, and verify seller identity on-chain via ERC-8004 — a seven-day public build from handshake to real payment.
+        github: https://github.com/dhru7777/ACP-demo
+        demo: https://dheeraj-acp-demo.netlify.app/
+
   - name: Completed Projects
     items:
       - title: Collisions
