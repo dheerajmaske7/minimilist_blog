@@ -5,7 +5,7 @@
   <li class="project-item">
     <div class="project-header">
       <span class="project-title">{{ project.title }}</span>
-      {% include project-icons.html github=project.github demo=project.demo %}
+      {% include project-icons.html github=project.github website=project.website demo=project.demo %}
       {% if project.date %}
       <span class="project-date">({{ project.date }})</span>
       {% endif %}

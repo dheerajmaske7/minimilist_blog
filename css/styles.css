@@ -155,6 +155,10 @@ footer {
   color: #24292f;
 }
 
+.project-link-website:hover {
+  color: #007acc;
+}
+
 .project-link-demo:hover {
   color: #ff0000;
 }
