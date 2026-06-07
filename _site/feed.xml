@@ -1,4 +1,166 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2026-06-07T12:00:46-04:00</updated><id>/feed.xml</id><title type="html">Dheeraj Maske</title><subtitle>Minimalist blog with blogs, projects, and more.</subtitle><author><name>Dheeraj Maske</name></author><entry><title type="html">Understanding Agent Client Protocol</title><link href="/2026/05/26/Understanding-Agent-Client-Protocol.html" rel="alternate" type="text/html" title="Understanding Agent Client Protocol" /><published>2026-05-26T00:00:00-04:00</published><updated>2026-05-26T00:00:00-04:00</updated><id>/2026/05/26/Understanding-Agent-Client-Protocol</id><content type="html" xml:base="/2026/05/26/Understanding-Agent-Client-Protocol.html"><![CDATA[<p>Imagine you are coordinating a project with a remote team of specialists. You do not re-introduce yourself on every call. You pick up where you left off: what was decided, what is pending, what you are still waiting on.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2026-06-07T18:15:20-04:00</updated><id>/feed.xml</id><title type="html">Dheeraj Maske</title><subtitle>Minimalist blog with blogs, projects, and more.</subtitle><author><name>Dheeraj Maske</name></author><entry><title type="html">HTTP 402 to x402 protocol</title><link href="/2026/06/07/HTTP-402-to-x402-protocol.html" rel="alternate" type="text/html" title="HTTP 402 to x402 protocol" /><published>2026-06-07T00:00:00-04:00</published><updated>2026-06-07T00:00:00-04:00</updated><id>/2026/06/07/HTTP-402-to-x402-protocol</id><content type="html" xml:base="/2026/06/07/HTTP-402-to-x402-protocol.html"><![CDATA[<div class="question-box">
+
+  <h3 id="what-is-http-402">What is HTTP 402?</h3>
+
+  <p><strong>HTTP 402</strong> is a standard HTTP response status code that indicates a payment is required before accessing a resource.</p>
+
+</div>
+
+<p>Interestingly, the idea has existed since the early days of the internet. Despite being part of the HTTP specification, HTTP 402 was rarely used because the Internet never developed a native way to move money.</p>
+
+<hr />
+
+<h2 id="story-time">Story Time</h2>
+
+<p>In 1994, Marc Andreessen helped bring the internet to the public through Netscape, one of the first popular web browsers. Years later, he realized that while the internet made it easy to share information, it didn’t make it easy to move money.</p>
+
+<p>The internet was designed around information. Developers could easily add text, images, and links using HTML. But there was no equivalent “payment” building block that allowed money to move as naturally as information.</p>
+
+<p>I believe Andreessen tried to push this idea, but banks and other financial institutions were conservative when it came to moving money online. They had legitimate concerns:</p>
+
+<ul>
+  <li>Who is responsible if something goes wrong?</li>
+  <li>How do you verify identity?</li>
+  <li>How do chargebacks work?</li>
+  <li>How do you protect consumers?</li>
+  <li>How do you comply with regulations?</li>
+  <li>How do you prevent money laundering?</li>
+  <li>How are disputes resolved?</li>
+</ul>
+
+<p>Regulated industries move slowly because they manage people’s money and need to be careful. Their concerns were valid, and introducing internet payments without the right infrastructure could have created significant risks.</p>
+
+<p>Netscape built <strong>SSL (Secure Socket Layer)</strong>, which made online payments possible. However, it never succeeded in making payments part of the internet’s core architecture. Banks, regulators, and payment networks were not ready to support such a radical change. Honestly, if I were in their position, I would probably have empathized with them.</p>
+
+<p>Meanwhile, information moved freely online. Industries like newspapers, television, magazines, and entertainment were completely reinvented. In <strong>Web 1.0</strong>, people could consume content instantly. In <strong>Web 2.0</strong>, they could both consume and publish content instantly.</p>
+
+<p>Money, however, remained trapped within traditional banking systems. Payments, loans, investing, and banking continued to rely on intermediaries, approvals, and complex infrastructure. As a result, innovation in finance moved much more slowly than innovation in media and communication.</p>
+
+<p>In 1998, <strong>PayPal</strong> solved the problem of internet payments. It made payments much easier for merchants, but it was still a bridge to the traditional financial system. Developers could accept payments, but they couldn’t build money directly into the internet the way they could build text, images, or links.</p>
+
+<hr />
+
+<h2 id="late-2000s-two-solutions-emerged">Late 2000s: Two Solutions Emerged</h2>
+
+<h3 id="1-vertical-finance">1. Vertical Finance</h3>
+
+<p>The first solution was <strong>Vertical Finance</strong>, where companies built financial products on top of the existing banking system instead of replacing it.</p>
+
+<p><strong>Stripe</strong> became one of the biggest examples of this approach. It made payments programmable. Instead of simply accepting payments, developers could write software around money. Stripe exposed financial functionality through APIs, allowing startups like Shopify, Lyft, and DoorDash to embed payments directly into their applications.</p>
+
+<p>For the first time, money could become part of the product logic:</p>
+
+<div class="wire-panel">
+
+  <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">user_clicks_buy</span><span class="p">:</span>
+    <span class="nf">charge_customer</span><span class="p">()</span>
+    <span class="nf">split_payment</span><span class="p">()</span>
+    <span class="nf">pay_vendor</span><span class="p">()</span>
+    <span class="nf">collect_platform_fee</span><span class="p">()</span>
+</code></pre></div>  </div>
+
+</div>
+
+<p>This was still a bridge to the traditional financial system, but it was a much more developer-friendly bridge.</p>
+
+<h3 id="2-cryptocurrency">2. Cryptocurrency</h3>
+
+<p>The second solution was <strong>Cryptocurrency</strong>, inspired by Bitcoin, which attempts to rebuild the financial system from scratch using open protocols. Many incumbents were skeptical in the early days. However, after 2020, institutions, banks, and regulators gradually started paying attention and, in some cases, embracing the technology.</p>
+
+<p>Instead of relying on layers of intermediaries such as banks, ACH networks, SWIFT, and card networks, crypto introduced a different model:</p>
+
+<div class="wire-panel">
+
+  <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Wallet → Blockchain → Wallet
+</code></pre></div>  </div>
+
+</div>
+
+<p>The infrastructure itself changes.</p>
+
+<hr />
+
+<div class="observation-box">
+
+  <p><strong>Observation</strong></p>
+
+  <h3 id="why-attention-became-the-internets-default-currency">Why Attention Became the Internet’s Default Currency?</h3>
+
+  <p>Since moving information online was easy but moving money was still high-friction, many internet companies struggled to charge users directly. Payments required accounts, trust, and integration with traditional financial systems. As a result, a large part of the consumer internet, especially media and social platforms, shifted toward advertising as a default monetization model.</p>
+
+  <p>Instead of users paying directly with money, platforms effectively monetized attention. Engagement became the closest measurable proxy for value in a system where native, low-friction payments did not exist.</p>
+
+</div>
+
+<hr />
+
+<h2 id="http-402-today">HTTP 402 Today</h2>
+
+<p>Looking back, the internet simply wasn’t ready for HTTP 402. The vision existed decades ago, but the infrastructure required to support it did not. Money was heavily regulated, banking systems were siloed, and the technology required for native internet payments simply did not exist.</p>
+
+<p>Fast forward to today, and things look different. <strong>Stablecoins</strong> have emerged as one of the first dollar-denominated assets that can move natively across the internet. In the U.S., regulatory efforts such as the <strong>GENIUS Act</strong>, which focuses on stablecoin regulation, and the <strong>CLARITY Act</strong>, which aims to define regulatory responsibilities for digital assets, have helped provide more clarity around the industry.</p>
+
+<p>Take <strong>USDC</strong> as an example. A USDC token is not literally a dollar, but it is designed to be redeemable for one U.S. dollar. It moves across blockchain networks and can settle globally in minutes or even seconds, depending on the chain being used. For the first time, there is a practical way to move a dollar-denominated asset across internet-native infrastructure.</p>
+
+<p>Now combine that with HTTP 402, whose original idea was simple: <strong>before accessing a resource, pay for it.</strong> The vision existed decades ago, but the infrastructure was missing. Today, with stablecoins, smart contracts, wallets, and Agentic AI, many of those missing pieces are finally starting to come together. For the first time, the internet has a way to move both information and value using internet-native infrastructure.</p>
+
+<hr />
+
+<div class="question-box">
+
+  <h3 id="what-is-x402-and-how-is-it-related-to-http-402">What is x402, and how is it related to HTTP 402?</h3>
+
+  <p><strong>x402</strong> is a protocol built around the idea behind HTTP 402. While HTTP 402 introduced the concept of “Payment Required”, it never became widely adopted because the infrastructure needed to support internet-native payments did not exist.</p>
+
+</div>
+
+<p>Now, the purpose of x402 is to enable frictionless, API-native payments for accessing web resources. It is designed for:</p>
+
+<ul>
+  <li><strong>Machine-to-machine (M2M) payments</strong></li>
+  <li><strong>Pay-per-use models</strong> such as API calls or paywalled content</li>
+  <li><strong>Micropayments</strong> without requiring account creation or traditional payment rails</li>
+</ul>
+
+<p>By using the existing HTTP 402 status code, x402 remains natively compatible with the web. This allows developers to integrate payments directly into HTTP-based services while preserving the original vision of “pay before accessing a resource.”</p>
+
+<p>This brings the internet one step closer to the evolution described by Chris Dixon:</p>
+
+<div class="table-wrap">
+
+  <table>
+    <thead>
+      <tr>
+        <th>Era</th>
+        <th>Capability</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Web 1.0</strong></td>
+        <td>Users could <strong>read</strong> information</td>
+      </tr>
+      <tr>
+        <td><strong>Web 2.0</strong></td>
+        <td>Users could <strong>read and write</strong> content</td>
+      </tr>
+      <tr>
+        <td><strong>Web 3.0</strong></td>
+        <td>Users can <strong>read, write, and own</strong> assets</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+
+<hr />
+
+<h2 id="references">References</h2>
+
+<ol>
+  <li><a href="https://docs.x402.org/core-concepts/http-402">x402 Documentation — HTTP 402</a></li>
+  <li><a href="https://economyofbits.substack.com/p/marc-andreessens-original-sin">Marc Andreessen’s Original Sin</a></li>
+</ol>]]></content><author><name>Dheeraj Maske</name></author><summary type="html"><![CDATA[HTTP 402 imagined pay-before-access on the web decades ago, but the internet had no native way to move money. With stablecoins, wallets, and agentic AI, x402 is finally making that vision practical.]]></summary></entry><entry><title type="html">Understanding Agent Client Protocol</title><link href="/2026/05/26/Understanding-Agent-Client-Protocol.html" rel="alternate" type="text/html" title="Understanding Agent Client Protocol" /><published>2026-05-26T00:00:00-04:00</published><updated>2026-05-26T00:00:00-04:00</updated><id>/2026/05/26/Understanding-Agent-Client-Protocol</id><content type="html" xml:base="/2026/05/26/Understanding-Agent-Client-Protocol.html"><![CDATA[<p>Imagine you are coordinating a project with a remote team of specialists. You do not re-introduce yourself on every call. You pick up where you left off: what was decided, what is pending, what you are still waiting on.</p>
 
 <p>Your specialists come from different companies. One uses Slack, one uses email, one has their own system. You need a shared language before any real work can happen. Before you assign anything, you ask what they can actually do. Some tasks take hours or days, so you do not block on every reply. When priorities shift, you send <strong>stop</strong> on an existing thread, not a brand-new conversation. Handoffs must stay visible, and access must match trust.</p>
 
@@ -2205,91 +2367,4 @@ A <strong>return to the Gold Standard is unlikely</strong>—the future is shift
 
 <p>Additionally, <strong>restaking protocols extend staking benefits to Layer 2s, bridges, and oracles</strong>, further enhancing Ethereum’s ecosystem.</p>
 
-<p>As liquid staking evolves, <strong>balancing decentralization, regulation, and security</strong> will be crucial for its long-term success.</p>]]></content><author><name>Dheeraj Maske</name></author><summary type="html"><![CDATA[Liquid Staking removes the barriers of traditional staking by allowing users to stake their ETH while maintaining liquidity. Learn how it works, its benefits, and its role in DeFi.]]></summary></entry><entry><title type="html">How Much Are You Really Losing to Hidden Fees When Paying Tuition Abroad by Traditional Banking?</title><link href="/2025/01/20/How-Much-Do-You-Really-Pay-While-Transferring-Fees-from-a-Student-Loan-to-an-Institute.html" rel="alternate" type="text/html" title="How Much Are You Really Losing to Hidden Fees When Paying Tuition Abroad by Traditional Banking?" /><published>2025-01-20T00:00:00-05:00</published><updated>2025-01-20T00:00:00-05:00</updated><id>/2025/01/20/How-Much-Do-You-Really-Pay-While-Transferring-Fees-from-a-Student-Loan-to-an-Institute</id><content type="html" xml:base="/2025/01/20/How-Much-Do-You-Really-Pay-While-Transferring-Fees-from-a-Student-Loan-to-an-Institute.html"><![CDATA[<p>When I transferred funds from a loan of ₹20,00,000 to New York University (NYU) for my tuition fees, I realized how much extra I ended up paying in hidden charges. It was an eye-opening experience to see how many intermediaries were involved in the process and how each one added their own fees. This got me thinking—what if there was a better way? Let me walk you through my experience, the charges I paid, and an idea that could save students like me a significant amount of money.</p>
-
-<hr />
-
-<h2 id="flowchart-of-traditional-payment-process">Flowchart of Traditional Payment Process</h2>
-
-<p>Here’s how the money flowed from my loan to NYU and the charges involved at each step:</p>
-
-<p><img src="\assets\images\How_Much_Do_You_Really_Pay_While_Transferring_Fees_from_a_Student_Loan\PaymentFlow-Blockdiagram.jpg" alt="Flowchart of Payment Process" /></p>
-
-<ul>
-  <li>This flowchart shows the <strong>traditional process</strong> of transferring funds.</li>
-  <li>Steps include:
-    <ol>
-      <li><strong>Loan Disbursal</strong> from Credila Bank.</li>
-      <li><strong>Bank Initiates Remittance</strong>, adding Tax Collected at Source (TCS), commission, and Goods and Services Tax (GST).</li>
-      <li><strong>Forex (Foreign Exchange) Conversion</strong> (INR to USD), with forex and GST charges.</li>
-      <li><strong>SWIFT (Society for Worldwide Interbank Financial Telecommunication) Network</strong> processes funds, incurring transfer fees.</li>
-      <li><strong>Intermediary Bank</strong> routes payments with additional charges.</li>
-      <li><strong>Flywire Platform</strong> facilitates the payment to NYU.</li>
-      <li>Funds are credited to <strong>NYU’s Bank Account</strong>.</li>
-    </ol>
-  </li>
-</ul>
-
-<hr />
-
-<h2 id="total-extra-charges-paid-in-the-traditional-method">Total Extra Charges Paid in the Traditional Method</h2>
-
-<p>After completing the process, I found out that I paid a total of ₹29,527.22 in extra charges—just to transfer my fees! Here’s the detailed breakdown of where this money went:</p>
-
-<p><img src="\assets\images\How_Much_Do_You_Really_Pay_While_Transferring_Fees_from_a_Student_Loan\PaymentFlow-Extra Amount-Blockdiagram.jpg" alt="Total Extra Charges Breakdown" /></p>
-
-<ul>
-  <li>The breakdown highlights:
-    <ul>
-      <li><strong>TCS (₹10,000)</strong>: Tax collected at source.</li>
-      <li><strong>Commission + GST (₹3,574.22)</strong>: Bank service fees.</li>
-      <li><strong>Forex Fee + GST (₹11,800)</strong>: Conversion charges for INR to USD.</li>
-      <li><strong>SWIFT Fee + GST (₹767)</strong>: Fees for international fund transfers.</li>
-      <li><strong>Intermediary Fee (₹442)</strong>: Routing charges by banks.</li>
-      <li><strong>Flywire Fee (₹2,944)</strong>: Charges for payment processing.</li>
-    </ul>
-  </li>
-</ul>
-
-<hr />
-
-<h2 id="what-if-nyu-had-its-own-stablecoin">What If NYU Had Its Own Stablecoin?</h2>
-
-<p>While going through this process, I started wondering: what if NYU had its own stablecoin? Imagine a digital currency like <strong>NYUCoin</strong> that students could use to transfer funds directly to the university. No intermediaries, no extra bank charges, and no unnecessary delays. This would make the process so much easier and cheaper.</p>
-
-<hr />
-
-<h2 id="flowchart-of-payment-using-nyucoin">Flowchart of Payment Using NYUCoin</h2>
-
-<p>Here’s how the payment process would look if NYUCoin and decentralized exchanges (DEXs) were used:</p>
-
-<p><img src="\assets\images\How_Much_Do_You_Really_Pay_While_Transferring_Fees_from_a_Student_Loan\PaymentFlow-DexAmt-Blockdiagram.jpg" alt="Flowchart of Payment with NYUCoin" /></p>
-
-<ul>
-  <li>The simplified process with NYUCoin:
-    <ol>
-      <li><strong>Buy USDT/ETH via DEX (Decentralized Exchange)</strong>: Students purchase cryptocurrency directly.</li>
-      <li><strong>Swap USDT/ETH for NYUCoin</strong>: Use platforms like Uniswap for the conversion.</li>
-      <li><strong>Send NYUCoin to NYU</strong>: Transfer happens instantly with minimal fees.</li>
-      <li><strong>NYU Receives NYUCoin</strong>: Funds are credited directly without delays or hidden fees.</li>
-    </ol>
-  </li>
-</ul>
-
-<hr />
-
-<h2 id="cost-comparison-traditional-vs-nyucoin-via-defi">Cost Comparison: Traditional vs NYUCoin via DeFi</h2>
-
-<p>Using decentralized finance (DeFi) tools like a DEX could save us a lot of money. Here’s a direct comparison:</p>
-
-<p><img src="/assets/images/How_Much_Do_You_Really_Pay_While_Transferring_Fees_from_a_Student_Loan\Dex-comparision-with-TF.jpg" alt="Saving Comparison Table" /></p>
-
-<hr />
-
-<h2 id="conclusion">Conclusion</h2>
-
-<p>Transferring funds through the traditional method not only costs more but also involves multiple intermediaries that complicate the process. From TCS (Tax Collected at Source) to SWIFT charges, every step adds to the total cost, leaving students like me paying significantly more than necessary.</p>
-
-<p>If NYU adopted a decentralized solution like <strong>NYUCoin</strong>, students could save approximately ₹23,527.22 on a ₹20,00,000 loan—around 70% reduction in extra charges. This approach is not just cost-effective but also transparent and efficient, ensuring that more of our money goes toward education rather than fees.</p>
-
-<p>For students, every penny counts, and innovations like this could make a huge difference. It’s time we rethink the way we pay our tuition fees.</p>]]></content><author><name>Dheeraj Maske</name></author><summary type="html"><![CDATA[A deep dive into the hidden charges and inefficiencies in traditional remittance methods, and how decentralized finance (DeFi) solutions like NYUCoin can save students significant costs.]]></summary></entry></feed>
+<p>As liquid staking evolves, <strong>balancing decentralization, regulation, and security</strong> will be crucial for its long-term success.</p>]]></content><author><name>Dheeraj Maske</name></author><summary type="html"><![CDATA[Liquid Staking removes the barriers of traditional staking by allowing users to stake their ETH while maintaining liquidity. Learn how it works, its benefits, and its role in DeFi.]]></summary></entry></feed>

@@ -346,6 +346,52 @@ article figure img {
   white-space: nowrap;
 }
 
+/* Highlighted question / callout boxes in posts */
+.question-box {
+  background: #f6f8fa;
+  border: 1px solid #e1e4e8;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0 1rem;
+}
+
+.question-box > *:first-child {
+  margin-top: 0;
+}
+
+.question-box > *:last-child {
+  margin-bottom: 0;
+}
+
+.question-box h2,
+.question-box h3 {
+  font-size: 1.15rem;
+  margin-bottom: 0.5rem;
+}
+
+.observation-box {
+  background: #fafbfc;
+  border: 1px solid #e1e4e8;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin: 0.75rem 0 0;
+  font-style: italic;
+}
+
+.observation-box > *:first-child {
+  margin-top: 0;
+}
+
+.observation-box > *:last-child {
+  margin-bottom: 0;
+}
+
+.observation-box h3 {
+  font-size: 1.05rem;
+  margin-bottom: 0.5rem;
+  font-style: italic;
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
   main {
