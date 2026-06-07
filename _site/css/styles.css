@@ -103,6 +103,68 @@ footer {
   color: #777;
 }
 
+/* Projects Page */
+.project-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2rem;
+}
+
+.project-item {
+  margin-bottom: 1.5rem;
+}
+
+.project-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+}
+
+.project-title {
+  font-weight: bold;
+  color: #333;
+}
+
+.project-date {
+  color: #666;
+  font-size: 0.95em;
+}
+
+.project-links {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.project-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #555;
+  text-decoration: none;
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.project-link:hover {
+  color: #007acc;
+  transform: translateY(-1px);
+}
+
+.project-link-github:hover {
+  color: #24292f;
+}
+
+.project-link-demo:hover {
+  color: #ff0000;
+}
+
+.project-description {
+  margin: 0.35rem 0 0;
+  color: #444;
+  line-height: 1.6;
+}
+
 /* Talks Page Styling */
 .talk-entry {
   display: flex;

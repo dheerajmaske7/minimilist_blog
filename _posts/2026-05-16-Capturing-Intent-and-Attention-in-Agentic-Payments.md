@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Capturing Intent Over Attention in Agentic Payments"
+title: "Capturing Intent and Attention in Agentic Payments"
 date: 2026-05-16
 excerpt: "As AI agents begin transacting for users, the bottleneck will shift from moving money to deciding who to trust, what to authorize, and how to recover when transactions fail. The next platform layer may not capture attention—it may capture delegated intent."
 ---
