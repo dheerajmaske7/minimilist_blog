@@ -129,7 +129,7 @@ Now, the purpose of x402 is to enable frictionless, API-native payments for acce
 
 By using the existing HTTP 402 status code, x402 remains natively compatible with the web. This allows developers to integrate payments directly into HTTP-based services while preserving the original vision of "pay before accessing a resource."
 
-This brings the internet one step closer to the evolution described by Chris Dixon:
+This brings the internet one step closer to the evolution described by Chris Dixon in *Read Write Own*:
 
 <div class="table-wrap" markdown="1">
 
@@ -147,3 +147,4 @@ This brings the internet one step closer to the evolution described by Chris Dix
 
 1. [x402 Documentation — HTTP 402](https://docs.x402.org/core-concepts/http-402)
 2. [Marc Andreessen's Original Sin](https://economyofbits.substack.com/p/marc-andreessens-original-sin)
+3. [Read Write Own — Chris Dixon](https://readwriteown.com/)

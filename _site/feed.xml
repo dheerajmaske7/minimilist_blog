@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2026-06-07T18:15:20-04:00</updated><id>/feed.xml</id><title type="html">Dheeraj Maske</title><subtitle>Minimalist blog with blogs, projects, and more.</subtitle><author><name>Dheeraj Maske</name></author><entry><title type="html">HTTP 402 to x402 protocol</title><link href="/2026/06/07/HTTP-402-to-x402-protocol.html" rel="alternate" type="text/html" title="HTTP 402 to x402 protocol" /><published>2026-06-07T00:00:00-04:00</published><updated>2026-06-07T00:00:00-04:00</updated><id>/2026/06/07/HTTP-402-to-x402-protocol</id><content type="html" xml:base="/2026/06/07/HTTP-402-to-x402-protocol.html"><![CDATA[<div class="question-box">
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2026-06-07T18:20:23-04:00</updated><id>/feed.xml</id><title type="html">Dheeraj Maske</title><subtitle>Minimalist blog with blogs, projects, and more.</subtitle><author><name>Dheeraj Maske</name></author><entry><title type="html">HTTP 402 to x402 protocol</title><link href="/2026/06/07/HTTP-402-to-x402-protocol.html" rel="alternate" type="text/html" title="HTTP 402 to x402 protocol" /><published>2026-06-07T00:00:00-04:00</published><updated>2026-06-07T00:00:00-04:00</updated><id>/2026/06/07/HTTP-402-to-x402-protocol</id><content type="html" xml:base="/2026/06/07/HTTP-402-to-x402-protocol.html"><![CDATA[<div class="question-box">
 
   <h3 id="what-is-http-402">What is HTTP 402?</h3>
 
@@ -124,7 +124,7 @@
 
 <p>By using the existing HTTP 402 status code, x402 remains natively compatible with the web. This allows developers to integrate payments directly into HTTP-based services while preserving the original vision of “pay before accessing a resource.”</p>
 
-<p>This brings the internet one step closer to the evolution described by Chris Dixon:</p>
+<p>This brings the internet one step closer to the evolution described by Chris Dixon in <em>Read Write Own</em>:</p>
 
 <div class="table-wrap">
 
@@ -160,6 +160,7 @@
 <ol>
   <li><a href="https://docs.x402.org/core-concepts/http-402">x402 Documentation — HTTP 402</a></li>
   <li><a href="https://economyofbits.substack.com/p/marc-andreessens-original-sin">Marc Andreessen’s Original Sin</a></li>
+  <li><a href="https://readwriteown.com/">Read Write Own — Chris Dixon</a></li>
 </ol>]]></content><author><name>Dheeraj Maske</name></author><summary type="html"><![CDATA[HTTP 402 imagined pay-before-access on the web decades ago, but the internet had no native way to move money. With stablecoins, wallets, and agentic AI, x402 is finally making that vision practical.]]></summary></entry><entry><title type="html">Understanding Agent Client Protocol</title><link href="/2026/05/26/Understanding-Agent-Client-Protocol.html" rel="alternate" type="text/html" title="Understanding Agent Client Protocol" /><published>2026-05-26T00:00:00-04:00</published><updated>2026-05-26T00:00:00-04:00</updated><id>/2026/05/26/Understanding-Agent-Client-Protocol</id><content type="html" xml:base="/2026/05/26/Understanding-Agent-Client-Protocol.html"><![CDATA[<p>Imagine you are coordinating a project with a remote team of specialists. You do not re-introduce yourself on every call. You pick up where you left off: what was decided, what is pending, what you are still waiting on.</p>
 
 <p>Your specialists come from different companies. One uses Slack, one uses email, one has their own system. You need a shared language before any real work can happen. Before you assign anything, you ask what they can actually do. Some tasks take hours or days, so you do not block on every reply. When priorities shift, you send <strong>stop</strong> on an existing thread, not a brand-new conversation. Handoffs must stay visible, and access must match trust.</p>

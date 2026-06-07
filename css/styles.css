@@ -303,6 +303,46 @@ article figure img {
   max-width: 820px;
 }
 
+/* Post body typography */
+.post-content {
+  text-align: justify;
+  hyphens: auto;
+}
+
+.post-content p {
+  text-indent: 1.5em;
+  margin: 0 0 1em;
+}
+
+.post-content > p:first-of-type,
+.post-content h2 + p,
+.post-content h3 + p,
+.post-content hr + p,
+.post-content ul + p,
+.post-content ol + p,
+.post-content .question-box + p,
+.post-content .observation-box + p,
+.post-content .wire-panel + p,
+.post-content .table-wrap + p,
+.post-content .question-box p,
+.post-content .observation-box p {
+  text-indent: 0;
+}
+
+.post-content h2,
+.post-content h3,
+.post-content ul,
+.post-content ol,
+.post-content li,
+.post-content .question-box,
+.post-content .observation-box,
+.post-content .table-wrap,
+.post-content .wire-panel,
+.post-content pre,
+.post-content .highlight {
+  text-align: left;
+}
+
 /* Markdown / HTML tables in posts */
 .post-content .table-wrap {
   overflow-x: auto;
