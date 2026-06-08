@@ -38,5 +38,9 @@
     <footer>
         <p>© {{ "now" | date: "%Y" }} {{ site.author }}</p>
     </footer>
+    <div id="image-zoom-overlay" class="image-zoom-overlay" aria-hidden="true">
+        <img id="image-zoom-target" alt="">
+    </div>
+    <script src="{{ '/assets/js/image-zoom.js' | relative_url }}"></script>
 </body>
 </html>
