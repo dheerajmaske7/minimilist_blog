@@ -18,19 +18,26 @@
     document.body.style.overflow = '';
   };
 
-  document.querySelectorAll('.post-content figure img').forEach((img) => {
-    img.classList.add('zoomable-image');
-    img.tabIndex = 0;
-    img.setAttribute('role', 'button');
-    img.setAttribute('aria-label', 'Click to zoom image');
+  document.querySelectorAll('.post-content figure').forEach((figure) => {
+    const img = figure.querySelector('img');
+    if (!img) return;
+
+    figure.classList.add('zoomable-figure');
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'figure-zoom-btn';
+    btn.setAttribute('aria-label', 'Expand image');
+    btn.textContent = 'Expand';
+    figure.appendChild(btn);
+
+    btn.addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      open(img);
+    });
 
     img.addEventListener('click', () => open(img));
-    img.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter' || event.key === ' ') {
-        event.preventDefault();
-        open(img);
-      }
-    });
   });
 
   overlay.addEventListener('click', close);

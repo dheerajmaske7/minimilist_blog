@@ -310,8 +310,44 @@ article figure img {
   max-width: 820px;
 }
 
-.post-content figure img.zoomable-image {
-  cursor: zoom-in;
+.post-content figure.zoomable-figure {
+  position: relative;
+}
+
+.post-content figure.zoomable-figure img {
+  cursor: default;
+}
+
+.figure-zoom-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;
+  border: 1px solid #e1e4e8;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #57606a;
+  font-family: inherit;
+  font-size: 0.75rem;
+  line-height: 1;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: opacity 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.zoomable-figure:hover .figure-zoom-btn,
+.zoomable-figure:focus-within .figure-zoom-btn {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.figure-zoom-btn:hover,
+.figure-zoom-btn:focus {
+  color: #24292f;
+  border-color: #c9d1d9;
+  outline: none;
 }
 
 .image-zoom-overlay {
@@ -322,12 +358,15 @@ article figure img {
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
-  background: rgba(0, 0, 0, 0.88);
+  background: rgba(255, 255, 255, 0.96);
   cursor: zoom-out;
+  opacity: 0;
+  transition: opacity 0.2s ease;
 }
 
 .image-zoom-overlay.open {
   display: flex;
+  opacity: 1;
 }
 
 .image-zoom-overlay img {
@@ -337,7 +376,8 @@ article figure img {
   height: auto;
   object-fit: contain;
   border-radius: 8px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+  border: 1px solid #e1e4e8;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
 }
 
 /* Markdown / HTML tables in posts */
@@ -496,6 +536,11 @@ article figure img {
 
   .post-content figure figcaption {
     padding: 0 14px;
+  }
+
+  .figure-zoom-btn {
+    opacity: 0.45;
+    pointer-events: auto;
   }
 
   .post-content table {
