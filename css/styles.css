@@ -487,6 +487,57 @@ article figure img {
   margin-bottom: 0;
 }
 
+.post-disclaimer {
+  background: #fafbfc;
+  border: 1px solid #e1e4e8;
+  border-radius: 8px;
+  padding: 0.75rem 1rem 1rem;
+  margin: 0 0 1.5rem;
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+.post-disclaimer > summary {
+  cursor: pointer;
+  font-weight: bold;
+  color: #24292f;
+  list-style: none;
+  padding: 0.15rem 0;
+}
+
+.post-disclaimer > summary::-webkit-details-marker {
+  display: none;
+}
+
+.post-disclaimer > summary::before {
+  content: "▸ ";
+  color: #57606a;
+}
+
+.post-disclaimer[open] > summary::before {
+  content: "▾ ";
+}
+
+.post-disclaimer > summary:hover {
+  color: #007acc;
+}
+
+.post-disclaimer[open] > summary {
+  margin-bottom: 0.75rem;
+}
+
+.post-disclaimer > *:not(summary) {
+  margin-top: 0;
+}
+
+.post-disclaimer p {
+  margin: 0 0 0.75rem;
+}
+
+.post-disclaimer p:last-child {
+  margin-bottom: 0;
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
   main {
