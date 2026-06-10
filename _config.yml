@@ -3,6 +3,9 @@ description: "Minimalist blog with blogs, projects, and more."
 author: "Dheeraj Maske"
 email: "dheerajmaske2001@gmail.com"
 
+# GA4 Measurement ID (https://analytics.google.com → Admin → Data streams)
+google_analytics: "G-KZ3YWGZWWP"
+
 #baseurl: "/minimilist_blog" # Repository name
 #url: "https://dheerajmaske7.github.io" # GitHub Pages URL
 
