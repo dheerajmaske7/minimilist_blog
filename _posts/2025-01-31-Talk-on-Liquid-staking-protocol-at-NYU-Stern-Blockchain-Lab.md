@@ -120,3 +120,10 @@ Liquid Staking **solves key limitations of traditional staking** by unlocking li
 Additionally, **restaking protocols extend staking benefits to Layer 2s, bridges, and oracles**, further enhancing Ethereum’s ecosystem.
 
 As liquid staking evolves, **balancing decentralization, regulation, and security** will be crucial for its long-term success.
+
+---
+
+## **Acknowledgment**
+I'm grateful to **[Hasu](https://x.com/hasufl)** (Strategic Advisor, Lido DAO) for following up with resources after I reached out. His reply came a little after the talk, but I had already covered the early Paradigm thesis on staking pools and Lido's GOOSE proposals. The one thing I didn't get to was the broader question of why liquid staking took off on Ethereum but not most other chains.
+
+![Email from Hasu sharing liquid staking resources for the talk](/assets/images/Liquid_Staking_Protocol/hasu-email-resources.png)
