@@ -100,7 +100,3 @@ From creating meme coins to gaining millions of followers, it challenges us to r
    Discussion about Truth Terminal and its viral growth.  
 2. **Meme Coin Info**  
    Market cap data and price fluctuations of GOAT.
-
----
-
-This markdown file can be saved in your `_posts` directory and will render correctly in your Jekyll blog. Let me know if you’d like any further refinements!```
