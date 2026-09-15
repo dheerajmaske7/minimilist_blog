@@ -300,6 +300,49 @@ article figure img {
   margin: 0 auto;
 }
 
+.post-content figure.post-figure-diagram {
+  max-width: 520px;
+  width: 100%;
+  margin: 0.75rem auto 1.5rem;
+  text-align: center;
+  overflow: hidden;
+}
+
+.post-content figure.post-figure-diagram img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+  border-radius: 8px;
+  border: 1px solid #e1e4e8;
+}
+
+.post-content figure.post-figure-diagram-tall {
+  max-width: 480px;
+}
+
+.post-content figure.post-figure-sm {
+  max-width: 340px;
+  margin: 0.75rem auto 1.25rem;
+  text-align: center;
+}
+
+.post-content figure.post-figure-sm img {
+  width: 100%;
+  max-width: 340px;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid #e1e4e8;
+}
+
+.post-content figure.post-figure-sm figcaption {
+  font-size: 0.85rem;
+  opacity: 0.75;
+  margin-top: 6px;
+  padding: 0 0.5rem;
+}
+
 .post-content figure {
   width: 100%;
   margin: 0 0 1.5rem;
@@ -389,12 +432,37 @@ article figure img {
   max-width: 100%;
 }
 
+.post-content .table-wrap-fit {
+  overflow-x: hidden !important;
+  max-width: 100%;
+}
+
+.post-content .table-wrap-fit table {
+  display: table;
+  width: 100% !important;
+  max-width: 100% !important;
+  table-layout: fixed !important;
+}
+
+.post-content .table-wrap-fit th,
+.post-content .table-wrap-fit td {
+  white-space: normal !important;
+  word-break: break-word !important;
+  overflow-wrap: anywhere !important;
+}
+
+.post-content .table-wrap-fit td:first-child,
+.post-content .table-wrap-fit th:first-child {
+  width: 28%;
+  white-space: normal !important;
+}
+
 .post-content table {
-  width: max-content;
-  min-width: 100%;
+  width: 100%;
+  max-width: 100%;
   border-collapse: collapse;
   font-size: 0.95rem;
-  table-layout: auto;
+  table-layout: fixed;
 }
 
 .post-content table th,
@@ -403,24 +471,26 @@ article figure img {
   padding: 10px 16px;
   text-align: left;
   vertical-align: top;
-  word-break: normal;
-  overflow-wrap: break-word;
-  hyphens: none;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  hyphens: auto;
 }
 
 .post-content table th {
   background: #f6f8fa;
   font-weight: bold;
-  white-space: nowrap;
+  white-space: normal;
 }
 
 .post-content table td:first-child,
 .post-content table th:first-child {
-  white-space: nowrap;
+  white-space: normal;
+  width: 32%;
 }
 
 .post-content table code {
-  white-space: nowrap;
+  white-space: normal;
+  word-break: break-word;
 }
 
 /* Highlighted question / callout boxes in posts */
@@ -572,17 +642,59 @@ article figure img {
     box-shadow: inset -10px 0 10px -10px rgba(0, 0, 0, 0.06);
   }
 
+  .post-content .table-wrap-fit {
+    box-shadow: none;
+    overflow-x: hidden;
+  }
+
+  .post-content .table-wrap-fit table {
+    font-size: 0.85rem;
+  }
+
+  .post-content .table-wrap-fit th,
+  .post-content .table-wrap-fit td {
+    padding: 8px 10px;
+  }
+
   /* Let diagrams use the full screen width on phones */
-  .post-content figure {
+  .post-content figure:not(.post-figure-sm):not(.post-figure-diagram) {
     margin-left: -14px;
     margin-right: -14px;
     width: calc(100% + 28px);
   }
 
-  .post-content figure img {
+  .post-content figure:not(.post-figure-sm):not(.post-figure-diagram) img {
     width: 100% !important;
     max-width: 100% !important;
     border-radius: 0 !important;
+  }
+
+  .post-content figure.post-figure-diagram,
+  .post-content figure.post-figure-diagram-tall {
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .post-content figure.post-figure-diagram img {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    border-radius: 8px !important;
+  }
+
+  .post-content figure.post-figure-sm {
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    max-width: min(100%, 300px);
+  }
+
+  .post-content figure.post-figure-sm img {
+    border-radius: 8px !important;
+    max-width: 100% !important;
   }
 
   .post-content figure figcaption {
