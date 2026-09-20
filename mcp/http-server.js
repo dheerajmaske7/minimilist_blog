@@ -1,12 +1,13 @@
 /**
- * Public HTTPS MCP server (Streamable HTTP).
+ * Public HTTPS MCP server (stateless Streamable HTTP).
  * Deploy on Railway: npm start → https://<host>/mcp
+ *
+ * Stateless mode avoids "Invalid or missing session ID" after redeploys
+ * and works better with Cursor remote MCP clients.
  */
-import { randomUUID } from "node:crypto"
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js"
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js"
 import { createMcpExpressApp } from "@modelcontextprotocol/sdk/server/express.js"
-import { isInitializeRequest } from "@modelcontextprotocol/sdk/types.js"
 import { registerBlogTools, SITE } from "./tools.js"
 
 const PORT = Number(process.env.PORT || process.env.MCP_PORT || 3000)
@@ -32,14 +33,12 @@ function createServer() {
   return server
 }
 
-/** @type {Record<string, StreamableHTTPServerTransport>} */
-const transports = {}
-
 app.get("/", (_req, res) => {
   res.json({
     name: "dheeraj-blog MCP",
     version: "1.0.0",
     mcp: "/mcp",
+    transport: "streamable-http (stateless)",
     site: SITE,
     llmsTxt: `${SITE}/llms.txt`,
     payment: {
@@ -53,6 +52,15 @@ app.get("/", (_req, res) => {
       "verify_payment",
       "get_post (requires accessToken)",
     ],
+    connect: {
+      cursor: {
+        mcpServers: {
+          "dheeraj-blog": {
+            url: "https://mcp-production-3ebd.up.railway.app/mcp",
+          },
+        },
+      },
+    },
   })
 })
 
@@ -60,39 +68,19 @@ app.get("/health", (_req, res) => {
   res.json({ ok: true })
 })
 
-async function mcpPostHandler(req, res) {
-  const sessionId = req.headers["mcp-session-id"]
+app.post("/mcp", async (req, res) => {
+  const server = createServer()
   try {
-    let transport
-    if (sessionId && transports[sessionId]) {
-      transport = transports[sessionId]
-    } else if (!sessionId && isInitializeRequest(req.body)) {
-      transport = new StreamableHTTPServerTransport({
-        sessionIdGenerator: () => randomUUID(),
-        onsessioninitialized: (id) => {
-          transports[id] = transport
-        },
-      })
-      transport.onclose = () => {
-        const sid = transport.sessionId
-        if (sid && transports[sid]) delete transports[sid]
-      }
-      const server = createServer()
-      await server.connect(transport)
-      await transport.handleRequest(req, res, req.body)
-      return
-    } else {
-      res.status(400).json({
-        jsonrpc: "2.0",
-        error: {
-          code: -32000,
-          message: "Bad Request: No valid session ID provided",
-        },
-        id: null,
-      })
-      return
-    }
+    const transport = new StreamableHTTPServerTransport({
+      sessionIdGenerator: undefined,
+      enableJsonResponse: true,
+    })
+    await server.connect(transport)
     await transport.handleRequest(req, res, req.body)
+    res.on("close", () => {
+      transport.close()
+      server.close()
+    })
   } catch (error) {
     console.error("MCP POST error:", error)
     if (!res.headersSent) {
@@ -103,32 +91,34 @@ async function mcpPostHandler(req, res) {
       })
     }
   }
-}
+})
 
-async function mcpGetHandler(req, res) {
-  const sessionId = req.headers["mcp-session-id"]
-  if (!sessionId || !transports[sessionId]) {
-    res.status(400).send("Invalid or missing session ID")
-    return
-  }
-  await transports[sessionId].handleRequest(req, res)
-}
+app.get("/mcp", (_req, res) => {
+  // Browsers hit GET /mcp and used to see "Invalid or missing session ID".
+  // Stateless servers don't use GET sessions — point clients here instead.
+  res.status(405).json({
+    jsonrpc: "2.0",
+    error: {
+      code: -32000,
+      message:
+        "GET /mcp is not used in stateless mode. Open / for discovery, or connect an MCP client with POST to /mcp (Cursor: url https://mcp-production-3ebd.up.railway.app/mcp).",
+    },
+    id: null,
+  })
+})
 
-async function mcpDeleteHandler(req, res) {
-  const sessionId = req.headers["mcp-session-id"]
-  if (!sessionId || !transports[sessionId]) {
-    res.status(400).send("Invalid or missing session ID")
-    return
-  }
-  await transports[sessionId].handleRequest(req, res)
-  delete transports[sessionId]
-}
-
-app.post("/mcp", mcpPostHandler)
-app.get("/mcp", mcpGetHandler)
-app.delete("/mcp", mcpDeleteHandler)
+app.delete("/mcp", (_req, res) => {
+  res.status(405).json({
+    jsonrpc: "2.0",
+    error: {
+      code: -32000,
+      message: "DELETE not required in stateless mode.",
+    },
+    id: null,
+  })
+})
 
 app.listen(PORT, HOST, () => {
-  console.log(`dheeraj-blog MCP listening on http://${HOST}:${PORT}/mcp`)
+  console.log(`dheeraj-blog MCP (stateless) on http://${HOST}:${PORT}/mcp`)
   console.log(`site=${SITE}`)
 })
