@@ -9,6 +9,8 @@ Talks: https://dheeraj-work.netlify.app/talks/
 Projects: https://dheeraj-work.netlify.app/projects/
 Feed: https://dheeraj-work.netlify.app/feed.xml
 Sitemap: https://dheeraj-work.netlify.app/sitemap.xml
+Public MCP: https://mcp-production-3ebd.up.railway.app/mcp
+MCP discovery: https://mcp-production-3ebd.up.railway.app/
 
 ## For humans and search engines
 
@@ -75,6 +77,31 @@ On Basescan / Base RPC we check that:
 - Understanding ERC-8004: https://dheeraj-work.netlify.app/2026/06/22/Understanding-ERC-8004.html
 - Google: Capturing Attention Is All You Need: https://dheeraj-work.netlify.app/2025/12/15/Google-Capturing-Attention-Is-All-You-Need.html
 
+## Public MCP (recommended for agents)
+
+Remote MCP endpoint (Streamable HTTP):
+
+https://mcp-production-3ebd.up.railway.app/mcp
+
+Tools:
+- `list_posts` — free catalog from the public feed
+- `get_access_terms` — wallet, amount, Base network
+- `verify_payment` — `{ txHash }` → accessToken
+- `get_post` — `{ path, accessToken }` → paid post body
+
+Cursor / Claude Desktop example:
+
+```json
+{
+  "mcpServers": {
+    "dheeraj-blog": {
+      "url": "https://mcp-production-3ebd.up.railway.app/mcp"
+    }
+  }
+}
+```
+
 ## Machine verification
 
 `POST /api/verify-payment` → `accessToken` → `GET /api/content` or post URL with Bearer / query token.
+Same flow is available via the public MCP tools above.

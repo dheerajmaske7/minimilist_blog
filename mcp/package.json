@@ -1,17 +1,27 @@
 {
-  "name": "mcp",
+  "name": "dheeraj-blog-mcp",
   "version": "1.0.0",
-  "description": "",
-  "main": "server.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "description": "Public MCP server for dheeraj-work.netlify.app with USDC access payments",
+  "main": "http-server.js",
   "type": "module",
+  "scripts": {
+    "start": "node http-server.js",
+    "start:stdio": "node server.js",
+    "start:http": "node http-server.js"
+  },
+  "keywords": [
+    "mcp",
+    "blog",
+    "x402"
+  ],
+  "author": "Dheeraj Maske",
+  "license": "ISC",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.30.0",
+    "express": "^5.2.1",
     "zod": "^4.6.5"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }
