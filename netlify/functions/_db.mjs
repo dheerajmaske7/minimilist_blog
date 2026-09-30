@@ -2,7 +2,6 @@
 // Local: data/analytics.db
 // Production: TURSO_DATABASE_URL + TURSO_AUTH_TOKEN (optional)
 
-import { createClient } from "@libsql/client"
 import { mkdirSync } from "node:fs"
 import { dirname, join } from "node:path"
 
@@ -22,10 +21,15 @@ export function sqlitePath() {
   return process.env.ANALYTICS_DB_PATH || join(process.cwd(), "data", "analytics.db")
 }
 
-export function getDb() {
+async function getDb() {
   if (client) return client
+  const url = dbUrl()
+  const spec = process.env.TURSO_DATABASE_URL
+    ? "@libsql/client/http"
+    : "@libsql/client/sqlite3"
+  const { createClient } = await import(spec)
   client = createClient({
-    url: dbUrl(),
+    url,
     authToken: process.env.TURSO_AUTH_TOKEN,
   })
   return client
@@ -33,7 +37,7 @@ export function getDb() {
 
 async function init() {
   if (ready) return getDb()
-  const db = getDb()
+  const db = await getDb()
   await db.executeMultiple(`
     CREATE TABLE IF NOT EXISTS events (
       id INTEGER PRIMARY KEY AUTOINCREMENT,

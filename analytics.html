@@ -225,8 +225,16 @@ body_class: analytics-app
   async function load() {
     document.getElementById("obs-meta").textContent = "Loading…";
     const res = await fetch("/api/analytics?range=" + state.range);
-    const data = await res.json();
-    if (!res.ok || data.ok === false) throw new Error(data.error || "Failed");
+    const text = await res.text();
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      throw new Error(text.slice(0, 180) || "Analytics request failed");
+    }
+    if (!res.ok || data.ok === false) {
+      throw new Error(data.error || data.errorMessage || data.errorType || "Failed");
+    }
     state.data = data;
     render();
   }

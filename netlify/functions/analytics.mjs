@@ -4,9 +4,7 @@ import {
   analyticsGet,
   emptySummary,
   useBlobs,
-  useSqlitePrimary,
 } from "./_analytics-store.mjs"
-import { queryDashboard } from "./_db.mjs"
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -36,6 +34,11 @@ function parseRange(event) {
   return "week"
 }
 
+function sinceIso(range) {
+  const days = range === "week" ? 7 : range === "month" ? 30 : 1
+  return new Date(Date.now() - days * 24 * 3600 * 1000).toISOString()
+}
+
 export async function handler(event) {
   useBlobs(event)
   if (event.httpMethod === "OPTIONS") {
@@ -46,29 +49,22 @@ export async function handler(event) {
   }
 
   const range = parseRange(event)
-
-  try {
-    if (useSqlitePrimary()) {
-      return json(200, await queryDashboard(range))
-    }
-  } catch (err) {
-    // fall through to blobs
-    if (useSqlitePrimary()) {
-      return json(500, { ok: false, error: err.message || "SQLite query failed" })
-    }
-  }
+  const since = sinceIso(range)
 
   try {
     const summary = (await analyticsGet("summary")) || emptySummary()
-    const recent = (await analyticsGet("recent")) || []
+    const recent = ((await analyticsGet("recent")) || []).filter(
+      (row) => !row.ts || row.ts >= since
+    )
     const t = { ...emptySummary().totals, ...(summary.totals || {}) }
     const topAgents = top(summary.agents, 40)
     const topBlogs = top(summary.blogPaths)
     const topPages = top(summary.paths)
     const topAgent =
       topAgents.find((row) => row.name !== "browser") || topAgents[0] || null
-    const days = Object.entries(summary.days || {})
+    const series = Object.entries(summary.days || {})
       .sort((a, b) => a[0].localeCompare(b[0]))
+      .filter(([day]) => day >= since.slice(0, 10))
       .map(([t, row]) => ({
         t,
         requests: row.requests || 0,
@@ -82,6 +78,7 @@ export async function handler(event) {
       ok: true,
       store: "blobs",
       range,
+      since,
       totalRequests: t.requests,
       uniqueVisitors: t.uniqueVisitors,
       aiAgentRequests: (t.ai_agent || 0) + (t.paid_agent || 0) + (t.unknown || 0),
@@ -96,7 +93,7 @@ export async function handler(event) {
       topAgents,
       topBlogs,
       topPages,
-      series: days,
+      series,
       recent: recent.slice(0, 80),
       updatedAt: summary.updatedAt || null,
     })
