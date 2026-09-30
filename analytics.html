@@ -45,7 +45,13 @@ body_class: analytics-app
     charts: [],
     rules: null,
     toastTimer: null,
+    eventPage: 1,
+    eventKind: "all",
+    eventStatus: "all",
+    eventAgent: "all",
+    eventQ: "",
   };
+  const EVENT_PAGE = 12;
 
   async function loadRules() {
     try {
@@ -486,22 +492,103 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
     }
 
     const events = d.recent || [];
+    const kinds = ["all", ...Array.from(new Set(events.map((e) => e.kind).filter(Boolean)))];
+    const agents = ["all", ...Array.from(new Set(events.map((e) => e.agent).filter(Boolean)))];
+    const statuses = ["all", ...Array.from(new Set(events.map((e) => String(e.status || "")).filter(Boolean)))];
+    const q = (state.eventQ || "").trim().toLowerCase();
+    const filtered = events.filter((e) => {
+      if (state.eventKind !== "all" && e.kind !== state.eventKind) return false;
+      if (state.eventAgent !== "all" && e.agent !== state.eventAgent) return false;
+      if (state.eventStatus !== "all" && String(e.status) !== state.eventStatus) return false;
+      if (q) {
+        const blob = `${e.kind || ""} ${e.agent || ""} ${e.path || ""} ${e.status || ""}`.toLowerCase();
+        if (!blob.includes(q)) return false;
+      }
+      return true;
+    });
+    const pages = Math.max(1, Math.ceil(filtered.length / EVENT_PAGE));
+    if (state.eventPage > pages) state.eventPage = pages;
+    const start = (state.eventPage - 1) * EVENT_PAGE;
+    const pageRows = filtered.slice(start, start + EVENT_PAGE);
+    const opt = (list, selected) =>
+      list.map((v) => `<option value="${v}" ${v === selected ? "selected" : ""}>${v === "all" ? "All" : v}</option>`).join("");
+    const pager = Array.from({ length: pages }, (_, i) => i + 1)
+      .map((n) => `<button type="button" class="obs-page${n === state.eventPage ? " is-active" : ""}" data-page="${n}">${n}</button>`)
+      .join("");
+
     root.innerHTML = `
-      <p class="obs-lead">Raw request log for this range — kind, client, path, status.</p>
+      <p class="obs-lead">Request log — filter by kind, client, status, or path. ${fmt(filtered.length)} of ${fmt(events.length)} shown.</p>
+      <div class="obs-event-filters">
+        <label>Kind
+          <select id="ev-kind">${opt(kinds, state.eventKind)}</select>
+        </label>
+        <label>Client
+          <select id="ev-agent">${opt(agents, state.eventAgent)}</select>
+        </label>
+        <label>Status
+          <select id="ev-status">${opt(statuses, state.eventStatus)}</select>
+        </label>
+        <label class="obs-event-search">Search
+          <input id="ev-q" type="search" placeholder="path, kind, agent…" value="${String(state.eventQ || "").replace(/"/g, "&quot;")}">
+        </label>
+      </div>
       ${
-        events.length
+        pageRows.length
           ? `<div class="table-wrap"><table>
               <thead><tr><th>When</th><th>Kind</th><th>Client</th><th>Path</th><th>Status</th></tr></thead>
-              <tbody>${events.map((e) => `<tr>
+              <tbody>${pageRows.map((e) => `<tr>
                 <td>${e.ts ? new Date(e.ts).toLocaleString() : ""}</td>
-                <td>${e.kind || ""}</td>
+                <td><code>${e.kind || ""}</code></td>
                 <td>${e.agent || ""}</td>
                 <td>${e.path || ""}</td>
                 <td>${e.status || ""}</td>
               </tr>`).join("")}</tbody>
-            </table></div>`
-          : "<p class='obs-empty'>No events yet.</p>"
+            </table></div>
+            <div class="obs-pager">
+              <button type="button" class="obs-page" data-page="prev" ${state.eventPage <= 1 ? "disabled" : ""}>Prev</button>
+              ${pager}
+              <button type="button" class="obs-page" data-page="next" ${state.eventPage >= pages ? "disabled" : ""}>Next</button>
+              <span class="obs-pager-meta">Page ${state.eventPage} of ${pages}</span>
+            </div>`
+          : "<p class='obs-empty'>No events match these filters.</p>"
       }`;
+
+    const bindFilter = (id, key) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener("change", () => {
+        state[key] = el.value;
+        state.eventPage = 1;
+        render();
+      });
+    };
+    bindFilter("ev-kind", "eventKind");
+    bindFilter("ev-agent", "eventAgent");
+    bindFilter("ev-status", "eventStatus");
+    const qEl = document.getElementById("ev-q");
+    if (qEl) {
+      qEl.addEventListener("input", () => {
+        state.eventQ = qEl.value;
+        state.eventPage = 1;
+        state._focusSearch = true;
+        render();
+      });
+      if (state._focusSearch) {
+        qEl.focus();
+        const len = qEl.value.length;
+        qEl.setSelectionRange(len, len);
+      }
+    }
+    root.querySelectorAll("[data-page]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const v = btn.dataset.page;
+        if (v === "prev") state.eventPage = Math.max(1, state.eventPage - 1);
+        else if (v === "next") state.eventPage = Math.min(pages, state.eventPage + 1);
+        else state.eventPage = Number(v) || 1;
+        render();
+      });
+    });
+    return;
   }
 
   async function load() {
@@ -536,6 +623,7 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
     btn.addEventListener("click", () => {
       state.range = btn.dataset.range;
       document.querySelectorAll(".obs-filters button").forEach((b) => b.classList.toggle("is-active", b === btn));
+      state.eventPage = 1;
       load().catch((err) => {
         document.getElementById("obs-panels").innerHTML =
           `<p>Could not load analytics. ${String(err).replace(/</g, "")}</p>`;

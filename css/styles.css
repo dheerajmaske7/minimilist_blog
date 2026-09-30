@@ -995,6 +995,77 @@ body.analytics-app header {
   font-size: 0.92rem;
 }
 
+.obs-event-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  margin: 0 0 1rem;
+  align-items: flex-end;
+}
+
+.obs-event-filters label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #777;
+}
+
+.obs-event-filters select,
+.obs-event-filters input {
+  font: inherit;
+  font-size: 0.95rem;
+  text-transform: none;
+  letter-spacing: 0;
+  color: #333;
+  padding: 6px 8px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  min-width: 8rem;
+  background: #fff;
+}
+
+.obs-event-search {
+  flex: 1;
+  min-width: 12rem;
+}
+
+.obs-pager {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.obs-page {
+  font: inherit;
+  border: 1px solid #ddd;
+  background: #fff;
+  min-width: 2rem;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.obs-page.is-active {
+  border-color: #007acc;
+  color: #007acc;
+}
+
+.obs-page:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.obs-pager-meta {
+  margin-left: 8px;
+  font-size: 0.9rem;
+  color: #777;
+}
+
 @media (max-width: 800px) {
   .obs {
     grid-template-columns: 1fr;

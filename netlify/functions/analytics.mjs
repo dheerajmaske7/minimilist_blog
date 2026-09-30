@@ -114,7 +114,7 @@ export async function handler(event) {
       topBlogs,
       topPages,
       series,
-      recent: recent.slice(0, 80),
+      recent: recent.slice(0, 500),
       ...reputation,
       updatedAt: summary.updatedAt || null,
     })

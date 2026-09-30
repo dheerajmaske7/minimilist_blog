@@ -208,7 +208,7 @@ export async function recordVisit(event) {
   applyVisit(summary, recent, event, writeStamp)
   await analyticsWrite({
     summary,
-    recent: recent.slice(0, 40),
+    recent: recent.slice(0, 500),
   })
 }
 
