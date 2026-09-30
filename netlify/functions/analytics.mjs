@@ -57,7 +57,7 @@ export async function handler(event) {
     const summary = (await analyticsGet("summary")) || emptySummary()
     const recent = (await analyticsGet("recent")) || []
     const t = { ...emptySummary().totals, ...(summary.totals || {}) }
-    const topAgents = top(summary.agents)
+    const topAgents = top(summary.agents, 40)
     const topBlogs = top(summary.blogPaths)
     const topPages = top(summary.paths)
     const topAgent =
