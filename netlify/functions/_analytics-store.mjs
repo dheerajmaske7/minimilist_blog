@@ -74,13 +74,13 @@ async function writeLocal(data) {
   await writeFile(LOCAL_FILE, JSON.stringify(data))
 }
 
-export async function analyticsGet(key, consistency = "eventual") {
+export async function analyticsGet(key) {
   if (preferLocalFile()) {
     const data = await readLocal()
     return data[key] ?? null
   }
   const store = getStore(STORE_NAME)
-  return await store.get(key, { type: "json", consistency })
+  return await store.get(key, { type: "json" })
 }
 
 export async function analyticsWrite(patch) {
@@ -102,21 +102,15 @@ export async function analyticsSet(key, value) {
 
 export async function recordVisit(event) {
   const writeStamp = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
-  for (let attempt = 0; attempt < 5; attempt++) {
-    const summary = JSON.parse(
-      JSON.stringify((await analyticsGet("summary", "strong")) || emptySummary())
-    )
-    const recent = JSON.parse(
-      JSON.stringify((await analyticsGet("recent", "strong")) || [])
-    )
-    applyVisit(summary, recent, event, writeStamp)
-    await analyticsWrite({
-      summary,
-      recent: recent.slice(0, 40),
-    })
-    const saved = await analyticsGet("summary", "strong")
-    if (saved?.writeStamp === writeStamp) return
-  }
+  const summary = JSON.parse(
+    JSON.stringify((await analyticsGet("summary")) || emptySummary())
+  )
+  const recent = JSON.parse(JSON.stringify((await analyticsGet("recent")) || []))
+  applyVisit(summary, recent, event, writeStamp)
+  await analyticsWrite({
+    summary,
+    recent: recent.slice(0, 40),
+  })
 }
 
 function applyVisit(summary, recent, event, writeStamp) {
