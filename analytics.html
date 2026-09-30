@@ -30,6 +30,9 @@ permalink: /analytics/
   try {
     const res = await fetch("/api/analytics");
     const data = await res.json();
+    if (!res.ok || data.errorType || data.ok === false) {
+      throw new Error(data.errorMessage || data.error || "Analytics request failed");
+    }
     const updated = data.updatedAt
       ? new Date(data.updatedAt).toLocaleString()
       : "no hits yet";
