@@ -170,7 +170,12 @@ function isPreviewBot(ua: string) {
 
 const AI_AGENTS: [RegExp, string][] = [
   [/gptbot/i, "GPTBot"],
+  [/oai-searchbot/i, "OAI-SearchBot"],
   [/chatgpt-user/i, "ChatGPT-User"],
+  [/chatgpt/i, "ChatGPT"],
+  [/openai/i, "OpenAI"],
+  [/cursor\//i, "Cursor"],
+  [/headlesschrome/i, "HeadlessChrome"],
   [/claudebot/i, "ClaudeBot"],
   [/claude-web/i, "Claude-Web"],
   [/anthropic/i, "Anthropic"],
@@ -235,21 +240,35 @@ function shouldTrack(pathname: string) {
   return true
 }
 
+function aiAgentName(ua: string): string | null {
+  for (const [re, name] of AI_AGENTS) {
+    if (re.test(ua)) return name
+  }
+  return null
+}
+
 function classifyVisit(opts: {
   ua: string
   paid: boolean
   humanCookie: boolean
+  secFetchMode: string
+  secFetchDest: string
 }): { kind: string; agent: string } {
-  const { ua, paid, humanCookie } = opts
+  const { ua, paid, humanCookie: _humanCookie, secFetchMode, secFetchDest } = opts
+  void _humanCookie
   const named = namedClient(ua)
-  if (paid) return { kind: "paid_agent", agent: named || "paid" }
+  const ai = aiAgentName(ua)
+  if (paid) return { kind: "paid_agent", agent: ai || named || "paid" }
+  if (ai) return { kind: "ai_agent", agent: ai }
   if (isSearchBot(ua)) return { kind: "search_bot", agent: named || "search" }
   if (isPreviewBot(ua)) return { kind: "preview_bot", agent: named || "preview" }
-  if (named && AI_AGENTS.some(([re]) => re.test(ua))) {
-    return { kind: "ai_agent", agent: named }
+  const realBrowser =
+    looksBrowser(ua) &&
+    (secFetchMode === "navigate" || secFetchDest === "document")
+  if (realBrowser) return { kind: "human", agent: "browser" }
+  if (looksBrowser(ua)) {
+    return { kind: "ai_agent", agent: named || "automated-browser" }
   }
-  if (humanCookie) return { kind: "human", agent: "browser" }
-  if (looksBrowser(ua)) return { kind: "human", agent: "browser" }
   if (named) return { kind: "ai_agent", agent: named }
   return { kind: "unknown", agent: "unknown" }
 }
@@ -479,8 +498,17 @@ export default async (req: Request, context: Context) => {
   const paid = await tokenOk(token, secret)
   const humanCookie = await readerCookieOk(req, secret)
 
+  const secFetchMode = req.headers.get("sec-fetch-mode") || ""
+  const secFetchDest = req.headers.get("sec-fetch-dest") || ""
+
   const allow = () => {
-    const { kind, agent } = classifyVisit({ ua, paid, humanCookie })
+    const { kind, agent } = classifyVisit({
+      ua,
+      paid,
+      humanCookie,
+      secFetchMode,
+      secFetchDest,
+    })
     scheduleTrack(req, context, secret, {
       kind,
       agent,
@@ -504,7 +532,13 @@ export default async (req: Request, context: Context) => {
     return challengePage(challenge)
   }
 
-  const { kind, agent } = classifyVisit({ ua, paid: false, humanCookie: false })
+  const { kind, agent } = classifyVisit({
+    ua,
+    paid: false,
+    humanCookie: false,
+    secFetchMode,
+    secFetchDest,
+  })
   scheduleTrack(req, context, secret, {
     kind: kind === "human" ? "unknown" : kind,
     status: 402,
