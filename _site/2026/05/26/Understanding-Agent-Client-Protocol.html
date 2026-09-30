@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KZ3YWGZWWP"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-KZ3YWGZWWP');
+</script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Understanding Agent Client Protocol</title>
@@ -32,6 +41,10 @@
             
                 
                 <a href="/about/">About</a>
+                
+            
+                
+                <a href="/analytics/">Analytics</a>
                 
             
         </nav>
@@ -1004,7 +1017,7 @@
 
 <h2 id="try-the-demo">Try the demo</h2>
 
-<p>Still struggling to see how the phases connect? Walk through a live, step-by-step visualization: <a href="https://dheeraj-acp-demo.netlify.app/">Agentic Commerce Protocol — Phase 1 Demo</a>.</p>
+<p>Still struggling to see how the phases connect? Walk through a live, step-by-step visualization: <a href="https://dheeraj-agentic-communication-demo.netlify.app/">Agentic Commerce Protocol — Phase 1 Demo</a>.</p>
 
 <p>The demo runs handshake, session, intent, offer, and payment between a buyer-side agent and a seller-side agent. Step through it once, then come back to this post.</p>
 
@@ -1020,5 +1033,9 @@
     <footer>
         <p>© 2026 Dheeraj Maske</p>
     </footer>
+    <div id="image-zoom-overlay" class="image-zoom-overlay" aria-hidden="true">
+        <img id="image-zoom-target" alt="">
+    </div>
+    <script src="/assets/js/image-zoom.js"></script>
 </body>
 </html>

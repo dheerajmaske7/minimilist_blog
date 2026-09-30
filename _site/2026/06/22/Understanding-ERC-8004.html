@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KZ3YWGZWWP"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-KZ3YWGZWWP');
+</script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding ERC-8004: Identity, Reputation, and Validation for Agents</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Dheeraj Maske</h1>
+        <nav>
+            
+                
+                <a href="/">Blogs</a>
+                
+            
+                
+                <a href="/projects/">Projects</a>
+                
+            
+                
+                <div class="nav-dropdown">
+                    <a href="/talks/" class="nav-dropdown-trigger">Talks</a>
+                    <div class="nav-dropdown-menu">
+                        <a href="/talks/">All Talks</a>
+                        <a href="/talks/crypto/">Crypto</a>
+                        <a href="/talks/toastmasters/">Toastmasters</a>
+                    </div>
+                </div>
+                
+            
+                
+                <a href="/about/">About</a>
+                
+            
+                
+                <a href="/analytics/">Analytics</a>
+                
+            
+        </nav>
+    </header>
+    <main>
+        <article>
+            <h2>Understanding ERC-8004: Identity, Reputation, and Validation for Agents</h2>
+            <p><small>Published on June 22, 2026</small></p>
+            <div class="post-content">
+                <p>Say your buyer agent finds a seller agent, negotiates over <a href="/2026/05/26/Understanding-Agent-Client-Protocol.html">ACP</a>, and pays with <a href="/2026/06/08/Understanding-x402-Agent-Payments-on-Chain.html">x402</a>. Payment settles. Now what?</p>
+
+<p>You still need to know who you paid, whether others trust them, and whether an independent party verified their claims. That is what ERC-8004 is for.</p>
+
+<h2 id="what-is-erc-8004">What is ERC-8004?</h2>
+
+<p>ERC-8004 is a protocol to build a global registry for agents, giving them identity, reputation, and validation on-chain.</p>
+
+<p>There are roughly eight billion people on this planet. If every human eventually runs one agent to achieve a particular task, we need a way to keep those agents accountable. A global registry with a history of each agent’s activity, promoted or demoted based on what it actually did, and a record that cannot be tampered with or manipulated because it lives on a blockchain.</p>
+
+<p>As the population of agents grows, we need a decentralized directory. These agents are borderless and internet-native. They can transact on behalf of a user and disrupt cross-border payments. That enables KYA (Know Your Agent), the same way finance uses KYC for people.</p>
+
+<p>This solves discovery (global identity), which builds trust.</p>
+
+<hr />
+
+<h2 id="how-does-it-work">How does it work?</h2>
+
+<p>ERC-8004 combines three registries:</p>
+
+<div class="table-wrap">
+
+  <table>
+    <thead>
+      <tr>
+        <th>Registry</th>
+        <th>Question it answers</th>
+        <th>Analogy</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Identity</td>
+        <td>Who is this agent?</td>
+        <td>A business license with a public listing</td>
+      </tr>
+      <tr>
+        <td>Reputation</td>
+        <td>How did buyers rate it?</td>
+        <td>Customers reviewing a restaurant</td>
+      </tr>
+      <tr>
+        <td>Validation</td>
+        <td>Did an independent party verify its claims?</td>
+        <td>A food inspector certifying the kitchen</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+
+<hr />
+
+<h2 id="1-identity-registry">1) Identity Registry</h2>
+
+<p>Before reputation or validation matter, the agent needs a public ID. Agents register on the Identity Registry using ERC-721. Each agent is an NFT (Non-Fungible Token), browsable and transferable across NFT-compliant apps.</p>
+
+<p><strong>Identity (ID tab).</strong> Each registered agent gets an agent ID, chain, global ID (e.g. <code class="language-plaintext highlighter-rouge">eip155:84532:…:6832</code>), owner address, agent wallet, and declared payment support. <a href="https://testnet.8004scan.io/agents/base-sepolia/6832">See agent #6832 on 8004scan</a> for a live example on Base Sepolia.</p>
+
+<figure class="post-figure-sm">
+  <img src="/assets/images/ERC_8004/erc8004-profile-id.png" alt="ERC-8004 agent identity tab" />
+  <figcaption>Figure 1: Identity (ID tab).</figcaption>
+</figure>
+
+<p>The on-chain NFT points to an off-chain registration file (<code class="language-plaintext highlighter-rouge">agentURI</code>). A typical file looks like this:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://eips.ethereum.org/EIPS/eip-8004#registration-v1"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Attention Agent"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Commerce agent that turns buyer intent into catalog offers and payments."</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"image"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://blob.8004scan.app/30aefe5a...fcb3d869.jpg"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"services"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"custom"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example-agent.example.com/"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"registrations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"agentId"</span><span class="p">:</span><span class="w"> </span><span class="mi">6832</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"agentRegistry"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eip155:84532:0x8004A818...A494BD9e"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"supportedTrusts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"reputation"</span><span class="p">,</span><span class="w"> </span><span class="s2">"tee-attestation"</span><span class="p">],</span><span class="w">
+  </span><span class="nl">"active"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"x402support"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="table-wrap">
+
+  <table>
+    <thead>
+      <tr>
+        <th>Field</th>
+        <th>Meaning</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">services[].endpoint</code></td>
+        <td>Public URL where the agent can be reached</td>
+      </tr>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">registrations[]</code></td>
+        <td>Links this file back to on-chain agent ID + registry contract</td>
+      </tr>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">x402support</code></td>
+        <td>Agent accepts x402 machine payments</td>
+      </tr>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">supportedTrusts</code></td>
+        <td>Declared trust models (<code class="language-plaintext highlighter-rouge">reputation</code>; <code class="language-plaintext highlighter-rouge">tee-attestation</code> is metadata until Validation Registry is used)</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+
+<hr />
+
+<h2 id="2-reputation-registry">2) Reputation Registry</h2>
+
+<p>With identity settled, the next question is trust. Once an agent is registered and publicly visible, its credibility grows through on-chain feedback from clients who actually used it.</p>
+
+<p>That feedback can measure quality of service (star rating), reachability, uptime, success rate, response time, and more. The better an agent performs, the faster it tends to climb discoverability rankings on indexers like <a href="https://testnet.8004scan.io/">8004scan</a>.</p>
+
+<p>Feedback is structured in an off-chain file; a hash (or inline URI) is submitted on-chain via <code class="language-plaintext highlighter-rouge">giveFeedback()</code>.</p>
+
+<p>A common scoring pattern maps star ratings to a 0–100 scale (e.g. 4 stars = 80 points).</p>
+
+<p><strong>Rating UI.</strong> Clients express a score — often as stars that map to a numeric value out of 100.</p>
+
+<figure class="post-figure-sm">
+  <img src="/assets/images/ERC_8004/erc8004-rating-ui.png" alt="Star rating UI mapped to a numeric score" />
+  <figcaption>Figure 2: Rating UI.</figcaption>
+</figure>
+
+<p><strong>Submitting feedback.</strong> The client wallet signs and broadcasts <code class="language-plaintext highlighter-rouge">giveFeedback()</code> on the Reputation Registry.</p>
+
+<figure class="post-figure-sm">
+  <img src="/assets/images/ERC_8004/erc8004-reputation-flow.png" alt="On-chain giveFeedback transaction flow" />
+  <figcaption>Figure 3: Submitting feedback.</figcaption>
+</figure>
+
+<p>Feedback is averaged with previous entries. For <a href="https://testnet.8004scan.io/agents/base-sepolia/6832">agent #6832 on 8004scan</a>:</p>
+
+<div class="table-wrap">
+
+  <table>
+    <thead>
+      <tr>
+        <th>Metric</th>
+        <th>Value</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Average score</td>
+        <td>4.2 / 5 (85/100)</td>
+      </tr>
+      <tr>
+        <td>Total feedback</td>
+        <td>16</td>
+      </tr>
+      <tr>
+        <td>Overall leaderboard score</td>
+        <td>20.83</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+
+<p><strong>Profile Feedback tab.</strong> Surfaces on-chain feedback count, average score, payment history tied to reviews, and publisher identity.</p>
+
+<figure class="post-figure-sm">
+  <img src="/assets/images/ERC_8004/erc8004-profile-feedback.png" alt="Profile feedback tab" />
+  <figcaption>Figure 4: Profile Feedback tab.</figcaption>
+</figure>
+
+<p>8004scan blends multiple dimensions when computing rank: engagement, service, compliance, momentum.</p>
+
+<p><strong>Score breakdown.</strong> Weighted dimensions produce the leaderboard score. Avg validation score stays at 0 until a validator submits an attestation on the Validation Registry.</p>
+
+<figure class="post-figure-sm">
+  <img src="/assets/images/ERC_8004/erc8004-score-breakdown.png" alt="8004scan score breakdown dimensions" />
+  <figcaption>Figure 5: Score breakdown.</figcaption>
+</figure>
+
+<p><strong>Profile Rank tab.</strong> Indexer-computed dimensions that drive discoverability beyond raw star averages.</p>
+
+<figure class="post-figure-sm">
+  <img src="/assets/images/ERC_8004/erc8004-profile-rank.png" alt="Profile rank tab" />
+  <figcaption>Figure 6: Profile Rank tab.</figcaption>
+</figure>
+
+<h3 id="why-fake-feedback-is-harder">Why fake feedback is harder</h3>
+
+<p>Every <code class="language-plaintext highlighter-rouge">giveFeedback</code> call costs gas. Bots are usually not willing to pay for every review, so each feedback carries a real cost. Tags (e.g. <code class="language-plaintext highlighter-rouge">x402</code>, <code class="language-plaintext highlighter-rouge">acp-commerce</code>) let indexers filter agents by rating, context, and endpoint — similar to filtering restaurants on a maps app, except the reviews are on-chain and portable across apps.</p>
+
+<p>A single rating splits across three layers:</p>
+
+<div class="table-wrap">
+
+  <table>
+    <thead>
+      <tr>
+        <th>Layer</th>
+        <th>What gets stored</th>
+        <th>Example</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>On-chain (Reputation Registry)</td>
+        <td>Score, tags, endpoint, proof pointer</td>
+        <td>80 points, <code class="language-plaintext highlighter-rouge">x402</code>, <code class="language-plaintext highlighter-rouge">acp-commerce</code>, agent endpoint URL</td>
+      </tr>
+      <tr>
+        <td>Off-chain (inside <code class="language-plaintext highlighter-rouge">feedback_uri</code>)</td>
+        <td>Full payment or service receipt</td>
+        <td>USDC paid, tx hash, offer ID, network</td>
+      </tr>
+      <tr>
+        <td>Indexer (8004scan)</td>
+        <td>Aggregated trust signals</td>
+        <td>4.2/5 average, 16 total reviews, rank 20.83</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+
+<p>The on-chain call itself carries four fields:</p>
+
+<div class="table-wrap">
+
+  <table>
+    <thead>
+      <tr>
+        <th>Field</th>
+        <th>Example</th>
+        <th>Purpose</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">value</code></td>
+        <td><code class="language-plaintext highlighter-rouge">80</code></td>
+        <td>Score 0–100 (4 stars × 20)</td>
+      </tr>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">tag1</code></td>
+        <td><code class="language-plaintext highlighter-rouge">x402</code></td>
+        <td>Payment rail used</td>
+      </tr>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">tag2</code></td>
+        <td><code class="language-plaintext highlighter-rouge">acp-commerce</code></td>
+        <td>Commerce context</td>
+      </tr>
+      <tr>
+        <td><code class="language-plaintext highlighter-rouge">feedback_uri</code></td>
+        <td><code class="language-plaintext highlighter-rouge">data:application/json;base64,...</code></td>
+        <td>Off-chain payment proof</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+
+<hr />
+
+<h2 id="3-validation-registry">3) Validation Registry</h2>
+
+<p>Reputation tells you what buyers thought. Validation answers a different question: did an independent party verify the agent’s claims?</p>
+
+<p>The Validation Registry is where trusted validators attest to capabilities, identity, or runtime behavior (TEE proofs, audits, service checks). Until an attestation is submitted, the validation score on indexers remains at zero — as visible in Figure 5.</p>
+
+<div class="table-wrap">
+
+  <table>
+    <thead>
+      <tr>
+        <th> </th>
+        <th>Reputation Registry</th>
+        <th>Validation Registry</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Who submits</td>
+        <td>Buyer / client after use</td>
+        <td>Named validator address</td>
+      </tr>
+      <tr>
+        <td>What it proves</td>
+        <td>“I paid and rate this experience”</td>
+        <td>“I tested and attest claim X”</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+
+<hr />
+
+<h2 id="advantages">Advantages</h2>
+
+<div class="table-wrap">
+
+  <table>
+    <thead>
+      <tr>
+        <th>Parameter</th>
+        <th>Explanation</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Public trust record</td>
+        <td>Ratings live on-chain; anyone can verify them, not just trust a platform’s database</td>
+      </tr>
+      <tr>
+        <td>Portable reputation</td>
+        <td>An agent’s score follows its ERC-8004 identity across apps and indexers, not locked to one marketplace</td>
+      </tr>
+      <tr>
+        <td>Spam is costly</td>
+        <td>Gas makes mass fake reviews more expensive than free web ratings</td>
+      </tr>
+      <tr>
+        <td>Tied to real wallets</td>
+        <td>Each review links to an address, so accountability is stronger than anonymous forms</td>
+      </tr>
+      <tr>
+        <td>Better discoverability</td>
+        <td>Indexers (e.g. 8004scan) turn feedback into rankings so good agents get found faster</td>
+      </tr>
+      <tr>
+        <td>Richer context possible</td>
+        <td>Off-chain proofs (payment receipt, test report) can back the on-chain score</td>
+      </tr>
+      <tr>
+        <td>Independent validators</td>
+        <td>Validation Registry lets third parties attest quality, not only buyer opinions</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+
+<hr />
+
+<h2 id="limitations">Limitations</h2>
+
+<div class="table-wrap">
+
+  <table>
+    <thead>
+      <tr>
+        <th>Parameter</th>
+        <th>Explanation</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Gas kills participation</td>
+        <td>Unlike Google/Yelp, buyers must pay to rate; most won’t, so scores skew toward motivated users</td>
+      </tr>
+      <tr>
+        <td>Off-chain storage cost &amp; ops</td>
+        <td>Detailed proofs need IPFS/hosting; someone pays and maintains that data</td>
+      </tr>
+      <tr>
+        <td>Sybil attacks still possible</td>
+        <td>Gas helps but doesn’t stop someone funding many wallets to inflate ratings</td>
+      </tr>
+      <tr>
+        <td>Slow to show up</td>
+        <td>On-chain tx ≠ instant rank change; indexers lag, so UX feels broken to normal users</td>
+      </tr>
+      <tr>
+        <td>Wallet UX barrier</td>
+        <td>Mainstream users don’t want to sign crypto txs after a purchase</td>
+      </tr>
+      <tr>
+        <td>Rank is confusing</td>
+        <td>Leaderboard score ≠ simple star average; users misread trust signals</td>
+      </tr>
+      <tr>
+        <td>No recourse for bad reviews</td>
+        <td>Mistaken or malicious on-chain feedback is hard to remove or dispute</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+
+<hr />
+
+<h2 id="how-the-pieces-connect">How the pieces connect</h2>
+
+<div class="table-wrap">
+
+  <table>
+    <thead>
+      <tr>
+        <th>Step</th>
+        <th>What happens</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Identity</td>
+        <td>Agent registers on the Identity Registry</td>
+      </tr>
+      <tr>
+        <td>Interaction</td>
+        <td>Client uses the agent (e.g. via ACP)</td>
+      </tr>
+      <tr>
+        <td>Payment</td>
+        <td>Client pays (e.g. via x402)</td>
+      </tr>
+      <tr>
+        <td>Reputation</td>
+        <td>Client submits <code class="language-plaintext highlighter-rouge">giveFeedback()</code> on-chain</td>
+      </tr>
+      <tr>
+        <td>Discoverability</td>
+        <td>Indexers update rank and public profile</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+
+<h2 id="references">References</h2>
+
+<ul>
+  <li><a href="https://eips.ethereum.org/EIPS/eip-8004">EIP-8004</a></li>
+  <li><a href="https://testnet.8004scan.io/">8004scan (testnet)</a></li>
+  <li><a href="https://testnet.8004scan.io/agents/base-sepolia/6832">Example agent #6832 on Base Sepolia</a></li>
+</ul>
+
+<hr />
+
+<p>Want to see ERC-8004 in action? Try it here: <a href="https://dheeraj-agentic-communication-demo.netlify.app/">dheeraj-agentic-communication-demo.netlify.app</a></p>
+
+            </div>
+        </article>
+    </main>
+    <footer>
+        <p>© 2026 Dheeraj Maske</p>
+    </footer>
+    <div id="image-zoom-overlay" class="image-zoom-overlay" aria-hidden="true">
+        <img id="image-zoom-target" alt="">
+    </div>
+    <script src="/assets/js/image-zoom.js"></script>
+</body>
+</html>

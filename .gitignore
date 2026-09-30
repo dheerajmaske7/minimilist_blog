@@ -12,3 +12,12 @@ data/*.db-shm
 
 # Local Netlify folder
 .netlify
+
+# Editor configs
+.cursor
+.vscode
+
+# Generated site extras
+_site/data
+_site/package.json
+_site/package-lock.json

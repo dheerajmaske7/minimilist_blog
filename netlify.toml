@@ -45,3 +45,9 @@
   to = "/.netlify/functions/analytics"
   status = 200
   force = true
+
+[[redirects]]
+  from = "/api/bot-rules"
+  to = "/.netlify/functions/bot-rules"
+  status = 200
+  force = true

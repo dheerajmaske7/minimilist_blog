@@ -16,9 +16,7 @@ const COOKIE_TTL_SEC = 7 * 24 * 60 * 60
 
 const OPEN_PREFIXES = [
   "/llms.txt",
-  "/robots.txt",
   "/sitemap.xml",
-  "/feed.xml",
   "/api/",
   "/about",
   "/talks",
@@ -27,6 +25,210 @@ const OPEN_PREFIXES = [
   "/css/",
   "/images/",
 ]
+
+interface BotRule {
+  id: string
+  name: string
+  category: string
+  allowed: boolean
+  patterns: string
+  description?: string
+  capabilities?: string
+}
+
+const DEFAULT_BOT_RULES: BotRule[] = [
+  {
+    id: "anthropic",
+    name: "Anthropic (Claude)",
+    category: "AI Assistant",
+    allowed: false,
+    patterns: "claudebot,anthropic-ai,claude-web,claude",
+    description: "Claude web search, interactive chat browsing, and Anthropic LLM training scrapers.",
+    capabilities: "Search, Web Browsing, Model Training",
+  },
+  {
+    id: "openai",
+    name: "OpenAI (ChatGPT & SearchGPT)",
+    category: "AI Assistant",
+    allowed: false,
+    patterns: "gptbot,chatgpt-user,oai-searchbot,chatgpt,openai",
+    description: "ChatGPT web browsing, SearchGPT indexing, and OpenAI model training.",
+    capabilities: "Search, Web Browsing, Model Training",
+  },
+  {
+    id: "google_search",
+    name: "Google Search (Googlebot)",
+    category: "Search Engine",
+    allowed: true,
+    patterns: "googlebot,google-inspectiontool",
+    description: "Standard Google search engine crawler (also used by Gemini Search tool).",
+    capabilities: "Search Indexing, Snippets",
+  },
+  {
+    id: "google_ai",
+    name: "Google AI / Gemini Training (Google-Extended)",
+    category: "AI Training",
+    allowed: false,
+    patterns: "google-extended",
+    description: "Google's dedicated crawler for training Gemini, Vertex AI, and Google AI products.",
+    capabilities: "Model Training",
+  },
+  {
+    id: "perplexity",
+    name: "Perplexity AI",
+    category: "AI Search",
+    allowed: false,
+    patterns: "perplexitybot,perplexity",
+    description: "Perplexity conversational search crawler and citation generator.",
+    capabilities: "Search, Answer Synthesis",
+  },
+  {
+    id: "cohere",
+    name: "Cohere AI",
+    category: "AI Training",
+    allowed: false,
+    patterns: "cohere-ai,cohere",
+    description: "Cohere foundation model training and enterprise search agents.",
+    capabilities: "Enterprise Search, Model Training",
+  },
+  {
+    id: "apple",
+    name: "Apple (Applebot & Apple Intelligence)",
+    category: "AI Assistant",
+    allowed: false,
+    patterns: "applebot-extended,applebot",
+    description: "Applebot-Extended trains Apple Intelligence models; Applebot indexes Siri/Spotlight.",
+    capabilities: "Search, Model Training",
+  },
+  {
+    id: "meta",
+    name: "Meta AI (LLaMA)",
+    category: "AI Training",
+    allowed: false,
+    patterns: "meta-externalagent,facebookbot",
+    description: "Meta's crawler for training LLaMA models and powering Meta AI search.",
+    capabilities: "Model Training, Chat Search",
+  },
+  {
+    id: "bytedance",
+    name: "ByteDance (Bytespider)",
+    category: "AI Training",
+    allowed: false,
+    patterns: "bytespider",
+    description: "TikTok and ByteDance automated web scrapers for LLM data collection.",
+    capabilities: "Model Training",
+  },
+  {
+    id: "aggregators",
+    name: "Aggregators (Common Crawl / Diffbot / CCBot)",
+    category: "Data Aggregators",
+    allowed: false,
+    patterns: "ccbot,diffbot,amazonbot,youbot",
+    description: "Bulk web crawlers supplying training datasets to dozens of commercial AI labs.",
+    capabilities: "Bulk Web Crawling, Training Datasets",
+  },
+  {
+    id: "bing",
+    name: "Bing Search (Bingbot)",
+    category: "Search Engine",
+    allowed: true,
+    patterns: "bingbot",
+    description: "Microsoft Bing search crawler (also feeds Copilot search).",
+    capabilities: "Search Indexing, Copilot Search",
+  },
+  {
+    id: "feed_protection",
+    name: "Feed Protection (/feed.xml)",
+    category: "RSS Protection",
+    allowed: true,
+    patterns: "",
+    description: "Gate /feed.xml so blocked AI crawlers cannot extract full post bodies from the RSS feed without paying.",
+    capabilities: "Full Content Protection",
+  },
+]
+
+let cachedRules: BotRule[] | null = null
+let rulesFetchedAt = 0
+const RULES_CACHE_TTL_MS = 15_000 // 15 seconds
+
+async function getLiveRules(origin: string): Promise<BotRule[]> {
+  const now = Date.now()
+  if (cachedRules && now - rulesFetchedAt < RULES_CACHE_TTL_MS) {
+    return cachedRules
+  }
+  try {
+    const controller = new AbortController()
+    const timer = setTimeout(() => controller.abort(), 1500)
+    const res = await fetch(`${origin}/api/bot-rules`, {
+      signal: controller.signal,
+      headers: { "Cache-Control": "no-cache" },
+    })
+    clearTimeout(timer)
+    if (res.ok) {
+      const data = await res.json()
+      if (data && Array.isArray(data.rules) && data.rules.length > 0) {
+        cachedRules = data.rules
+        rulesFetchedAt = now
+        return cachedRules
+      }
+    }
+  } catch (_e) {
+    // Fallback on error/timeout
+  }
+  return cachedRules || DEFAULT_BOT_RULES
+}
+
+function matchBotRule(ua: string, rules: BotRule[]): BotRule | null {
+  const lowerUa = ua.toLowerCase()
+  for (const rule of rules) {
+    if (!rule.patterns) continue
+    const pats = rule.patterns
+      .split(",")
+      .map((p) => p.trim().toLowerCase())
+      .filter(Boolean)
+    for (const pat of pats) {
+      if (lowerUa.includes(pat)) {
+        return rule
+      }
+    }
+  }
+  return null
+}
+
+function buildRobotsTxt(rules: BotRule[]): string {
+  const allowedLines: string[] = []
+  const blockedLines: string[] = []
+
+  for (const r of rules) {
+    if (!r.patterns) continue
+    const pats = r.patterns.split(",").map((p) => p.trim()).filter(Boolean)
+    for (const p of pats) {
+      const uaName = p.charAt(0).toUpperCase() + p.slice(1)
+      if (r.allowed) {
+        allowedLines.push(`User-agent: ${uaName}\nAllow: /`)
+      } else {
+        blockedLines.push(`User-agent: ${uaName}\nDisallow: /`)
+      }
+    }
+  }
+
+  return `# https://dheeraj-work.netlify.app/robots.txt
+# AgentGate Dynamic Access Rules (Configured in /analytics/)
+# AI terms + pay-to-access for agents: https://dheeraj-work.netlify.app/llms.txt
+# Note: automated scrapers receive HTTP 402 on post URLs without an access token.
+
+User-agent: *
+Allow: /
+
+# Allowed Search & AI Crawlers (dynamically enabled):
+${allowedLines.join("\n\n")}
+
+# Gated / Blocked AI Crawlers (dynamically disabled):
+${blockedLines.join("\n\n")}
+
+Sitemap: https://dheeraj-work.netlify.app/sitemap.xml
+`
+}
 
 function b64urlToBytes(s: string): Uint8Array {
   const pad = "=".repeat((4 - (s.length % 4)) % 4)
@@ -236,6 +438,7 @@ function shouldTrack(pathname: string) {
     pathname === "/api/track" ||
     pathname === "/api/analytics" ||
     pathname === "/api/reader-unlock" ||
+    pathname === "/api/bot-rules" ||
     pathname === "/analytics" ||
     pathname === "/analytics/"
   ) {
@@ -525,11 +728,89 @@ export default async (req: Request, context: Context) => {
     return context.next()
   }
 
-  if (!isPostPath(pathname) || isOpenPath(pathname)) {
+  // 1. Dynamic robots.txt based on live dashboard rules
+  if (pathname === "/robots.txt") {
+    const rules = await getLiveRules(url.origin)
+    return new Response(buildRobotsTxt(rules), {
+      status: 200,
+      headers: {
+        "Content-Type": "text/plain; charset=UTF-8",
+        "Cache-Control": "public, max-age=15, must-revalidate",
+      },
+    })
+  }
+
+  // 2. Feed protection (/feed.xml)
+  if (pathname === "/feed.xml") {
+    const rules = await getLiveRules(url.origin)
+    const feedRule = rules.find((r) => r.id === "feed_protection")
+    const feedProtected = feedRule ? feedRule.allowed : true
+
+    if (feedProtected) {
+      const matched = matchBotRule(ua, rules)
+      if (matched && !matched.allowed && !paid && !humanCookie) {
+        scheduleTrack(req, context, secret, {
+          kind: "ai_agent",
+          agent: matched.name,
+          status: 402,
+          path: pathname,
+        })
+        return json402()
+      }
+    }
     return allow()
   }
 
-  if (paid || isSearchBot(ua) || isPreviewBot(ua) || humanCookie) {
+  // 3. Open static paths and API endpoints
+  if (isOpenPath(pathname)) {
+    return allow()
+  }
+
+  // 4. Non-post paths
+  if (!isPostPath(pathname)) {
+    return allow()
+  }
+
+  // 5. Post path (/20xx/...) - Dynamic Rule Evaluation
+  const rules = await getLiveRules(url.origin)
+  const matchedRule = matchBotRule(ua, rules)
+
+  if (matchedRule) {
+    if (matchedRule.allowed) {
+      // Allowed via dashboard switch
+      scheduleTrack(req, context, secret, {
+        kind: matchedRule.category === "Search Engine" ? "search_bot" : "ai_agent",
+        agent: matchedRule.name,
+        status: 200,
+        path: pathname,
+      })
+      return context.next()
+    } else {
+      // Gated via dashboard switch
+      if (paid || humanCookie) {
+        return allow()
+      }
+      const wantsHtml = (req.headers.get("accept") || "").includes("text/html")
+      scheduleTrack(req, context, secret, {
+        kind: "ai_agent",
+        agent: matchedRule.name,
+        status: 402,
+        path: pathname,
+      })
+      if (wantsHtml && looksBrowser(ua)) {
+        const challenge = await issueChallenge(secret, clientIp(req, context))
+        return challengePage(challenge)
+      }
+      return json402()
+    }
+  }
+
+  // 6. If no specific bot rule matched:
+  if (paid || isPreviewBot(ua) || humanCookie) {
+    return allow()
+  }
+
+  if (isSearchBot(ua)) {
     return allow()
   }
 
