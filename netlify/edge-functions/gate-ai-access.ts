@@ -174,7 +174,9 @@ const AI_AGENTS: [RegExp, string][] = [
   [/google-extended/i, "Google-Extended"],
   [/anthropic-ai/i, "Anthropic-AI"],
   [/claude-web/i, "Claude-Web"],
+  [/claude-user/i, "Claude-Web"],
   [/claudebot/i, "ClaudeBot"],
+  [/claude/i, "ClaudeBot"],
   [/ccbot/i, "CCBot"],
   [/perplexitybot/i, "PerplexityBot"],
   [/cohere-ai/i, "Cohere-ai"],
@@ -184,7 +186,7 @@ const AI_AGENTS: [RegExp, string][] = [
   [/openai/i, "OpenAI"],
   [/cursor\//i, "Cursor"],
   [/headlesschrome/i, "HeadlessChrome"],
-  [/anthropic/i, "Anthropic"],
+  [/anthropic/i, "Anthropic-AI"],
   [/perplexity/i, "PerplexityBot"],
   [/bytespider/i, "Bytespider"],
   [/amazonbot/i, "Amazonbot"],
@@ -531,6 +533,20 @@ export default async (req: Request, context: Context) => {
 
   const wantsHtml = (req.headers.get("accept") || "").includes("text/html")
   if (wantsHtml && looksBrowser(ua)) {
+    const ai = aiAgentName(ua)
+    const classified = classifyVisit({
+      ua,
+      paid: false,
+      humanCookie: false,
+      secFetchMode,
+      secFetchDest,
+    })
+    scheduleTrack(req, context, secret, {
+      kind: ai ? "ai_agent" : "unknown",
+      agent: ai || classified.agent || "payment-required",
+      status: 402,
+      path: pathname,
+    })
     const challenge = await issueChallenge(secret, clientIp(req, context))
     return challengePage(challenge)
   }

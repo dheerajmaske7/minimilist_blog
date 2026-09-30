@@ -79,7 +79,16 @@ permalink: /analytics/
       <div class="kpi-block">
         ${row("Revenue", money(data.revenueUsdc))}
         ${row("Paid requests", fmt(data.paidRequests))}
+        ${row("Payment required (402)", fmt(data.paymentRequired))}
       </div>
+      <h2>Blocked, payment required</h2>
+      ${table(
+        (data.recent || [])
+          .filter((r) => Number(r.status) === 402)
+          .map((r) => ({ name: r.agent + " · " + r.path, count: 1 })),
+        "Agent and page",
+        "Hit"
+      )}
       <h2>robots.txt agents</h2>
       <p>Each request from these user-agents is an AI request, including when the count is still zero.</p>
       ${table(robotsRows, "Agent", "Requests")}
