@@ -283,7 +283,13 @@ function scheduleTrack(
   const waitUntil = (
     context as Context & { waitUntil?: (p: Promise<unknown>) => void }
   ).waitUntil
-  if (typeof waitUntil === "function") waitUntil(job)
+  const edgeWait = (
+    globalThis as typeof globalThis & {
+      EdgeRuntime?: { waitUntil?: (p: Promise<unknown>) => void }
+    }
+  ).EdgeRuntime?.waitUntil
+  const wait = typeof waitUntil === "function" ? waitUntil : edgeWait
+  if (typeof wait === "function") wait(job)
 }
 
 function paymentBody() {

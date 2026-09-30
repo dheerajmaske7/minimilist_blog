@@ -12,7 +12,7 @@ const PRICE_USDC = 0.01
 const MAX_UNIQUES = 20_000
 
 function preferLocalFile() {
-  return process.env.NETLIFY_DEV === "true" || process.env.NETLIFY !== "true"
+  return process.env.NETLIFY_DEV === "true"
 }
 
 export function emptySummary() {
@@ -70,33 +70,25 @@ async function writeLocal(data) {
 }
 
 export async function analyticsGet(key) {
-  if (!preferLocalFile()) {
-    try {
-      const store = getStore(STORE_NAME)
-      return await store.get(key, { type: "json" })
-    } catch {
-      // production blobs unavailable — try local
-    }
+  if (preferLocalFile()) {
+    const data = await readLocal()
+    return data[key] ?? null
   }
-  const data = await readLocal()
-  return data[key] ?? null
+  const store = getStore(STORE_NAME)
+  return await store.get(key, { type: "json" })
 }
 
 export async function analyticsWrite(patch) {
-  if (!preferLocalFile()) {
-    try {
-      const store = getStore(STORE_NAME)
-      await Promise.all(
-        Object.entries(patch).map(([key, value]) => store.setJSON(key, value))
-      )
-      return
-    } catch {
-      // fall through
-    }
+  if (preferLocalFile()) {
+    const data = await readLocal()
+    Object.assign(data, patch)
+    await writeLocal(data)
+    return
   }
-  const data = await readLocal()
-  Object.assign(data, patch)
-  await writeLocal(data)
+  const store = getStore(STORE_NAME)
+  await Promise.all(
+    Object.entries(patch).map(([key, value]) => store.setJSON(key, value))
+  )
 }
 
 export async function analyticsSet(key, value) {
