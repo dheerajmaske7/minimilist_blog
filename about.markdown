@@ -26,7 +26,7 @@ I write blogs that simplify complex ideas by answering the fundamentals—why, h
 
 - Feel free to connect with me on [Twitter](https://x.com/Dheeraj_maske) & [LinkedIn](https://www.linkedin.com/in/dheeraj-maske-nyu/).  
 - Reach out to me via email: **[firstname][lastname]2001[at]gmail[dot]com**.
-- AI agents / crawlers: see payment and reuse terms in [`/llms.txt`](/llms.txt).
+- [AI agents / crawlers](/llms.txt): see payment and reuse terms in [`/llms.txt`](/llms.txt). [Analytics](/analytics/).
 - Public MCP (paid post access for agents): [mcp-production-3ebd.up.railway.app/mcp](https://mcp-production-3ebd.up.railway.app/mcp).
 <br>
 <br>
