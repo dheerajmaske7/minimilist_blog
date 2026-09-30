@@ -3,7 +3,9 @@
 import {
   analyticsGet,
   emptySummary,
+  reputationFromProfiles,
   useBlobs,
+  useSqlitePrimary,
 } from "./_analytics-store.mjs"
 
 const corsHeaders = {
@@ -51,12 +53,30 @@ export async function handler(event) {
   const range = parseRange(event)
   const since = sinceIso(range)
 
+  if (useSqlitePrimary()) {
+    try {
+      const { queryDashboard } = await import("./_db.mjs")
+    const data = await queryDashboard(range)
+    const summary = (await analyticsGet("summary")) || emptySummary()
+    return json(200, {
+      ...data,
+      ...reputationFromProfiles(summary.agentProfiles, summary.recent || []),
+    })
+    } catch (err) {
+      console.warn("SQLite query fallback:", err)
+    }
+  }
+
   try {
     const summary = (await analyticsGet("summary")) || emptySummary()
     const recent = ((await analyticsGet("recent")) || []).filter(
       (row) => !row.ts || row.ts >= since
     )
     const t = { ...emptySummary().totals, ...(summary.totals || {}) }
+    const reputation = reputationFromProfiles(
+      summary.agentProfiles,
+      recent
+    )
     const topAgents = top(summary.agents, 40)
     const topBlogs = top(summary.blogPaths)
     const topPages = top(summary.paths)
@@ -95,6 +115,7 @@ export async function handler(event) {
       topPages,
       series,
       recent: recent.slice(0, 80),
+      ...reputation,
       updatedAt: summary.updatedAt || null,
     })
   } catch (err) {

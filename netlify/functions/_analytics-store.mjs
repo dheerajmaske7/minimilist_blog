@@ -15,6 +15,18 @@ function preferLocalFile() {
   return process.env.NETLIFY_DEV === "true"
 }
 
+export function useSqlitePrimary() {
+  return (
+    process.env.NETLIFY_DEV === "true" ||
+    Boolean(process.env.TURSO_DATABASE_URL) ||
+    !process.env.NETLIFY
+  )
+}
+
+async function sqlite() {
+  return import("./_db.mjs")
+}
+
 export function useBlobs(event) {
   if (preferLocalFile() || !event?.blobs) return
   connectLambda(event)
@@ -46,6 +58,7 @@ export function emptySummary() {
     blogPaths: {},
     status: {},
     days: {},
+    agentProfiles: {},
     updatedAt: null,
   }
 }
@@ -53,6 +66,92 @@ export function emptySummary() {
 function bump(map, key, n = 1) {
   if (!key) return
   map[key] = (map[key] || 0) + n
+}
+
+function isPaywalledKind(kind) {
+  return kind === "ai_agent" || kind === "unknown"
+}
+
+export function reputationFromProfiles(profiles, recent = []) {
+  const summary = { agentProfiles: { ...(profiles || {}) } }
+  for (const event of recent || []) {
+    updateAgentProfile(summary, event)
+  }
+  profiles = summary.agentProfiles
+  const good = {}
+  const bad = {}
+  const paid = {}
+  let goodVisitors = 0
+  let badVisitors = 0
+  let paidVisitors = 0
+
+  for (const p of Object.values(profiles || {})) {
+    const name = p.agent || "unknown"
+    if (p.paid) {
+      paidVisitors += 1
+      bump(paid, name)
+    } else if (p.saw402 && p.gotContent) {
+      badVisitors += 1
+      bump(bad, name)
+    } else if (p.saw402) {
+      goodVisitors += 1
+      bump(good, name)
+    }
+  }
+
+  const toRows = (map) =>
+    Object.entries(map)
+      .sort((a, b) => b[1] - a[1])
+      .map(([name, count]) => ({ name, count }))
+
+  return {
+    goodVisitors,
+    badVisitors,
+    paidVisitors,
+    goodAgents: toRows(good),
+    badAgents: toRows(bad),
+    paidAgents: toRows(paid),
+  }
+}
+
+function updateAgentProfile(summary, event) {
+  const kind = event.kind || "unknown"
+  if (kind === "human" || kind === "search_bot" || kind === "preview_bot") return
+
+  if (!summary.agentProfiles) summary.agentProfiles = {}
+  const visitorId = typeof event.visitorId === "string" ? event.visitorId.slice(0, 16) : ""
+  const agent = event.agent || "unknown"
+  const key = visitorId || `agent:${agent}`
+  const path = event.path || "/"
+  const status = Number(event.status) || 0
+  const gatedPath = isBlogPath(path) || path.startsWith("/feed.xml") || path.startsWith("/api/content")
+
+  const prev = summary.agentProfiles[key] || {
+    agent,
+    saw402: false,
+    gotContent: false,
+    paid: false,
+    lastTs: event.ts || null,
+  }
+  prev.agent = agent
+  prev.lastTs = event.ts || prev.lastTs
+  if (status === 402) prev.saw402 = true
+  if (kind === "paid_agent" && status === 200) prev.paid = true
+  if (gatedPath && status === 200 && isPaywalledKind(kind)) prev.gotContent = true
+  summary.agentProfiles[key] = prev
+
+  const keys = Object.keys(summary.agentProfiles)
+  if (keys.length > 4000) {
+    keys
+      .sort(
+        (a, b) =>
+          String(summary.agentProfiles[a].lastTs || "").localeCompare(
+            String(summary.agentProfiles[b].lastTs || "")
+          )
+      )
+      .slice(0, keys.length - 4000)
+      .forEach((k) => delete summary.agentProfiles[k])
+  }
 }
 
 function pruneMap(map, max = 400) {
@@ -122,6 +221,7 @@ function applyVisit(summary, recent, event, writeStamp) {
   if (!summary.paths) summary.paths = {}
   if (!summary.status) summary.status = {}
   if (!summary.days) summary.days = {}
+  if (!summary.agentProfiles) summary.agentProfiles = {}
 
   const kind = event.kind || "unknown"
   const path = event.path || "/"
@@ -147,6 +247,8 @@ function applyVisit(summary, recent, event, writeStamp) {
       summary.visitorHashes[visitorId] = 1
     }
   }
+
+  updateAgentProfile(summary, { visitorId, agent, kind, status, path, ts })
 
   if (!summary.days[day]) {
     summary.days[day] = { requests: 0, human: 0, ai_agent: 0 }
@@ -181,6 +283,57 @@ export async function recordPayment({ txHash }) {
   )
   summary.updatedAt = new Date().toISOString()
   await analyticsSet("summary", summary)
+}
+
+export async function getBotRulesStore() {
+  if (useSqlitePrimary()) {
+    const { getDbBotRules } = await sqlite()
+    return await getDbBotRules()
+  }
+  const { DEFAULT_BOT_RULES } = await sqlite()
+  const stored = await analyticsGet("bot_rules")
+  if (!stored || !Array.isArray(stored) || stored.length === 0) {
+    await analyticsSet("bot_rules", DEFAULT_BOT_RULES)
+    return DEFAULT_BOT_RULES
+  }
+  return stored
+}
+
+export async function updateBotRuleStore(id, allowed) {
+  if (useSqlitePrimary()) {
+    const { updateDbBotRule } = await sqlite()
+    return await updateDbBotRule(id, allowed)
+  }
+  const { DEFAULT_BOT_RULES } = await sqlite()
+  const rules = (await analyticsGet("bot_rules")) || DEFAULT_BOT_RULES
+  const idx = rules.findIndex((r) => r.id === id)
+  if (idx !== -1) {
+    rules[idx].allowed = Boolean(allowed)
+    rules[idx].updatedAt = new Date().toISOString()
+  } else {
+    rules.push({ id, allowed: Boolean(allowed), updatedAt: new Date().toISOString() })
+  }
+  await analyticsSet("bot_rules", rules)
+  return rules
+}
+
+export async function updateAllBotRulesStore(newRules) {
+  if (useSqlitePrimary()) {
+    const { updateAllDbBotRules } = await sqlite()
+    return await updateAllDbBotRules(newRules)
+  }
+  const { DEFAULT_BOT_RULES } = await sqlite()
+  const rules = (await analyticsGet("bot_rules")) || DEFAULT_BOT_RULES
+  const now = new Date().toISOString()
+  for (const item of newRules) {
+    const idx = rules.findIndex((r) => r.id === item.id)
+    if (idx !== -1) {
+      rules[idx].allowed = Boolean(item.allowed)
+      rules[idx].updatedAt = now
+    }
+  }
+  await analyticsSet("bot_rules", rules)
+  return rules
 }
 
 export { PRICE_USDC }
