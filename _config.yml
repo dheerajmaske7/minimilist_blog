@@ -22,6 +22,17 @@ plugins:
   - jekyll-paginate
   - jekyll-sitemap
 
+exclude:
+  - netlify
+  - mcp
+  - node_modules
+  - vendor
+  - .netlify
+  - Gemfile
+  - Gemfile.lock
+  - netlify.toml
+  - README.md
+
 
 
 
