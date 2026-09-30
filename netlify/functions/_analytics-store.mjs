@@ -74,13 +74,13 @@ async function writeLocal(data) {
   await writeFile(LOCAL_FILE, JSON.stringify(data))
 }
 
-export async function analyticsGet(key) {
+export async function analyticsGet(key, consistency = "eventual") {
   if (preferLocalFile()) {
     const data = await readLocal()
     return data[key] ?? null
   }
   const store = getStore(STORE_NAME)
-  return await store.get(key, { type: "json" })
+  return await store.get(key, { type: "json", consistency })
 }
 
 export async function analyticsWrite(patch) {
@@ -101,8 +101,25 @@ export async function analyticsSet(key, value) {
 }
 
 export async function recordVisit(event) {
-  const summary = (await analyticsGet("summary")) || emptySummary()
-  const recent = (await analyticsGet("recent")) || []
+  const writeStamp = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
+  for (let attempt = 0; attempt < 5; attempt++) {
+    const summary = JSON.parse(
+      JSON.stringify((await analyticsGet("summary", "strong")) || emptySummary())
+    )
+    const recent = JSON.parse(
+      JSON.stringify((await analyticsGet("recent", "strong")) || [])
+    )
+    applyVisit(summary, recent, event, writeStamp)
+    await analyticsWrite({
+      summary,
+      recent: recent.slice(0, 40),
+    })
+    const saved = await analyticsGet("summary", "strong")
+    if (saved?.writeStamp === writeStamp) return
+  }
+}
+
+function applyVisit(summary, recent, event, writeStamp) {
   if (!summary.totals) summary.totals = emptySummary().totals
   if (!summary.visitorHashes) summary.visitorHashes = {}
   if (!summary.blogPaths) summary.blogPaths = {}
@@ -147,6 +164,7 @@ export async function recordVisit(event) {
   summary.paths = pruneMap(summary.paths)
   summary.blogPaths = pruneMap(summary.blogPaths)
   summary.updatedAt = ts
+  summary.writeStamp = writeStamp
 
   const dayKeys = Object.keys(summary.days).sort()
   if (dayKeys.length > 90) {
@@ -154,10 +172,6 @@ export async function recordVisit(event) {
   }
 
   recent.unshift({ ts, path, kind, agent, status })
-  await analyticsWrite({
-    summary,
-    recent: recent.slice(0, 40),
-  })
 }
 
 export async function recordPayment({ txHash }) {
