@@ -1,6 +1,6 @@
 // POST /api/track — edge gate logs visits here.
 
-import { recordVisit } from "./_analytics-store.mjs"
+import { recordVisit, useBlobs } from "./_analytics-store.mjs"
 
 const KINDS = new Set([
   "human",
@@ -31,6 +31,7 @@ function trackSecret() {
 }
 
 export async function handler(event) {
+  useBlobs(event)
   if (event.httpMethod === "OPTIONS") {
     return { statusCode: 204, headers: corsHeaders, body: "" }
   }

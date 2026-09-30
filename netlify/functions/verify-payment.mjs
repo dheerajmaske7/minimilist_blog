@@ -177,7 +177,8 @@ export async function handler(event) {
     })
 
     try {
-      const { recordPayment } = await import("./_analytics-store.mjs")
+      const { recordPayment, useBlobs } = await import("./_analytics-store.mjs")
+      useBlobs(event)
       await recordPayment({ txHash })
     } catch {
       // Payment still succeeds if analytics write fails.

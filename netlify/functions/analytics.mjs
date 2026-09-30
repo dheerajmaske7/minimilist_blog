@@ -1,6 +1,6 @@
 // GET /api/analytics — AgentGate KPI snapshot for /analytics/
 
-import { analyticsGet, emptySummary } from "./_analytics-store.mjs"
+import { analyticsGet, emptySummary, useBlobs } from "./_analytics-store.mjs"
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -45,6 +45,7 @@ function emptyKpis() {
 }
 
 export async function handler(event) {
+  useBlobs(event)
   if (event.httpMethod === "OPTIONS") {
     return { statusCode: 204, headers: corsHeaders, body: "" }
   }

@@ -1,7 +1,7 @@
 // Shared AgentGate analytics store.
 // Uses Netlify Blobs in production; a temp JSON file when Blobs is unavailable.
 
-import { getStore } from "@netlify/blobs"
+import { connectLambda, getStore } from "@netlify/blobs"
 import { readFile, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
@@ -13,6 +13,11 @@ const MAX_UNIQUES = 20_000
 
 function preferLocalFile() {
   return process.env.NETLIFY_DEV === "true"
+}
+
+export function useBlobs(event) {
+  if (preferLocalFile() || !event?.blobs) return
+  connectLambda(event)
 }
 
 export function emptySummary() {
