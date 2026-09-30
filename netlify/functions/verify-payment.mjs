@@ -176,6 +176,13 @@ export async function handler(event) {
       from: transfer.from,
     })
 
+    try {
+      const { recordPayment } = await import("./_analytics-store.mjs")
+      await recordPayment({ txHash })
+    } catch {
+      // Payment still succeeds if analytics write fails.
+    }
+
     return json(200, {
       ok: true,
       txHash,

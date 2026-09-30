@@ -168,6 +168,124 @@ function isPreviewBot(ua: string) {
   )
 }
 
+const AI_AGENTS: [RegExp, string][] = [
+  [/gptbot/i, "GPTBot"],
+  [/chatgpt-user/i, "ChatGPT-User"],
+  [/claudebot/i, "ClaudeBot"],
+  [/claude-web/i, "Claude-Web"],
+  [/anthropic/i, "Anthropic"],
+  [/ccbot/i, "CCBot"],
+  [/perplexity/i, "PerplexityBot"],
+  [/google-extended/i, "Google-Extended"],
+  [/applebot-extended/i, "Applebot-Extended"],
+  [/bytespider/i, "Bytespider"],
+  [/amazonbot/i, "Amazonbot"],
+  [/meta-externalagent/i, "Meta-ExternalAgent"],
+  [/cohere/i, "Cohere"],
+  [/youbot/i, "YouBot"],
+  [/diffbot/i, "Diffbot"],
+]
+
+function namedClient(ua: string): string | null {
+  for (const [re, name] of AI_AGENTS) {
+    if (re.test(ua)) return name
+  }
+  if (/googlebot/i.test(ua)) return "Googlebot"
+  if (/bingbot/i.test(ua)) return "Bingbot"
+  if (/duckduckbot/i.test(ua)) return "DuckDuckBot"
+  if (/applebot/i.test(ua)) return "Applebot"
+  if (/twitterbot/i.test(ua)) return "Twitterbot"
+  if (/slackbot/i.test(ua)) return "Slackbot"
+  if (/facebookexternalhit/i.test(ua)) return "Facebook"
+  if (/linkedinbot/i.test(ua)) return "LinkedInBot"
+  if (/discordbot/i.test(ua)) return "Discordbot"
+  if (/curl\//i.test(ua)) return "curl"
+  if (/wget\//i.test(ua)) return "wget"
+  if (/python-requests|httpx|aiohttp/i.test(ua)) return "python"
+  if (/go-http-client/i.test(ua)) return "go"
+  if (/axios|node-fetch|undici/i.test(ua)) return "node"
+  return null
+}
+
+function looksBrowser(ua: string) {
+  return (
+    /mozilla/i.test(ua) &&
+    /chrome|safari|firefox|edg|crios|fxios|opr\//i.test(ua)
+  )
+}
+
+function shouldTrack(pathname: string) {
+  if (
+    pathname.startsWith("/assets/") ||
+    pathname.startsWith("/css/") ||
+    pathname.startsWith("/images/")
+  ) {
+    return false
+  }
+  if (
+    pathname === "/api/track" ||
+    pathname === "/api/analytics" ||
+    pathname === "/api/reader-unlock"
+  ) {
+    return false
+  }
+  if (/\.(png|jpe?g|gif|svg|webp|ico|woff2?|css|js|map)$/i.test(pathname)) {
+    return false
+  }
+  return true
+}
+
+function classifyVisit(opts: {
+  ua: string
+  paid: boolean
+  humanCookie: boolean
+}): { kind: string; agent: string } {
+  const { ua, paid, humanCookie } = opts
+  const named = namedClient(ua)
+  if (paid) return { kind: "paid_agent", agent: named || "paid" }
+  if (isSearchBot(ua)) return { kind: "search_bot", agent: named || "search" }
+  if (isPreviewBot(ua)) return { kind: "preview_bot", agent: named || "preview" }
+  if (named && AI_AGENTS.some(([re]) => re.test(ua))) {
+    return { kind: "ai_agent", agent: named }
+  }
+  if (humanCookie) return { kind: "human", agent: "browser" }
+  if (looksBrowser(ua)) return { kind: "human", agent: "browser" }
+  if (named) return { kind: "ai_agent", agent: named }
+  return { kind: "unknown", agent: "unknown" }
+}
+
+function scheduleTrack(
+  req: Request,
+  context: Context,
+  secret: string,
+  meta: { kind: string; agent: string; status: number; path: string }
+) {
+  if (!shouldTrack(meta.path)) return
+  const trackUrl = new URL("/api/track", req.url).toString()
+  const job = (async () => {
+    const visitorId = (await sha256Hex(clientIp(req, context))).slice(0, 16)
+    await fetch(trackUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Track-Key": secret,
+      },
+      body: JSON.stringify({
+        ts: new Date().toISOString(),
+        path: meta.path,
+        kind: meta.kind,
+        agent: meta.agent,
+        status: meta.status,
+        visitorId,
+      }),
+    })
+  })().catch(() => {})
+  const waitUntil = (
+    context as Context & { waitUntil?: (p: Promise<unknown>) => void }
+  ).waitUntil
+  if (typeof waitUntil === "function") waitUntil(job)
+}
+
 function paymentBody() {
   return {
     ok: false,
@@ -347,32 +465,46 @@ export default async (req: Request, context: Context) => {
     return context.next()
   }
 
-  if (!isPostPath(pathname) || isOpenPath(pathname)) {
-    return context.next()
-  }
-
   const ua = req.headers.get("user-agent") || ""
   const auth = req.headers.get("authorization") || ""
   const bearer = auth.match(/^Bearer\s+(.+)$/i)?.[1]?.trim() || null
   const queryToken = url.searchParams.get("access_token") || url.searchParams.get("token")
   const token = bearer || queryToken
+  const paid = await tokenOk(token, secret)
+  const humanCookie = await readerCookieOk(req, secret)
 
-  if (await tokenOk(token, secret)) {
+  const allow = () => {
+    const { kind, agent } = classifyVisit({ ua, paid, humanCookie })
+    scheduleTrack(req, context, secret, {
+      kind,
+      agent,
+      status: 200,
+      path: pathname,
+    })
     return context.next()
   }
-  if (isSearchBot(ua) || isPreviewBot(ua)) {
-    return context.next()
+
+  if (!isPostPath(pathname) || isOpenPath(pathname)) {
+    return allow()
   }
-  if (await readerCookieOk(req, secret)) {
-    return context.next()
+
+  if (paid || isSearchBot(ua) || isPreviewBot(ua) || humanCookie) {
+    return allow()
   }
 
   const wantsHtml = (req.headers.get("accept") || "").includes("text/html")
-  if (wantsHtml) {
+  if (wantsHtml && looksBrowser(ua)) {
     const challenge = await issueChallenge(secret, clientIp(req, context))
     return challengePage(challenge)
   }
 
+  const { kind, agent } = classifyVisit({ ua, paid: false, humanCookie: false })
+  scheduleTrack(req, context, secret, {
+    kind: kind === "human" ? "unknown" : kind,
+    status: 402,
+    agent,
+    path: pathname,
+  })
   return json402()
 }
 

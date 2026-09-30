@@ -737,3 +737,80 @@ article figure img {
       order: 2;
   }
 }
+
+.analytics-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin: 1.25rem 0 2rem;
+}
+
+.analytics-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+
+.analytics-card span {
+  display: block;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.analytics-card strong {
+  font-size: 1.6rem;
+  font-weight: normal;
+}
+
+.analytics .table-wrap {
+  overflow-x: auto;
+  margin: 0 0 2rem;
+}
+
+.analytics table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.analytics th,
+.analytics td {
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid #eee;
+  font-size: 0.95rem;
+}
+
+.analytics-updated,
+.analytics-status {
+  opacity: 0.8;
+}
+
+.kpi-block {
+  margin: 0 0 1.75rem;
+  max-width: 36rem;
+}
+
+.kpi-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1.5rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid #eee;
+  font-variant-numeric: tabular-nums;
+}
+
+.kpi-row span {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 0.85rem;
+  color: #555;
+}
+
+.kpi-row strong {
+  font-weight: normal;
+  font-size: 1.2rem;
+  text-align: right;
+  max-width: 70%;
+  overflow-wrap: anywhere;
+}

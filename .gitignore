@@ -3,3 +3,9 @@
 .jekyll-cache
 .jekyll-metadata
 vendor
+node_modules
+netlify/functions/.analytics-local.json
+
+
+# Local Netlify folder
+.netlify
