@@ -235,7 +235,9 @@ function shouldTrack(pathname: string) {
   if (
     pathname === "/api/track" ||
     pathname === "/api/analytics" ||
-    pathname === "/api/reader-unlock"
+    pathname === "/api/reader-unlock" ||
+    pathname === "/analytics" ||
+    pathname === "/analytics/"
   ) {
     return false
   }

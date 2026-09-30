@@ -28,10 +28,13 @@ exclude:
   - node_modules
   - vendor
   - .netlify
+  - data
   - Gemfile
   - Gemfile.lock
   - netlify.toml
   - README.md
+  - package.json
+  - package-lock.json
 
 
 
@@ -46,3 +49,5 @@ navigation:
     link: /talks/
   - name: About
     link: /about/
+  - name: Analytics
+    link: /analytics/

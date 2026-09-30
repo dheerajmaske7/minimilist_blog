@@ -1,104 +1,258 @@
 ---
-layout: page
+layout: default
 title: Analytics
 permalink: /analytics/
+body_class: analytics-app
 ---
 
-<p>AgentGate analytics from this site’s own edge gate. Google Analytics only sees browsers; this page also counts agents, 402s, and paid access. Requests from the crawlers allowed in <a href="/robots.txt">robots.txt</a> are counted as AI requests. Payment terms are in <a href="/llms.txt">llms.txt</a>.</p>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
-<div id="analytics-root" class="analytics">
-  <p class="analytics-status">Loading…</p>
+<div id="obs" class="obs">
+  <aside class="obs-nav" aria-label="Observability">
+    <p class="obs-brand">AgentGate</p>
+    <button type="button" data-tab="graphs" class="is-active">Graphs</button>
+    <button type="button" data-tab="overview">Overview</button>
+    <button type="button" data-tab="agents">Agents</button>
+    <button type="button" data-tab="pages">Pages</button>
+    <button type="button" data-tab="events">Events</button>
+  </aside>
+  <section class="obs-main">
+    <header class="obs-top">
+      <div>
+        <h1>Observability</h1>
+        <p id="obs-meta" class="obs-meta">Loading…</p>
+      </div>
+      <div class="obs-filters" role="group" aria-label="Time range">
+        <button type="button" data-range="day">Day</button>
+        <button type="button" data-range="week" class="is-active">Week</button>
+        <button type="button" data-range="month">30 days</button>
+      </div>
+    </header>
+    <div id="obs-panels"></div>
+  </section>
 </div>
 
 <script>
-(async () => {
-  const root = document.getElementById("analytics-root");
+(function () {
   const fmt = (n) => Number(n || 0).toLocaleString();
   const money = (n) => "$" + Number(n || 0).toFixed(2);
+  const state = { tab: "graphs", range: "week", data: null, charts: [] };
 
-  const row = (label, value) =>
-    `<div class="kpi-row"><span>${label}</span><strong>${value}</strong></div>`;
-
-  const ROBOTS_AGENTS = [
-    "GPTBot",
-    "ChatGPT-User",
-    "Google-Extended",
-    "Anthropic-AI",
-    "Claude-Web",
-    "ClaudeBot",
-    "CCBot",
-    "PerplexityBot",
-    "Cohere-ai",
-    "Applebot-Extended",
-  ];
+  const kpi = (label, value) =>
+    `<div class="obs-kpi"><span>${label}</span><strong>${value}</strong></div>`;
 
   const table = (rows, a, b) => {
-    if (!rows.length) return "<p>None yet.</p>";
+    if (!rows.length) return "<p class='obs-empty'>None in this range.</p>";
     return `<div class="table-wrap"><table>
       <thead><tr><th>${a}</th><th>${b}</th></tr></thead>
       <tbody>${rows.map((r) => `<tr><td>${r.name}</td><td>${fmt(r.count)}</td></tr>`).join("")}</tbody>
     </table></div>`;
   };
 
-  try {
-    const res = await fetch("/api/analytics");
-    const data = await res.json();
-    if (!res.ok || data.errorType || data.ok === false) {
-      throw new Error(data.errorMessage || data.error || "Analytics request failed");
-    }
-    const updated = data.updatedAt
-      ? new Date(data.updatedAt).toLocaleString()
-      : "no hits yet";
-    const topAgent = data.topAgent
-      ? `${data.topAgent.name} · ${fmt(data.topAgent.count)} requests`
-      : "—";
-    const topBlog = data.topBlog
-      ? `${data.topBlog.name} · ${fmt(data.topBlog.count)} requests`
-      : "—";
-    const agentCounts = Object.fromEntries(
-      (data.topAgents || []).map((r) => [r.name, r.count])
-    );
-    const robotsRows = ROBOTS_AGENTS.map((name) => ({
-      name,
-      count: agentCounts[name] || 0,
-    }));
-
-    root.innerHTML = `
-      <p class="analytics-updated">Last hit: ${updated}</p>
-      <div class="kpi-block">
-        ${row("Total requests", fmt(data.totalRequests))}
-        ${row("Unique visitors", fmt(data.uniqueVisitors))}
-        ${row("AI agent requests", fmt(data.aiAgentRequests))}
-        ${row("Human requests", fmt(data.humanRequests))}
-        ${row("Blog requests", fmt(data.blogRequests))}
-      </div>
-      <div class="kpi-block">
-        ${row("Top agent", topAgent)}
-        ${row("Top blog", topBlog)}
-      </div>
-      <div class="kpi-block">
-        ${row("Revenue", money(data.revenueUsdc))}
-        ${row("Paid requests", fmt(data.paidRequests))}
-        ${row("Payment required (402)", fmt(data.paymentRequired))}
-      </div>
-      <h2>Blocked, payment required</h2>
-      ${table(
-        (data.recent || [])
-          .filter((r) => Number(r.status) === 402)
-          .map((r) => ({ name: r.agent + " · " + r.path, count: 1 })),
-        "Agent and page",
-        "Hit"
-      )}
-      <h2>robots.txt agents</h2>
-      <p>Each request from these user-agents is an AI request, including when the count is still zero.</p>
-      ${table(robotsRows, "Agent", "Requests")}
-      <h2>Requests per agent</h2>
-      ${table(data.topAgents || [], "Agent", "Requests")}
-      <h2>Top pages</h2>
-      ${table(data.topPages || [], "Page", "Requests")}
-    `;
-  } catch (err) {
-    root.innerHTML = `<p>Could not load analytics. ${String(err).replace(/</g, "")}</p>`;
+  function clearCharts() {
+    state.charts.forEach((c) => c.destroy());
+    state.charts = [];
   }
+
+  function lineChart(id, labels, datasets) {
+    const el = document.getElementById(id);
+    if (!el || !window.Chart) return;
+    const chart = new Chart(el, {
+      type: "line",
+      data: { labels, datasets },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: "index", intersect: false },
+        plugins: { legend: { position: "bottom" } },
+        scales: { y: { beginAtZero: true, ticks: { precision: 0 } } },
+      },
+    });
+    state.charts.push(chart);
+  }
+
+  function doughnut(id, labels, values) {
+    const el = document.getElementById(id);
+    if (!el || !window.Chart) return;
+    const chart = new Chart(el, {
+      type: "doughnut",
+      data: {
+        labels,
+        datasets: [{ data: values, backgroundColor: ["#007acc", "#333", "#c45c26", "#888", "#9bbc5a"] }],
+      },
+      options: { plugins: { legend: { position: "bottom" } }, maintainAspectRatio: false },
+    });
+    state.charts.push(chart);
+  }
+
+  function barChart(id, labels, values, label) {
+    const el = document.getElementById(id);
+    if (!el || !window.Chart) return;
+    const chart = new Chart(el, {
+      type: "bar",
+      data: {
+        labels,
+        datasets: [{ label, data: values, backgroundColor: "#007acc" }],
+      },
+      options: {
+        indexAxis: "y",
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: { x: { beginAtZero: true, ticks: { precision: 0 } } },
+      },
+    });
+    state.charts.push(chart);
+  }
+
+  function render() {
+    const d = state.data;
+    const root = document.getElementById("obs-panels");
+    const meta = document.getElementById("obs-meta");
+    if (!d) {
+      root.innerHTML = "<p>Loading…</p>";
+      return;
+    }
+    clearCharts();
+    const store = d.store === "turso" ? "Turso" : d.store && String(d.store).includes("analytics.db")
+      ? "SQLite · data/analytics.db"
+      : "SQLite";
+    meta.textContent = `Last hit: ${d.updatedAt ? new Date(d.updatedAt).toLocaleString() : "none"} · ${store}`;
+
+    const kpis = `
+      <div class="obs-kpis">
+        ${kpi("Total requests", fmt(d.totalRequests))}
+        ${kpi("Unique visitors", fmt(d.uniqueVisitors))}
+        ${kpi("AI agent requests", fmt(d.aiAgentRequests))}
+        ${kpi("Human requests", fmt(d.humanRequests))}
+        ${kpi("Blog requests", fmt(d.blogRequests))}
+        ${kpi("HTTP 402", fmt(d.paymentRequired))}
+        ${kpi("Paid requests", fmt(d.paidRequests))}
+        ${kpi("Revenue", money(d.revenueUsdc))}
+      </div>`;
+
+    const series = d.series || [];
+    const labels = series.map((r) => r.t);
+    const topAgent = d.topAgent ? `${d.topAgent.name} · ${fmt(d.topAgent.count)}` : "—";
+    const topBlog = d.topBlog ? `${d.topBlog.name} · ${fmt(d.topBlog.count)}` : "—";
+
+    if (state.tab === "overview") {
+      root.innerHTML = `
+        ${kpis}
+        <div class="obs-highlights">
+          <div><span>Top agent</span><strong>${topAgent}</strong></div>
+          <div><span>Top blog</span><strong>${topBlog}</strong></div>
+        </div>`;
+      return;
+    }
+
+    if (state.tab === "graphs") {
+      root.innerHTML = `
+        ${kpis}
+        <h2>Traffic</h2>
+        <div class="obs-chart"><canvas id="chart-traffic"></canvas></div>
+        <div class="obs-split">
+          <div>
+            <h2>Human vs AI</h2>
+            <div class="obs-chart obs-chart-sm"><canvas id="chart-mix"></canvas></div>
+          </div>
+          <div>
+            <h2>Status</h2>
+            <div class="obs-chart obs-chart-sm"><canvas id="chart-status"></canvas></div>
+          </div>
+        </div>
+        <h2>402 paywall vs paid</h2>
+        <div class="obs-chart"><canvas id="chart-pay"></canvas></div>`;
+      lineChart("chart-traffic", labels, [
+        { label: "Requests", data: series.map((r) => r.requests), borderColor: "#333", tension: 0.2, fill: false },
+        { label: "Human", data: series.map((r) => r.human), borderColor: "#007acc", tension: 0.2, fill: false },
+        { label: "AI", data: series.map((r) => r.ai), borderColor: "#c45c26", tension: 0.2, fill: false },
+      ]);
+      doughnut("chart-mix", ["Human", "AI"], [d.humanRequests || 0, d.aiAgentRequests || 0]);
+      doughnut(
+        "chart-status",
+        (d.status || []).map((s) => s.name),
+        (d.status || []).map((s) => s.count)
+      );
+      lineChart("chart-pay", labels, [
+        { label: "402 blocked", data: series.map((r) => r.blocked), borderColor: "#c45c26", tension: 0.2, fill: false },
+        { label: "Paid", data: series.map((r) => r.paid), borderColor: "#9bbc5a", tension: 0.2, fill: false },
+      ]);
+      return;
+    }
+
+    if (state.tab === "agents") {
+      const names = (d.topAgents || []).map((r) => r.name);
+      const counts = (d.topAgents || []).map((r) => r.count);
+      root.innerHTML = `
+        <p class="obs-lead">Which agents consumed the site in this range, and how heavily.</p>
+        <div class="obs-chart"><canvas id="chart-agents"></canvas></div>
+        ${table(d.topAgents || [], "Agent", "Requests")}`;
+      barChart("chart-agents", names.slice(0, 12), counts.slice(0, 12), "Requests");
+      return;
+    }
+
+    if (state.tab === "pages") {
+      const names = (d.topPages || []).map((r) => r.name);
+      const counts = (d.topPages || []).map((r) => r.count);
+      root.innerHTML = `
+        <p class="obs-lead">What they actually opened. Blog paths are the content agents pay for.</p>
+        <div class="obs-chart"><canvas id="chart-pages"></canvas></div>
+        ${table(d.topPages || [], "Page", "Requests")}`;
+      barChart("chart-pages", names.slice(0, 12), counts.slice(0, 12), "Requests");
+      return;
+    }
+
+    const events = d.recent || [];
+    root.innerHTML = `
+      <p class="obs-lead">Raw request log for this range — kind, client, path, status.</p>
+      ${
+        events.length
+          ? `<div class="table-wrap"><table>
+              <thead><tr><th>When</th><th>Kind</th><th>Client</th><th>Path</th><th>Status</th></tr></thead>
+              <tbody>${events.map((e) => `<tr>
+                <td>${e.ts ? new Date(e.ts).toLocaleString() : ""}</td>
+                <td>${e.kind || ""}</td>
+                <td>${e.agent || ""}</td>
+                <td>${e.path || ""}</td>
+                <td>${e.status || ""}</td>
+              </tr>`).join("")}</tbody>
+            </table></div>`
+          : "<p class='obs-empty'>No events yet.</p>"
+      }`;
+  }
+
+  async function load() {
+    document.getElementById("obs-meta").textContent = "Loading…";
+    const res = await fetch("/api/analytics?range=" + state.range);
+    const data = await res.json();
+    if (!res.ok || data.ok === false) throw new Error(data.error || "Failed");
+    state.data = data;
+    render();
+  }
+
+  document.querySelectorAll(".obs-nav button").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      state.tab = btn.dataset.tab;
+      document.querySelectorAll(".obs-nav button").forEach((b) => b.classList.toggle("is-active", b === btn));
+      render();
+    });
+  });
+
+  document.querySelectorAll(".obs-filters button").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      state.range = btn.dataset.range;
+      document.querySelectorAll(".obs-filters button").forEach((b) => b.classList.toggle("is-active", b === btn));
+      load().catch((err) => {
+        document.getElementById("obs-panels").innerHTML =
+          `<p>Could not load analytics. ${String(err).replace(/</g, "")}</p>`;
+      });
+    });
+  });
+
+  load().catch((err) => {
+    document.getElementById("obs-panels").innerHTML =
+      `<p>Could not load analytics. ${String(err).replace(/</g, "")}</p>`;
+  });
 })();
 </script>

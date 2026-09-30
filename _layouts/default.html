@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{{ '/css/styles.css' | relative_url }}">
     <link rel="icon" href="{{ '/assets/images/Profiles/my-notion-face-transparent (1).jpg' | relative_url }}" type="image/png">
 </head>
-<body>
+<body{% if page.body_class %} class="{{ page.body_class }}"{% endif %}>
     <header>
         <div class="header-content">
             <!-- Adjust the image size and alignment -->
@@ -33,7 +33,7 @@
         </nav>
     </header>
     
-    <main>
+    <main{% if page.body_class %} class="{{ page.body_class }}-main"{% endif %}>
         {{ content }}
     </main>
     <footer>

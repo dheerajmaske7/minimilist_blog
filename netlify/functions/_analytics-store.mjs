@@ -1,6 +1,7 @@
 // Shared AgentGate analytics store.
 // Uses Netlify Blobs in production; a temp JSON file when Blobs is unavailable.
 
+import { insertEvent, insertPayment, isBlogPath as dbBlogPath } from "./_db.mjs"
 import { connectLambda, getStore } from "@netlify/blobs"
 import { readFile, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
@@ -15,9 +16,17 @@ function preferLocalFile() {
   return process.env.NETLIFY_DEV === "true"
 }
 
+function useSqlitePrimary() {
+  return preferLocalFile() || Boolean(process.env.TURSO_DATABASE_URL)
+}
+
 export function useBlobs(event) {
   if (preferLocalFile() || !event?.blobs) return
   connectLambda(event)
+}
+
+export function isBlogPath(path) {
+  return dbBlogPath(path)
 }
 
 export function emptySummary() {
@@ -56,10 +65,6 @@ function pruneMap(map, max = 400) {
   if (entries.length <= max) return map
   entries.sort((a, b) => b[1] - a[1])
   return Object.fromEntries(entries.slice(0, max))
-}
-
-export function isBlogPath(path) {
-  return /^\/20\d{2}\/\d{2}\/\d{2}\//.test(path) || path.startsWith("/api/content")
 }
 
 async function readLocal() {
@@ -101,6 +106,15 @@ export async function analyticsSet(key, value) {
 }
 
 export async function recordVisit(event) {
+  if (useSqlitePrimary()) {
+    await insertEvent(event)
+    return
+  }
+  try {
+    await insertEvent(event)
+  } catch {
+    // continue to blobs
+  }
   const writeStamp = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
   const summary = JSON.parse(
     JSON.stringify((await analyticsGet("summary")) || emptySummary())
@@ -170,6 +184,15 @@ function applyVisit(summary, recent, event, writeStamp) {
 
 export async function recordPayment({ txHash }) {
   if (!txHash) return
+  if (useSqlitePrimary()) {
+    await insertPayment({ txHash })
+    return
+  }
+  try {
+    await insertPayment({ txHash })
+  } catch {
+    // continue to blobs
+  }
   const summary = (await analyticsGet("summary")) || emptySummary()
   if (!summary.paidTx) summary.paidTx = {}
   if (!summary.totals) summary.totals = emptySummary().totals
@@ -183,4 +206,4 @@ export async function recordPayment({ txHash }) {
   await analyticsSet("summary", summary)
 }
 
-export { PRICE_USDC }
+export { PRICE_USDC, useSqlitePrimary }

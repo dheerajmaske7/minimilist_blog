@@ -1,0 +1,15 @@
+CREATE TABLE IF NOT EXISTS events (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  ts TEXT NOT NULL,
+  path TEXT NOT NULL,
+  kind TEXT NOT NULL,
+  agent TEXT NOT NULL,
+  status INTEGER,
+  visitor_id TEXT
+);
+
+CREATE TABLE IF NOT EXISTS payments (
+  tx_hash TEXT PRIMARY KEY,
+  amount_usdc REAL NOT NULL DEFAULT 0.01,
+  ts TEXT NOT NULL
+);

@@ -5,6 +5,9 @@
 vendor
 node_modules
 netlify/functions/.analytics-local.json
+data/*.db
+data/*.db-wal
+data/*.db-shm
 
 
 # Local Netlify folder
