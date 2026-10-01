@@ -998,6 +998,45 @@ body.analytics-app header {
   color: #777;
 }
 
+.obs-map {
+  margin: 0 0 1.75rem;
+}
+
+.obs-map svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #e7eef1;
+  border-radius: 10px;
+}
+
+.obs-map line {
+  stroke: rgba(30, 50, 60, 0.14);
+  stroke-width: 0.35;
+}
+
+.obs-map-land {
+  fill: #c9d7c4;
+  stroke: #7f977c;
+  stroke-width: 0.45;
+  stroke-linejoin: round;
+}
+
+.obs-map-dot {
+  fill: #c2410c;
+  stroke: #fff;
+  stroke-width: 0.4;
+}
+
+.obs-map-list {
+  margin-top: 0.75rem;
+}
+
+.obs-map-cities {
+  color: #666;
+  font-size: 0.85em;
+}
+
 .obs-chart {
   position: relative;
   width: 100%;

@@ -489,6 +489,36 @@ function classifyVisit(opts: {
   return { kind: "unknown", agent: "unknown" }
 }
 
+function requestGeo(context: Context) {
+  const geo = (
+    context as Context & {
+      geo?: {
+        city?: string
+        country?: { code?: string; name?: string }
+        latitude?: number
+        longitude?: number
+      }
+    }
+  ).geo
+  if (!geo) return {}
+  const lat = Number(geo.latitude)
+  const lon = Number(geo.longitude)
+  const ok =
+    Number.isFinite(lat) &&
+    Number.isFinite(lon) &&
+    lat >= -90 &&
+    lat <= 90 &&
+    lon >= -180 &&
+    lon <= 180
+  return {
+    country: geo.country?.name || "",
+    countryCode: geo.country?.code || "",
+    city: geo.city || "",
+    lat: ok ? Math.round(lat * 10) / 10 : null,
+    lon: ok ? Math.round(lon * 10) / 10 : null,
+  }
+}
+
 function scheduleTrack(
   req: Request,
   context: Context,
@@ -512,6 +542,7 @@ function scheduleTrack(
         agent: meta.agent,
         status: meta.status,
         visitorId,
+        ...requestGeo(context),
       }),
     })
   })().catch(() => {})

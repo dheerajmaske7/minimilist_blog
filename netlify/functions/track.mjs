@@ -58,6 +58,15 @@ export async function handler(event) {
       : "/"
   const agent =
     typeof body.agent === "string" ? body.agent.slice(0, 60) : "unknown"
+  const lat = Number(body.lat)
+  const lon = Number(body.lon)
+  const hasGeo =
+    Number.isFinite(lat) &&
+    Number.isFinite(lon) &&
+    lat >= -90 &&
+    lat <= 90 &&
+    lon >= -180 &&
+    lon <= 180
 
   try {
     await recordVisit({
@@ -67,6 +76,14 @@ export async function handler(event) {
       status: Number(body.status) || 0,
       ts: body.ts,
       visitorId: typeof body.visitorId === "string" ? body.visitorId : "",
+      country: typeof body.country === "string" ? body.country.slice(0, 40) : "",
+      countryCode:
+        typeof body.countryCode === "string"
+          ? body.countryCode.slice(0, 2).toUpperCase()
+          : "",
+      city: typeof body.city === "string" ? body.city.slice(0, 40) : "",
+      lat: hasGeo ? Math.round(lat * 10) / 10 : null,
+      lon: hasGeo ? Math.round(lon * 10) / 10 : null,
     })
     return json(200, { ok: true })
   } catch (err) {

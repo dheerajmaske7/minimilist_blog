@@ -23,6 +23,29 @@ function json(statusCode, body) {
   }
 }
 
+function placesFrom(recent) {
+  const groups = new Map()
+  for (const row of recent || []) {
+    const lat = Number(row.lat)
+    const lon = Number(row.lon)
+    if (!Number.isFinite(lat) || !Number.isFinite(lon)) continue
+    const country = row.country || row.countryCode || "Unknown"
+    const city = row.city || ""
+    const key = `${country}|${city}|${lat}|${lon}`
+    const cur = groups.get(key) || {
+      country,
+      countryCode: row.countryCode || "",
+      city,
+      lat,
+      lon,
+      count: 0,
+    }
+    cur.count += 1
+    groups.set(key, cur)
+  }
+  return [...groups.values()].sort((a, b) => b.count - a.count)
+}
+
 function top(map, n = 10) {
   return Object.entries(map || {})
     .sort((a, b) => b[1] - a[1])
@@ -92,6 +115,7 @@ export async function handler(event) {
       } catch (_e) {}
       return json(200, {
         ...data,
+        places: placesFrom(data.recent),
         ...reputation,
       })
     } catch (err) {
@@ -147,6 +171,7 @@ export async function handler(event) {
       topPages,
       series,
       recent: recent.slice(0, 500),
+      places: placesFrom(recent),
       ...reputation,
       updatedAt: summary.updatedAt || null,
     })

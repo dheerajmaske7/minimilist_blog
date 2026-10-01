@@ -268,7 +268,15 @@ function applyVisit(summary, recent, event, writeStamp) {
     for (const old of dayKeys.slice(0, dayKeys.length - 90)) delete summary.days[old]
   }
 
-  recent.unshift({ ts, path, kind, agent, status })
+  const row = { ts, path, kind, agent, status }
+  if (typeof event.lat === "number" && typeof event.lon === "number") {
+    row.lat = event.lat
+    row.lon = event.lon
+    row.country = typeof event.country === "string" ? event.country : ""
+    row.countryCode = typeof event.countryCode === "string" ? event.countryCode : ""
+    row.city = typeof event.city === "string" ? event.city : ""
+  }
+  recent.unshift(row)
 }
 
 export async function recordPayment({ txHash }) {
