@@ -13,10 +13,9 @@ body_class: analytics-app
     <button type="button" data-tab="graphs" class="is-active">Graphs</button>
     <button type="button" data-tab="overview">Overview</button>
     <button type="button" data-tab="agents">Agents</button>
-    <button type="button" data-tab="reputation">Good / Bad</button>
     <button type="button" data-tab="pages">Pages</button>
     <button type="button" data-tab="events">Events</button>
-    <button type="button" data-tab="permissions" style="margin-top: 8px; border-top: 1px solid #eee; padding-top: 0.65rem;">🛡️ Bot Permissions</button>
+    <button type="button" data-tab="permissions">Permissions</button>
   </aside>
   <section class="obs-main">
     <header class="obs-top">
@@ -44,12 +43,15 @@ body_class: analytics-app
     data: null,
     charts: [],
     rules: null,
+    rulesError: null,
+    rulesLoading: false,
     toastTimer: null,
     eventPage: 1,
     eventKind: "all",
     eventStatus: "all",
     eventAgent: "all",
     eventQ: "",
+    agentView: "all",
   };
   const EVENT_PAGE = 12;
 
@@ -57,11 +59,14 @@ body_class: analytics-app
     try {
       const res = await fetch("/api/bot-rules");
       const json = await res.json();
-      if (json && json.ok && Array.isArray(json.rules)) {
+      if (json && json.ok && Array.isArray(json.rules) && json.rules.length) {
         state.rules = json.rules;
+        state.rulesError = null;
+        return;
       }
-    } catch (_err) {
-      console.warn("Could not load bot rules", _err);
+      state.rulesError = (json && json.error) || "Bot permissions API returned no rules";
+    } catch (err) {
+      state.rulesError = err.message || "Could not load bot permissions";
     }
   }
 
@@ -92,17 +97,12 @@ body_class: analytics-app
         }
       });
     });
-    return `# https://dheeraj-work.netlify.app/robots.txt
-# AgentGate Dynamic Access Rules (Controlled via /analytics/)
-# AI terms + pay-to-access for agents: https://dheeraj-work.netlify.app/llms.txt
-
+    return `# AgentGate
 User-agent: *
 Allow: /
 
-# Allowed Search & AI Crawlers:
 ${allowed.join("\n\n")}
 
-# Gated / Blocked AI Crawlers (HTTP 402 unless paid 0.01 USDC):
 ${blocked.join("\n\n")}
 
 Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
@@ -118,7 +118,7 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
     if (card) {
       const statusEl = card.querySelector(".obs-rule-status");
       if (statusEl) {
-        statusEl.textContent = allowed ? "Allowed" : "Gated (402)";
+        statusEl.textContent = allowed ? "Allow" : "Gate";
         statusEl.className = `obs-rule-status ${allowed ? "is-allowed" : "is-gated"}`;
       }
     }
@@ -127,7 +127,7 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
       previewEl.textContent = buildRobotsPreview(state.rules);
     }
 
-    showToast(`✓ ${rule.name} set to ${allowed ? "Allowed (Free)" : "Gated (402)"}`);
+    showToast(`${rule.name}: ${allowed ? "allowed" : "gated"}`);
 
     try {
       const res = await fetch("/api/bot-rules", {
@@ -157,7 +157,7 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
       if (data.ok && data.rules) {
         state.rules = data.rules;
         render();
-        showToast("✓ Permissions updated");
+        showToast("Saved");
       }
     } catch (err) {
       showToast(`⚠️ Error: ${err.message}`);
@@ -317,45 +317,66 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
       return;
     }
 
-    if (state.tab === "reputation") {
-      root.innerHTML = `
-        <p class="obs-lead">Paywall behavior. <strong>Good</strong> got HTTP 402 and stopped. <strong>Bad</strong> were gated but still fetched the post. <strong>Paid</strong> stopped, then paid and came back.</p>
-        <div class="obs-kpis">
-          ${kpi("Good (stopped at 402)", fmt(d.goodVisitors))}
-          ${kpi("Bad (got content anyway)", fmt(d.badVisitors))}
-          ${kpi("Paid after 402", fmt(d.paidVisitors))}
-        </div>
-        <div class="obs-split">
-          <div>
-            <h2>Mix</h2>
-            <div class="obs-chart obs-chart-sm"><canvas id="chart-rep"></canvas></div>
-          </div>
-          <div>
-            <h2>Good agents</h2>
-            ${table(d.goodAgents || [], "Agent", "Visitors")}
-          </div>
-        </div>
-        <h2>Bad agents</h2>
-        ${table(d.badAgents || [], "Agent", "Visitors")}
-        <h2>Paid after stopping</h2>
-        ${table(d.paidAgents || [], "Agent", "Visitors")}`;
-      doughnut(
-        "chart-rep",
-        ["Good", "Bad", "Paid"],
-        [d.goodVisitors || 0, d.badVisitors || 0, d.paidVisitors || 0],
-        ["#9bbc5a", "#c45c26", "#007acc"]
-      );
-      return;
-    }
-
     if (state.tab === "agents") {
+      const view = state.agentView || "all";
+      const subtabs = `
+        <div class="obs-subtabs" role="tablist" aria-label="Agent groups">
+          <button type="button" data-agent-view="all"${view === "all" ? " class=\"is-active\"" : ""}>All</button>
+          <button type="button" data-agent-view="good"${view === "good" ? " class=\"is-active\"" : ""}>Good</button>
+          <button type="button" data-agent-view="bad"${view === "bad" ? " class=\"is-active\"" : ""}>Bad</button>
+          <button type="button" data-agent-view="paid"${view === "paid" ? " class=\"is-active\"" : ""}>Paid</button>
+        </div>`;
+      const bindSubs = () => {
+        root.querySelectorAll("[data-agent-view]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            state.agentView = btn.dataset.agentView;
+            render();
+          });
+        });
+      };
+
+      if (view === "good") {
+        root.innerHTML = `
+          ${subtabs}
+          <p class="obs-lead"><strong>Good</strong> agents hit HTTP 402 and stopped. They did not fetch the paywalled post.</p>
+          <div class="obs-kpis">${kpi("Good visitors", fmt(d.goodVisitors))}</div>
+          ${table(d.goodAgents || [], "Agent", "Visitors")}`;
+        bindSubs();
+        return;
+      }
+      if (view === "bad") {
+        root.innerHTML = `
+          ${subtabs}
+          <p class="obs-lead"><strong>Bad</strong> agents were gated but still fetched the post without paying.</p>
+          <div class="obs-kpis">${kpi("Bad visitors", fmt(d.badVisitors))}</div>
+          ${table(d.badAgents || [], "Agent", "Visitors")}`;
+        bindSubs();
+        return;
+      }
+      if (view === "paid") {
+        root.innerHTML = `
+          ${subtabs}
+          <p class="obs-lead"><strong>Paid</strong> agents stopped at 402, then paid 0.01 USDC and came back.</p>
+          <div class="obs-kpis">${kpi("Paid after 402", fmt(d.paidVisitors))}</div>
+          ${table(d.paidAgents || [], "Agent", "Visitors")}`;
+        bindSubs();
+        return;
+      }
+
       const names = (d.topAgents || []).map((r) => r.name);
       const counts = (d.topAgents || []).map((r) => r.count);
       root.innerHTML = `
-        <p class="obs-lead">Which agents consumed the site in this range, and how heavily.</p>
+        ${subtabs}
+        <p class="obs-lead">Which agents consumed the site in this range, and how heavily. Use Good / Bad / Paid to see paywall behavior.</p>
+        <div class="obs-kpis">
+          ${kpi("Good agents", fmt(d.goodVisitors))}
+          ${kpi("Bad agents", fmt(d.badVisitors))}
+          ${kpi("Paid after 402", fmt(d.paidVisitors))}
+        </div>
         <div class="obs-chart"><canvas id="chart-agents"></canvas></div>
         ${table(d.topAgents || [], "Agent", "Requests")}`;
       barChart("chart-agents", names.slice(0, 12), counts.slice(0, 12), "Requests");
+      bindSubs();
       return;
     }
 
@@ -371,46 +392,47 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
     }
 
     if (state.tab === "permissions") {
-      if (!state.rules) {
+      if (!state.rules && !state.rulesError) {
         root.innerHTML = "<p class='obs-lead'>Loading bot permissions…</p>";
-        loadRules().then(() => render());
+        if (!state.rulesLoading) {
+          state.rulesLoading = true;
+          loadRules().finally(() => {
+            state.rulesLoading = false;
+            render();
+          });
+        }
+        return;
+      }
+
+      if (state.rulesError && !(state.rules && state.rules.length)) {
+        root.innerHTML = `
+          <p class="obs-lead">Could not load bot permissions. ${String(state.rulesError).replace(/</g, "")}</p>
+          <button type="button" class="obs-btn-sm" id="retry-rules">Retry</button>`;
+        const retry = document.getElementById("retry-rules");
+        if (retry) {
+          retry.addEventListener("click", () => {
+            state.rulesError = null;
+            render();
+          });
+        }
         return;
       }
 
       const groups = [
-        {
-          title: "AI Assistants & LLM Agents",
-          ids: ["anthropic", "openai", "perplexity", "apple"],
-        },
-        {
-          title: "AI Training & Bulk Web Scrapers",
-          ids: ["google_ai", "meta", "bytedance", "aggregators", "cohere"],
-        },
-        {
-          title: "Search Engines (Web Indexing)",
-          ids: ["google_search", "bing"],
-        },
-        {
-          title: "Content & Feed Protection",
-          ids: ["feed_protection"],
-        },
+        { title: "Assistants", ids: ["anthropic", "openai", "perplexity", "apple"] },
+        { title: "Training", ids: ["google_ai", "meta", "bytedance", "aggregators", "cohere"] },
+        { title: "Search", ids: ["google_search", "bing"] },
+        { title: "Feed", ids: ["feed_protection"] },
       ];
 
       let html = `
-        <div class="obs-perm-header">
-          <h2 style="font-size: 1.3rem; margin: 0 0 6px;">Dynamic Bot & Agent Permissions</h2>
-          <p class="obs-lead" style="margin: 0 0 10px;">
-            Slide the toggles below to dynamically grant or revoke crawler access.
-            <strong>Allowed:</strong> Free access to post contents and marked <code>Allow</code> in <code>robots.txt</code>.
-            <strong>Gated (402):</strong> Receives HTTP 402 Payment Required (0.01 USDC) and marked <code>Disallow</code> in <code>robots.txt</code>.
-          </p>
-          <div class="obs-perm-actions">
-            <button type="button" class="obs-btn-sm is-primary" id="btn-allow-all">Allow All</button>
-            <button type="button" class="obs-btn-sm" id="btn-block-ai">Block All AI (Keep Search)</button>
-            <button type="button" class="obs-btn-sm" id="btn-reset-rules">Reset Defaults</button>
-            <a href="/robots.txt" target="_blank" class="obs-btn-sm" style="text-decoration:none;display:inline-flex;align-items:center;">Live robots.txt ↗</a>
-            <span id="obs-toast-area"></span>
-          </div>
+        <p class="obs-lead">On = free. Off = HTTP 402 (0.01 USDC) and <code>Disallow</code> in robots.txt.</p>
+        <div class="obs-perm-actions">
+          <button type="button" class="obs-btn-sm is-primary" id="btn-allow-all">Allow all</button>
+          <button type="button" class="obs-btn-sm" id="btn-block-ai">Gate AI</button>
+          <button type="button" class="obs-btn-sm" id="btn-reset-rules">Reset</button>
+          <a href="/robots.txt" target="_blank" class="obs-btn-sm" style="text-decoration:none;">robots.txt</a>
+          <span id="obs-toast-area"></span>
         </div>`;
 
       const topAgents = d.topAgents || [];
@@ -435,20 +457,12 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
           html += `
             <div class="obs-rule-card" data-rule-id="${r.id}">
               <div class="obs-rule-left">
-                <div class="obs-rule-title-row">
-                  <h4 class="obs-rule-name">${r.name}</h4>
-                  <span class="obs-cat-badge">${r.category}</span>
-                  ${count > 0 ? `<span class="obs-traffic-badge">⚡ ${fmt(count)} requests in range</span>` : ""}
-                </div>
-                <p class="obs-rule-desc">${r.description || ""}</p>
-                <div class="obs-rule-meta">
-                  ${r.capabilities ? `<span><strong>Capabilities:</strong> ${r.capabilities}</span>` : ""}
-                  ${r.patterns ? `<span><strong>Patterns:</strong> <code>${r.patterns.split(",").join("</code> <code>")}</code></span>` : ""}
-                </div>
+                <h4 class="obs-rule-name">${r.name}</h4>
+                ${count > 0 ? `<span class="obs-rule-hits">${fmt(count)}</span>` : ""}
               </div>
               <div class="obs-rule-right">
-                <span class="obs-rule-status ${r.allowed ? "is-allowed" : "is-gated"}">${r.allowed ? "Allowed" : "Gated (402)"}</span>
-                <label class="obs-switch" title="${r.allowed ? "Currently Allowed. Slide to gate." : "Currently Gated. Slide to allow."}">
+                <span class="obs-rule-status ${r.allowed ? "is-allowed" : "is-gated"}">${r.allowed ? "Allow" : "Gate"}</span>
+                <label class="obs-switch">
                   <input type="checkbox" data-rule-id="${r.id}" ${r.allowed ? "checked" : ""}>
                   <span class="obs-slider"></span>
                 </label>
@@ -458,16 +472,10 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
       });
 
       html += `
-        <div class="obs-robots-card">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-            <h3 style="margin:0;">Dynamic robots.txt Generated from Sliders</h3>
-            <a href="/robots.txt" target="_blank" style="font-size:0.82rem;color:#007acc;text-decoration:none;">Open Live robots.txt ↗</a>
-          </div>
-          <p class="obs-lead" style="font-size:0.85rem;margin:0 0 10px;">
-            Crawlers visiting <code>/robots.txt</code> immediately see these directives reflecting your toggle choices.
-          </p>
+        <details class="obs-robots-card">
+          <summary>robots.txt preview</summary>
           <pre id="obs-robots-preview-code" class="obs-robots-code">${buildRobotsPreview(state.rules)}</pre>
-        </div>`;
+        </details>`;
 
       root.innerHTML = html;
 
@@ -492,9 +500,27 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
     }
 
     const events = d.recent || [];
-    const kinds = ["all", ...Array.from(new Set(events.map((e) => e.kind).filter(Boolean)))];
-    const agents = ["all", ...Array.from(new Set(events.map((e) => e.agent).filter(Boolean)))];
-    const statuses = ["all", ...Array.from(new Set(events.map((e) => String(e.status || "")).filter(Boolean)))];
+    const mergeOpts = (fixed, extra) => {
+      const seen = new Set();
+      const out = ["all"];
+      for (const v of [...fixed, ...extra]) {
+        if (!v || seen.has(v)) continue;
+        seen.add(v);
+        out.push(v);
+      }
+      return out;
+    };
+    const kinds = mergeOpts(
+      ["human", "ai_agent", "search_bot", "preview_bot", "paid_agent", "unknown"],
+      events.map((e) => e.kind)
+    );
+    const agents = mergeOpts([], events.map((e) => e.agent).filter(Boolean).sort());
+    const statuses = mergeOpts(
+      ["200", "402"],
+      events.map((e) => (e.status ? String(e.status) : "")).concat(
+        (d.status || []).map((s) => String(s.name || ""))
+      )
+    );
     const q = (state.eventQ || "").trim().toLowerCase();
     const filtered = events.filter((e) => {
       if (state.eventKind !== "all" && e.kind !== state.eventKind) return false;
@@ -517,7 +543,7 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
       .join("");
 
     root.innerHTML = `
-      <p class="obs-lead">Request log — filter by kind, client, status, or path. ${fmt(filtered.length)} of ${fmt(events.length)} shown.</p>
+      <p class="obs-lead">${fmt(filtered.length)} of ${fmt(events.length)} requests.</p>
       <div class="obs-event-filters">
         <label>Kind
           <select id="ev-kind">${opt(kinds, state.eventKind)}</select>

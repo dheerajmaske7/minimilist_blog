@@ -7,7 +7,7 @@ import {
   updateAllBotRulesStore,
   useBlobs,
 } from "./_analytics-store.mjs"
-import { DEFAULT_BOT_RULES } from "./_db.mjs"
+import { DEFAULT_BOT_RULES } from "./_bot-defaults.mjs"
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",

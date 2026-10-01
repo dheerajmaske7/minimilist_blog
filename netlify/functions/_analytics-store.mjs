@@ -5,6 +5,7 @@ import { connectLambda, getStore } from "@netlify/blobs"
 import { readFile, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
+import { DEFAULT_BOT_RULES } from "./_bot-defaults.mjs"
 
 const STORE_NAME = "agent-analytics"
 const LOCAL_FILE = join(tmpdir(), "dheeraj-agent-analytics.json")
@@ -16,11 +17,11 @@ function preferLocalFile() {
 }
 
 export function useSqlitePrimary() {
-  return (
-    process.env.NETLIFY_DEV === "true" ||
-    Boolean(process.env.TURSO_DATABASE_URL) ||
-    !process.env.NETLIFY
-  )
+  if (process.env.TURSO_DATABASE_URL) return true
+  if (process.env.NETLIFY_DEV === "true") return true
+  if (process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.LAMBDA_TASK_ROOT) return false
+  if (process.env.NETLIFY === "true") return false
+  return true
 }
 
 async function sqlite() {
@@ -285,27 +286,38 @@ export async function recordPayment({ txHash }) {
   await analyticsSet("summary", summary)
 }
 
+function cloneDefaults() {
+  return JSON.parse(JSON.stringify(DEFAULT_BOT_RULES))
+}
+
 export async function getBotRulesStore() {
   if (useSqlitePrimary()) {
-    const { getDbBotRules } = await sqlite()
-    return await getDbBotRules()
+    try {
+      const { getDbBotRules } = await sqlite()
+      return await getDbBotRules()
+    } catch (err) {
+      console.warn("SQLite bot rules fallback:", err)
+    }
   }
-  const { DEFAULT_BOT_RULES } = await sqlite()
   const stored = await analyticsGet("bot_rules")
   if (!stored || !Array.isArray(stored) || stored.length === 0) {
-    await analyticsSet("bot_rules", DEFAULT_BOT_RULES)
-    return DEFAULT_BOT_RULES
+    const defaults = cloneDefaults()
+    await analyticsSet("bot_rules", defaults)
+    return defaults
   }
   return stored
 }
 
 export async function updateBotRuleStore(id, allowed) {
   if (useSqlitePrimary()) {
-    const { updateDbBotRule } = await sqlite()
-    return await updateDbBotRule(id, allowed)
+    try {
+      const { updateDbBotRule } = await sqlite()
+      return await updateDbBotRule(id, allowed)
+    } catch (err) {
+      console.warn("SQLite bot rule update fallback:", err)
+    }
   }
-  const { DEFAULT_BOT_RULES } = await sqlite()
-  const rules = (await analyticsGet("bot_rules")) || DEFAULT_BOT_RULES
+  const rules = (await analyticsGet("bot_rules")) || cloneDefaults()
   const idx = rules.findIndex((r) => r.id === id)
   if (idx !== -1) {
     rules[idx].allowed = Boolean(allowed)
@@ -319,11 +331,14 @@ export async function updateBotRuleStore(id, allowed) {
 
 export async function updateAllBotRulesStore(newRules) {
   if (useSqlitePrimary()) {
-    const { updateAllDbBotRules } = await sqlite()
-    return await updateAllDbBotRules(newRules)
+    try {
+      const { updateAllDbBotRules } = await sqlite()
+      return await updateAllDbBotRules(newRules)
+    } catch (err) {
+      console.warn("SQLite bot rules bulk fallback:", err)
+    }
   }
-  const { DEFAULT_BOT_RULES } = await sqlite()
-  const rules = (await analyticsGet("bot_rules")) || DEFAULT_BOT_RULES
+  const rules = (await analyticsGet("bot_rules")) || cloneDefaults()
   const now = new Date().toISOString()
   for (const item of newRules) {
     const idx = rules.findIndex((r) => r.id === item.id)

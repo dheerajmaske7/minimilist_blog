@@ -913,6 +913,28 @@ body.analytics-app header {
   color: #007acc;
 }
 
+.obs-subtabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 1rem;
+}
+
+.obs-subtabs button {
+  font: inherit;
+  border: 1px solid #ddd;
+  background: #fff;
+  padding: 0.35rem 0.85rem;
+  cursor: pointer;
+  border-radius: 999px;
+}
+
+.obs-subtabs button.is-active {
+  border-color: #007acc;
+  color: #007acc;
+  background: #eef6fc;
+}
+
 .obs-kpis {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -1143,18 +1165,12 @@ body.analytics-app header {
   outline-offset: 2px;
 }
 
-.obs-perm-header {
-  margin-bottom: 1.5rem;
-  padding-bottom: 1.25rem;
-  border-bottom: 1px solid #eee;
-}
-
 .obs-perm-actions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
-  margin-top: 1rem;
+  margin: 0 0 1.25rem;
 }
 
 .obs-btn-sm {
@@ -1196,99 +1212,51 @@ body.analytics-app header {
 }
 
 .obs-rule-group-title {
-  font-size: 0.82rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: #888;
-  margin: 1.75rem 0 0.65rem;
+  margin: 1.25rem 0 0.4rem;
 }
 
 .obs-rule-card {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 1.25rem;
-  border: 1px solid #eee;
-  border-radius: 8px;
-  padding: 1rem 1.25rem;
-  margin-bottom: 0.75rem;
-  background: #fff;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
-}
-
-.obs-rule-card:hover {
-  border-color: #ccc;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  gap: 0.75rem;
+  border-bottom: 1px solid #eee;
+  padding: 0.5rem 0;
 }
 
 .obs-rule-left {
-  flex: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
   min-width: 0;
 }
 
-.obs-rule-title-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 4px;
-}
-
 .obs-rule-name {
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: #1f2937;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #222;
   margin: 0;
 }
 
-.obs-cat-badge {
-  font-size: 0.72rem;
-  padding: 2px 7px;
-  border-radius: 999px;
-  background: #f3f4f6;
-  color: #4b5563;
-  font-weight: 500;
-}
-
-.obs-rule-desc {
-  font-size: 0.88rem;
-  color: #555;
-  margin: 0 0 6px;
-  line-height: 1.4;
-}
-
-.obs-rule-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  font-size: 0.78rem;
-  color: #777;
-}
-
-.obs-rule-meta code {
-  background: #f4f4f5;
-  padding: 1px 5px;
-  border-radius: 4px;
-  color: #555;
-  font-size: 0.76rem;
-}
-
-.obs-traffic-badge {
-  color: #007acc;
-  font-weight: 500;
+.obs-rule-hits {
+  font-size: 0.8rem;
+  color: #888;
 }
 
 .obs-rule-right {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
   flex-shrink: 0;
 }
 
 .obs-rule-status {
-  font-size: 0.85rem;
-  font-weight: 600;
-  min-width: 75px;
+  font-size: 0.8rem;
+  min-width: 2.5rem;
   text-align: right;
 }
 
@@ -1301,26 +1269,24 @@ body.analytics-app header {
 }
 
 .obs-robots-card {
-  margin-top: 2.5rem;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  padding: 1.25rem;
-  background: #fafafa;
+  margin-top: 1.75rem;
 }
 
-.obs-robots-card h3 {
-  margin: 0 0 0.5rem;
-  font-size: 1rem;
+.obs-robots-card summary {
+  cursor: pointer;
+  color: #555;
+  font-size: 0.9rem;
 }
 
 .obs-robots-code {
   background: #1e1e1e;
   color: #d4d4d4;
   padding: 1rem;
+  overflow: auto;
+  font-size: 0.78rem;
+  margin: 0.75rem 0 0;
   border-radius: 6px;
   font-family: monospace;
-  font-size: 0.82rem;
-  overflow-x: auto;
   white-space: pre;
   max-height: 320px;
 }
