@@ -41,12 +41,27 @@ function sinceIso(range) {
   return new Date(Date.now() - days * 24 * 3600 * 1000).toISOString()
 }
 
+function getExpectedPassword() {
+  return process.env.ANALYTICS_PASSWORD || process.env.ADMIN_PASSWORD || "1432"
+}
+
+function getAccessSecret() {
+  return process.env.ACCESS_TOKEN_SECRET || "dheeraj-work-netlify-ai-access-hmac-v1"
+}
+
 function isAuthorized(event) {
+  const expected = getExpectedPassword()
+  const secret = getAccessSecret()
   const adminKey = event.headers?.["x-admin-key"] || event.headers?.["X-Admin-Key"]
-  if (adminKey === "1432") return true
-  if (event.queryStringParameters?.auth === "1432") return true
+  const internalSecret = event.headers?.["x-internal-secret"] || event.headers?.["X-Internal-Secret"]
+  const authQuery = event.queryStringParameters?.auth
   const cookie = event.headers?.cookie || ""
-  if (cookie.includes("agentgate_auth=1432")) return true
+
+  if (adminKey && (adminKey === expected || adminKey === secret)) return true
+  if (internalSecret && internalSecret === secret) return true
+  if (authQuery && (authQuery === expected || authQuery === secret)) return true
+  if (cookie.includes(`agentgate_auth=${expected}`) || cookie.includes(`agentgate_auth=${encodeURIComponent(expected)}`)) return true
+
   return false
 }
 

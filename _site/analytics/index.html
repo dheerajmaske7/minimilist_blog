@@ -111,7 +111,6 @@
 
 <script>
 (function () {
-  const PASSWORD = "1432";
   const fmt = (n) => Number(n || 0).toLocaleString();
   const money = (n) => "$" + Number(n || 0).toFixed(2);
 
@@ -148,24 +147,30 @@
   };
   const EVENT_PAGE = 12;
 
-  function isAuthed() {
-    return sessionStorage.getItem("agentgate_auth") === PASSWORD;
+  function getAuthKey() {
+    return sessionStorage.getItem("agentgate_auth") || "";
   }
 
-  function setAuthed(val) {
+  function setAuthKey(val) {
     if (val) {
-      sessionStorage.setItem("agentgate_auth", PASSWORD);
-      document.cookie = `agentgate_auth=${PASSWORD}; path=/; max-age=604800; SameSite=Lax`;
+      sessionStorage.setItem("agentgate_auth", val);
+      document.cookie = `agentgate_auth=${encodeURIComponent(val)}; path=/; max-age=604800; SameSite=Lax`;
     } else {
       sessionStorage.removeItem("agentgate_auth");
       document.cookie = "agentgate_auth=; path=/; max-age=0; SameSite=Lax";
     }
   }
 
+  function isAuthed() {
+    return Boolean(getAuthKey());
+  }
+
   async function loadRules() {
+    const auth = getAuthKey();
+    if (!auth) return;
     try {
-      const res = await fetch("/api/bot-rules?auth=" + PASSWORD, {
-        headers: { "x-admin-key": PASSWORD }
+      const res = await fetch("/api/bot-rules?auth=" + encodeURIComponent(auth), {
+        headers: { "x-admin-key": auth }
       });
       const json = await res.json();
       if (json && json.ok && Array.isArray(json.rules) && json.rules.length) {
@@ -238,10 +243,11 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
 
     showToast(`${rule.name}: ${allowed ? "free" : "gated"}`);
 
+    const auth = getAuthKey();
     try {
-      const res = await fetch("/api/bot-rules?auth=" + PASSWORD, {
+      const res = await fetch("/api/bot-rules?auth=" + encodeURIComponent(auth), {
         method: "POST",
-        headers: { "Content-Type": "application/json", "x-admin-key": PASSWORD },
+        headers: { "Content-Type": "application/json", "x-admin-key": auth },
         body: JSON.stringify({ id, allowed }),
       });
       const data = await res.json();
@@ -253,11 +259,12 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
   }
 
   async function actionRules(action) {
+    const auth = getAuthKey();
     try {
       showToast("Updating…");
-      const res = await fetch("/api/bot-rules?auth=" + PASSWORD, {
+      const res = await fetch("/api/bot-rules?auth=" + encodeURIComponent(auth), {
         method: "POST",
-        headers: { "Content-Type": "application/json", "x-admin-key": PASSWORD },
+        headers: { "Content-Type": "application/json", "x-admin-key": auth },
         body: JSON.stringify({ action }),
       });
       const data = await res.json();
@@ -742,10 +749,15 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
   }
 
   async function load() {
+    const auth = getAuthKey();
+    if (!auth) {
+      showAuthScreen();
+      return;
+    }
     document.getElementById("obs-meta").textContent = "Loading…";
     const [res] = await Promise.all([
-      fetch("/api/analytics?range=" + state.range + "&auth=" + PASSWORD, {
-        headers: { "x-admin-key": PASSWORD }
+      fetch("/api/analytics?range=" + state.range + "&auth=" + encodeURIComponent(auth), {
+        headers: { "x-admin-key": auth }
       }),
       loadRules(),
     ]);
@@ -758,7 +770,7 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
     }
     if (!res.ok || data.ok === false) {
       if (res.status === 401) {
-        setAuthed(false);
+        setAuthKey("");
         showAuthScreen();
         return;
       }
@@ -794,16 +806,46 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
   // Bind Login Form
   const loginForm = document.getElementById("obs-lock-form");
   if (loginForm) {
-    loginForm.addEventListener("submit", (e) => {
+    loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const entered = document.getElementById("obs-pass-input").value;
+      const passInput = document.getElementById("obs-pass-input");
+      const entered = (passInput.value || "").trim();
       const errEl = document.getElementById("obs-lock-error");
-      if (entered === PASSWORD) {
-        if (errEl) errEl.style.display = "none";
-        setAuthed(true);
-        showDashboard();
-      } else {
-        if (errEl) errEl.style.display = "block";
+      const submitBtn = loginForm.querySelector("button[type='submit']");
+      if (!entered) return;
+
+      if (errEl) errEl.style.display = "none";
+      const originalText = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Verifying…";
+
+      try {
+        const res = await fetch("/api/analytics?range=" + state.range + "&auth=" + encodeURIComponent(entered), {
+          headers: { "x-admin-key": entered },
+        });
+        const text = await res.text();
+        let data;
+        try { data = JSON.parse(text); } catch {}
+
+        if (res.ok && data && data.ok) {
+          setAuthKey(entered);
+          state.data = data;
+          showDashboard();
+        } else {
+          setAuthKey("");
+          if (errEl) {
+            errEl.textContent = (data && data.error) || "Incorrect password. Please try again.";
+            errEl.style.display = "block";
+          }
+        }
+      } catch (err) {
+        if (errEl) {
+          errEl.textContent = "Connection error: " + err.message;
+          errEl.style.display = "block";
+        }
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
       }
     });
   }
@@ -812,7 +854,7 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
   const lockBtn = document.getElementById("obs-lock-btn");
   if (lockBtn) {
     lockBtn.addEventListener("click", () => {
-      setAuthed(false);
+      setAuthKey("");
       showAuthScreen();
     });
   }

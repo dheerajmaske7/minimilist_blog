@@ -159,9 +159,15 @@ async function getLiveRules(origin: string): Promise<BotRule[]> {
   try {
     const controller = new AbortController()
     const timer = setTimeout(() => controller.abort(), 1500)
-    const res = await fetch(`${origin}/api/bot-rules?auth=1432`, {
+    const authPass = Deno.env.get("ANALYTICS_PASSWORD") || Deno.env.get("ADMIN_PASSWORD") || "1432"
+    const secret = Deno.env.get("ACCESS_TOKEN_SECRET") || DEFAULT_SECRET
+    const res = await fetch(`${origin}/api/bot-rules?auth=${encodeURIComponent(authPass)}`, {
       signal: controller.signal,
-      headers: { "Cache-Control": "no-cache", "X-Admin-Key": "1432" },
+      headers: {
+        "Cache-Control": "no-cache",
+        "X-Admin-Key": authPass,
+        "X-Internal-Secret": secret,
+      },
     })
     clearTimeout(timer)
     if (res.ok) {
