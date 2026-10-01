@@ -31,7 +31,6 @@ body_class: analytics-app
     </div>
     <div class="obs-nav-tabs" role="tablist">
       <button type="button" data-tab="graphs" class="is-active">Graphs</button>
-      <button type="button" data-tab="overview">Overview</button>
       <button type="button" data-tab="agents">Agents</button>
       <div class="obs-nav-sub" id="obs-nav-agents-sub" style="display: none;">
         <button type="button" data-subtab="all" class="is-active">↳ All Agents</button>
@@ -446,16 +445,6 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
     const topAgent = d.topAgent ? `${d.topAgent.name} · ${fmt(d.topAgent.count)}` : "—";
     const topBlog = d.topBlog ? `${d.topBlog.name} · ${fmt(d.topBlog.count)}` : "—";
 
-    if (state.tab === "overview") {
-      root.innerHTML = `
-        ${kpis}
-        <div class="obs-highlights">
-          <div><span>Top agent</span><strong>${topAgent}</strong></div>
-          <div><span>Top blog</span><strong>${topBlog}</strong></div>
-        </div>`;
-      return;
-    }
-
     if (state.tab === "graphs") {
       const places = (d.places && d.places.length) ? d.places : placesOf(d.recent);
       const located = (d.recent || []).filter((e) => Number.isFinite(Number(e.lat)) && Number.isFinite(Number(e.lon))).length;
@@ -500,6 +489,7 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
     if (state.tab === "agents") {
       const view = state.agentView || "all";
       const subtabs = `
+        <div class="obs-highlights"><div><span>Top agent</span><strong>${topAgent}</strong></div></div>
         <div class="obs-subtabs" role="tablist" aria-label="Agent groups">
           <button type="button" data-agent-view="all"${view === "all" ? " class=\"is-active\"" : ""}>All Agents</button>
           <button type="button" data-agent-view="compare"${view === "compare" ? " class=\"is-active\"" : ""}>Good vs Bad Agents</button>
@@ -598,6 +588,7 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
       const names = (d.topPages || []).map((r) => r.name);
       const counts = (d.topPages || []).map((r) => r.count);
       root.innerHTML = `
+        <div class="obs-highlights"><div><span>Top blog</span><strong>${topBlog}</strong></div></div>
         <p class="obs-lead">What they actually opened. Blog paths are the content agents pay for.</p>
         <div class="obs-chart"><canvas id="chart-pages"></canvas></div>
         ${table(d.topPages || [], "Page", "Requests")}`;
