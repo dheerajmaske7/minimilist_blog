@@ -48,10 +48,6 @@
             <a href="/about/">About</a>
             
             
-            
-            <a href="/analytics/">Analytics</a>
-            
-            
         </nav>
     </header>
     
@@ -82,7 +78,6 @@
     </div>
     <div class="obs-nav-tabs" role="tablist">
       <button type="button" data-tab="graphs" class="is-active">Graphs</button>
-      <button type="button" data-tab="overview">Overview</button>
       <button type="button" data-tab="agents">Agents</button>
       <div class="obs-nav-sub" id="obs-nav-agents-sub" style="display: none;">
         <button type="button" data-subtab="all" class="is-active">↳ All Agents</button>
@@ -116,6 +111,96 @@
 (function () {
   const fmt = (n) => Number(n || 0).toLocaleString();
   const money = (n) => "$" + Number(n || 0).toFixed(2);
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+  }[c]));
+
+  function placesOf(recent) {
+    const groups = new Map();
+    for (const row of recent || []) {
+      const lat = Number(row.lat);
+      const lon = Number(row.lon);
+      if (!Number.isFinite(lat) || !Number.isFinite(lon)) continue;
+      const country = row.country || row.countryCode || "Unknown";
+      const city = row.city || "";
+      const key = `${country}|${city}|${lat}|${lon}`;
+      const cur = groups.get(key) || {
+        country,
+        countryCode: row.countryCode || "",
+        city,
+        lat,
+        lon,
+        count: 0,
+      };
+      cur.count += 1;
+      groups.set(key, cur);
+    }
+    return [...groups.values()].sort((a, b) => b.count - a.count);
+  }
+
+  function drawMap(places, located, total) {
+    const lead = document.getElementById("obs-map-lead");
+    const el = document.getElementById("obs-map");
+    if (!el) return;
+    if (lead) {
+      lead.textContent = located
+        ? `${fmt(located)} of ${fmt(total)} requests in this range have a rough location. Hover a dot for the city.`
+        : "No located requests in this range yet. The next visit will drop a dot here. Older visits were saved before location was recorded.";
+    }
+    if (!places.length) {
+      el.innerHTML = "";
+      return;
+    }
+    const xOf = (lon) => lon + 180;
+    const yOf = (lat) => 90 - lat;
+    const land = [
+      [[-168,71],[-153,71],[-140,70],[-128,71],[-105,74],[-88,74],[-70,68],[-62,58],[-56,48],[-68,44],[-80,25],[-90,29],[-97,26],[-105,22],[-112,24],[-117,32],[-124,40],[-125,49],[-136,56],[-153,59],[-166,64]],
+      [[-90,15],[-83,9],[-77,8],[-80,8],[-87,13],[-92,16]],
+      [[-80,12],[-77,8],[-71,12],[-67,10],[-60,8],[-50,0],[-35,-5],[-35,-10],[-40,-22],[-48,-28],[-62,-40],[-68,-55],[-74,-52],[-71,-42],[-70,-18],[-78,-5],[-80,8]],
+      [[-10,36],[-9,42],[-2,43],[0,51],[-5,58],[-8,54],[-10,52],[-5,48],[2,51],[8,54],[10,58],[12,56],[8,44],[3,43],[-5,36]],
+      [[-17,15],[-16,28],[10,37],[11,32],[25,32],[32,31],[43,12],[51,12],[43,-1],[40,-15],[35,-25],[28,-33],[18,-34],[14,-18],[9,4],[8,13],[-5,5],[-17,14]],
+      [[28,41],[36,36],[44,37],[48,42],[60,45],[68,45],[78,43],[87,28],[92,22],[98,8],[103,1],[104,-6],[115,-8],[120,-8],[128,-3],[141,-10],[147,-18],[153,-26],[146,-38],[138,-35],[128,-32],[115,-34],[114,-22],[104,-5],[98,8],[80,6],[72,8],[68,24],[60,25],[57,26],[51,25],[44,12],[43,12],[36,22],[32,31]],
+      [[104,1],[109,14],[100,20],[98,8]],
+      [[131,31],[135,35],[140,42],[145,44],[145,43],[141,35],[132,31]],
+      [[113,-22],[122,-18],[130,-12],[136,-14],[142,-11],[146,-18],[153,-26],[146,-38],[130,-32],[115,-34],[114,-22]],
+    ];
+    const landPaths = land.map((ring) => {
+      const d = ring.map(([lon, lat], i) => `${i ? "L" : "M"}${xOf(lon).toFixed(1)},${yOf(lat).toFixed(1)}`).join(" ") + " Z";
+      return `<path class="obs-map-land" d="${d}"></path>`;
+    }).join("");
+    let grid = "";
+    for (let lon = -150; lon <= 150; lon += 30) {
+      grid += `<line x1="${xOf(lon)}" y1="8" x2="${xOf(lon)}" y2="172" />`;
+    }
+    for (let lat = -60; lat <= 60; lat += 30) {
+      grid += `<line x1="8" y1="${yOf(lat)}" x2="352" y2="${yOf(lat)}" />`;
+    }
+    const max = Math.max(...places.map((p) => p.count), 1);
+    const dots = places.map((p) => {
+      const r = (1.5 + (Math.sqrt(p.count) / Math.sqrt(max)) * 3.2).toFixed(2);
+      const where = `${p.city ? p.city + ", " : ""}${p.country}`;
+      return `<circle class="obs-map-dot" cx="${xOf(p.lon).toFixed(2)}" cy="${yOf(p.lat).toFixed(2)}" r="${r}"><title>${esc(where)} · ${p.count}</title></circle>`;
+    }).join("");
+    const byCountry = new Map();
+    for (const p of places) {
+      const cur = byCountry.get(p.country) || { country: p.country, count: 0, cities: new Set() };
+      cur.count += p.count;
+      if (p.city) cur.cities.add(p.city);
+      byCountry.set(p.country, cur);
+    }
+    const rows = [...byCountry.values()].sort((a, b) => b.count - a.count);
+    el.innerHTML = `
+      <svg viewBox="0 0 360 180" role="img" aria-label="World map of request locations">
+        ${grid}${landPaths}${dots}
+      </svg>
+      <div class="table-wrap obs-map-list"><table>
+        <thead><tr><th>Place</th><th>Requests</th></tr></thead>
+        <tbody>${rows.map((r) => `<tr>
+          <td>${esc(r.country)}${r.cities.size ? ` <span class="obs-map-cities">${esc([...r.cities].slice(0, 4).join(", "))}</span>` : ""}</td>
+          <td>${fmt(r.count)}</td>
+        </tr>`).join("")}</tbody>
+      </table></div>`;
+  }
 
   const DEFAULT_FALLBACK_RULES = [
     { id: "anthropic", name: "Anthropic (Claude)", category: "AI Assistant", allowed: false, patterns: "claudebot,anthropic-ai,claude-web,claude" },
@@ -124,7 +209,7 @@
     { id: "google_ai", name: "Google AI / Gemini Training (Google-Extended)", category: "AI Training", allowed: false, patterns: "google-extended" },
     { id: "perplexity", name: "Perplexity AI", category: "AI Search", allowed: false, patterns: "perplexitybot,perplexity" },
     { id: "cohere", name: "Cohere AI", category: "AI Training", allowed: false, patterns: "cohere-ai,cohere" },
-    { id: "apple", name: "Apple (Applebot & Apple Intelligence)", category: "AI Assistant", allowed: false, patterns: "applebot-extended,applebot" },
+    { id: "apple", name: "Apple (Applebot & Apple Intelligence)", category: "AI Assistant", allowed: true, patterns: "applebot-extended,applebot" },
     { id: "meta", name: "Meta AI (LLaMA)", category: "AI Training", allowed: false, patterns: "meta-externalagent,facebookbot" },
     { id: "bytedance", name: "ByteDance (Bytespider)", category: "AI Training", allowed: false, patterns: "bytespider" },
     { id: "aggregators", name: "Aggregators (CCBot / Diffbot)", category: "Data Aggregators", allowed: false, patterns: "ccbot,diffbot,amazonbot,youbot" },
@@ -257,7 +342,9 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
       if (!res.ok || !data.ok) throw new Error(data.error || "Update failed");
       if (data.rules) state.rules = data.rules;
     } catch (err) {
+      rule.allowed = !allowed;
       showToast(`Save failed: ${err.message}`);
+      render();
     }
   }
 
@@ -405,19 +492,14 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
     const topAgent = d.topAgent ? `${d.topAgent.name} · ${fmt(d.topAgent.count)}` : "—";
     const topBlog = d.topBlog ? `${d.topBlog.name} · ${fmt(d.topBlog.count)}` : "—";
 
-    if (state.tab === "overview") {
-      root.innerHTML = `
-        ${kpis}
-        <div class="obs-highlights">
-          <div><span>Top agent</span><strong>${topAgent}</strong></div>
-          <div><span>Top blog</span><strong>${topBlog}</strong></div>
-        </div>`;
-      return;
-    }
-
     if (state.tab === "graphs") {
+      const places = (d.places && d.places.length) ? d.places : placesOf(d.recent);
+      const located = (d.recent || []).filter((e) => Number.isFinite(Number(e.lat)) && Number.isFinite(Number(e.lon))).length;
       root.innerHTML = `
         ${kpis}
+        <h2>Where requests come from</h2>
+        <p class="obs-lead" id="obs-map-lead"></p>
+        <div id="obs-map" class="obs-map"></div>
         <h2>Traffic</h2>
         <div class="obs-chart"><canvas id="chart-traffic"></canvas></div>
         <div class="obs-split">
@@ -447,12 +529,14 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
         { label: "402 blocked", data: series.map((r) => r.blocked), borderColor: "#c45c26", tension: 0.2, fill: false },
         { label: "Paid", data: series.map((r) => r.paid), borderColor: "#9bbc5a", tension: 0.2, fill: false },
       ]);
+      drawMap(places, located, (d.recent || []).length);
       return;
     }
 
     if (state.tab === "agents") {
       const view = state.agentView || "all";
       const subtabs = `
+        <div class="obs-highlights"><div><span>Top agent</span><strong>${topAgent}</strong></div></div>
         <div class="obs-subtabs" role="tablist" aria-label="Agent groups">
           <button type="button" data-agent-view="all"${view === "all" ? " class=\"is-active\"" : ""}>All Agents</button>
           <button type="button" data-agent-view="compare"${view === "compare" ? " class=\"is-active\"" : ""}>Good vs Bad Agents</button>
@@ -551,6 +635,7 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
       const names = (d.topPages || []).map((r) => r.name);
       const counts = (d.topPages || []).map((r) => r.count);
       root.innerHTML = `
+        <div class="obs-highlights"><div><span>Top blog</span><strong>${topBlog}</strong></div></div>
         <p class="obs-lead">What they actually opened. Blog paths are the content agents pay for.</p>
         <div class="obs-chart"><canvas id="chart-pages"></canvas></div>
         ${table(d.topPages || [], "Page", "Requests")}`;
@@ -568,6 +653,7 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
 
       let html = `
         <p class="obs-lead">Slide the toggles to dynamically grant or revoke crawler access. <strong>On:</strong> Free content access & marked <code>Allow</code> in robots.txt. <strong>Off:</strong> HTTP 402 (0.01 USDC) & <code>Disallow</code> in robots.txt.</p>
+        ${state.rulesError ? `<p class="obs-empty">${esc(state.rulesError)}</p>` : ""}
         <div class="obs-perm-actions">
           <button type="button" class="obs-btn-sm is-primary" id="btn-allow-all">Allow all</button>
           <button type="button" class="obs-btn-sm" id="btn-block-ai">Gate AI</button>
@@ -651,7 +737,7 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
       if (state.eventAgent !== "all" && e.agent !== state.eventAgent) return false;
       if (state.eventStatus !== "all" && String(e.status) !== state.eventStatus) return false;
       if (q) {
-        const hay = `${e.path || ""} ${e.kind || ""} ${e.agent || ""} ${e.status || ""}`.toLowerCase();
+        const hay = `${e.path || ""} ${e.kind || ""} ${e.agent || ""} ${e.status || ""} ${e.city || ""} ${e.country || ""}`.toLowerCase();
         if (!hay.includes(q)) return false;
       }
       return true;
@@ -695,14 +781,18 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
       ${
         pageRows.length
           ? `<div class="table-wrap"><table>
-              <thead><tr><th>When</th><th>Kind</th><th>Client</th><th>Path</th><th>Status</th></tr></thead>
-              <tbody>${pageRows.map((e) => `<tr>
+              <thead><tr><th>When</th><th>Kind</th><th>Client</th><th>Where</th><th>Path</th><th>Status</th></tr></thead>
+              <tbody>${pageRows.map((e) => {
+                const where = [e.city, e.country].filter(Boolean).join(", ");
+                return `<tr>
                 <td>${e.ts ? new Date(e.ts).toLocaleString() : ""}</td>
                 <td><code>${e.kind || ""}</code></td>
                 <td>${e.agent || ""}</td>
+                <td>${where ? esc(where) : "—"}</td>
                 <td>${e.path || ""}</td>
                 <td>${e.status || ""}</td>
-              </tr>`).join("")}</tbody>
+              </tr>`;
+              }).join("")}</tbody>
             </table></div>
             <div class="obs-pager">
               <button type="button" class="obs-page" data-page="prev" ${state.eventPage <= 1 ? "disabled" : ""}>Prev</button>
@@ -841,7 +931,7 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
             errEl.style.display = "block";
           }
         }
-      } catch (err) {
+  } catch (err) {
         if (errEl) {
           errEl.textContent = "Connection error: " + err.message;
           errEl.style.display = "block";

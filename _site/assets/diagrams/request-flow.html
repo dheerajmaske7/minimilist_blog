@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Request flow — dheeraj-work</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: ui-sans-serif, system-ui, sans-serif; max-width: 1100px; margin: 2rem auto; padding: 0 1rem; line-height: 1.5; color: #1c1c1c; }
+    h1 { font-size: 1.6rem; }
+    h2 { font-size: 1.15rem; margin-top: 2.4rem; }
+    p, li { max-width: 46rem; }
+    .diagram { overflow-x: auto; margin: 1rem 0 2rem; }
+    code { background: #f4f1ea; padding: 0.1rem 0.3rem; }
+  </style>
+</head>
+<body>
+  <h1>How a request reaches this site</h1>
+  <p>Each column is one party. Time moves downward, the same way a TCP handshake is drawn. The edge function <code>gate-ai-access</code> runs on every request after TLS, before any Jekyll file is sent. The Node functions run only when their URL is called.</p>
+
+  <h2>1. Opening the connection</h2>
+  <p>A human and an agent do the same three handshakes. DNS answers with a Netlify edge IP. The article is not involved yet.</p>
+  <div class="diagram">
+    <pre class="mermaid">
+sequenceDiagram
+  participant C as Human client
+  participant A as AI agent
+  participant D as DNS
+  participant N as Netlify edge
+  participant S as Server
+
+  C->>D: What is the IP of dheeraj-work.netlify.app?
+  D-->>C: A Netlify edge IP
+  C->>N: TCP SYN
+  N-->>C: TCP SYN-ACK
+  C->>N: TCP ACK
+  C->>N: TLS ClientHello
+  N-->>C: TLS certificate and keys
+  Note over C,N: The connection is encrypted. No page has been sent yet.
+    </pre>
+  </div>
+
+  <h2>2. A human opens a blog post</h2>
+  <p>The first response is decided on the edge. The Jekyll file stays unread until the reader cookie exists.</p>
+  <div class="diagram">
+    <pre class="mermaid">
+sequenceDiagram
+  participant C as Human client
+  participant A as AI agent
+  participant D as DNS
+  participant N as Netlify edge
+  participant S as Server
+
+  C->>N: GET /2025/05/13/why-ola-is-building-its-own-llms-krutrim
+  Note over N: User-Agent looks like a browser. Sec-Fetch-Mode is navigate. No cookie. No payment token.
+  N-->>C: 402 challenge page
+  Note over S: The article file is not read.
+  C->>N: POST /api/reader-unlock after JavaScript runs
+  N-->>C: Set-Cookie dw_reader
+  C->>N: GET the same post, with the cookie
+  N->>S: Cookie is valid, so fetch the HTML
+  S-->>N: Article HTML
+  N-->>C: 200 article
+  N->>S: POST /api/track as human, status 200
+    </pre>
+  </div>
+
+  <h2>3. An agent wants the same post</h2>
+  <p>Reading <code>/llms.txt</code> returns the price and the wallet. It does not unlock the post.</p>
+  <div class="diagram">
+    <pre class="mermaid">
+sequenceDiagram
+  participant C as Human client
+  participant A as AI agent
+  participant D as DNS
+  participant N as Netlify edge
+  participant S as Server
+
+  A->>N: GET /llms.txt
+  N->>S: Open path, fetch the file
+  S-->>N: Payment terms
+  N-->>A: 200 llms.txt
+  Note over A: Reading this file does not unlock posts.
+  A->>N: GET /2025/05/13/why-ola-is-building-its-own-llms-krutrim
+  Note over N: User-Agent matches Claude, GPTBot, or another blocked agent.
+  N-->>A: 402 Payment Required
+  Note over S: The article file is not read.
+  N->>S: POST /api/track as AI agent, status 402
+  A->>N: POST /api/verify-payment with txHash
+  N->>S: Check the Base USDC transfer
+  S-->>N: accessToken
+  N-->>A: 200 accessToken
+  A->>N: GET the post with Authorization Bearer token
+  N->>S: Token is valid, so fetch the HTML
+  S-->>N: Article HTML
+  N-->>A: 200 article
+    </pre>
+  </div>
+
+  <h2>4. Which function runs, and which request hits the edge</h2>
+  <p>Every URL hits <code>gate-ai-access</code> first. <code>/api/reader-unlock</code> is handled inside that edge function. The other <code>/api</code> URLs are separate functions, and the edge lets them through because <code>/api/</code> is an open path. <code>GET /api/bot-rules</code> runs only when the edge’s 15-second rule cache is cold.</p>
+  <div class="diagram">
+    <pre class="mermaid">
+sequenceDiagram
+  participant C as Client
+  participant E as Edge gate-ai-access
+  participant R as Function bot-rules
+  participant T as Function track
+  participant M as Function analytics
+  participant F as Jekyll file in _site
+
+  C->>E: Any GET or POST, after TCP and TLS
+  alt Path is / /about /talks /projects /llms.txt /assets
+    E->>F: context.next reads the static file
+    F-->>E: 200 file
+    E-->>C: 200 file
+    E->>T: POST /api/track kind and path
+    Note over T: track.mjs writes the visit to Netlify Blobs
+  else Path is a post and the client is a human with no cookie
+    E-->>C: 402 HTML challenge, written by the edge
+    C->>E: POST /api/reader-unlock
+    Note over E: Still the edge function. No Node function runs.
+    E-->>C: Set-Cookie dw_reader
+    C->>E: GET the post again with the cookie
+    E->>F: context.next
+    F-->>E: Article HTML
+    E-->>C: 200 article
+    E->>T: POST /api/track human 200
+  else Path is a post and the User-Agent is a blocked agent
+    E->>R: GET /api/bot-rules if the 15s cache is empty
+    R-->>E: allowed or blocked for that name
+    E-->>C: 402 JSON, or 402 HTML if it looks like a browser
+    Note over F: The article file is not read.
+    E->>T: POST /api/track AI agent 402
+  else Path is a post and the User-Agent is Googlebot or Bingbot
+    E->>F: context.next, search is allowed
+    F-->>E: Article HTML
+    E-->>C: 200 article
+    E->>T: POST /api/track search 200
+  else Browser opens /analytics/
+    E->>F: context.next, this page is not a post
+    F-->>E: analytics.html
+    E-->>C: 200 page
+    C->>E: GET /api/analytics
+    Note over E: Open path, so the edge does not gate it
+    E->>M: analytics.mjs reads Blobs
+    M-->>E: JSON counts
+    E-->>C: 200 JSON
+  end
+    </pre>
+  </div>
+
+  <h2>5. The agent pays, then the post is accepted</h2>
+  <p>The edge checks the token on the post URL itself. <code>/api/content</code> checks the same token again, then fetches the HTML with <code>X-AI-Access-Bypass</code> so the edge will pass that internal request through.</p>
+  <div class="diagram">
+    <pre class="mermaid">
+sequenceDiagram
+  participant A as AI agent
+  participant E as Edge gate-ai-access
+  participant V as Function verify-payment
+  participant B as Base
+  participant K as Function content
+  participant F as Jekyll file in _site
+
+  A->>E: GET /20xx/mm/dd/post with no token
+  E-->>A: 402 pay 0.01 USDC on Base to the site wallet
+  A->>B: Transfer 0.01 USDC
+  B-->>A: Transaction hash
+  A->>E: POST /api/verify-payment { txHash }
+  Note over E: /api/ is open, so the edge forwards this
+  E->>V: verify-payment.mjs
+  V->>B: Read the receipt and the USDC Transfer log
+  B-->>V: Success, recipient, amount at least 0.01
+  V-->>E: accessToken, valid 7 days
+  E-->>A: 200 { ok, accessToken }
+
+  alt Option A, same post URL
+    A->>E: GET /20xx/mm/dd/post Authorization Bearer accessToken
+    Note over E: tokenOk inside the edge
+    E->>F: context.next
+    F-->>E: Article HTML
+    E-->>A: 200 article
+  else Option B, content API
+    A->>E: GET /api/content?path=/20xx/mm/dd/post.html Bearer accessToken
+    E->>K: content.mjs
+    Note over K: verifyAccessToken, then fetch the path
+    K->>E: GET that post with X-AI-Access-Bypass
+    Note over E: Bypass header matches the secret, so the gate steps aside
+    E->>F: context.next
+    F-->>E: Article HTML
+    E-->>K: 200 HTML
+    K-->>A: 200 article
+  end
+    </pre>
+  </div>
+
+  <script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+    mermaid.initialize({ startOnLoad: true, theme: "neutral", securityLevel: "loose" });
+  </script>
+</body>
+</html>

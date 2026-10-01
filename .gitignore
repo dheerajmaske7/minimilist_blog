@@ -22,6 +22,8 @@ data/*.db-shm
 # Editor configs
 .cursor
 .vscode
+.DS_Store
+*.DS_Store
 
 # Generated site extras
 _site/data
