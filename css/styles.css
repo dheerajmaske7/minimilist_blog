@@ -1296,94 +1296,101 @@ body.analytics-app header {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 55vh;
+  min-height: 50vh;
   padding: 3rem 1rem;
 }
 
+.obs-lock-box,
 .obs-lock-card {
-  max-width: 380px;
+  max-width: 290px;
   width: 100%;
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 2.25rem 2rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   text-align: center;
 }
 
 .obs-lock-icon {
-  width: 52px;
-  height: 52px;
-  line-height: 52px;
-  margin: 0 auto 1.25rem;
-  background: #f3f4f6;
-  border-radius: 50%;
-  font-size: 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  font-size: 1.25rem;
+  margin: 0 auto 0.5rem;
+  opacity: 0.7;
 }
 
+.obs-lock-title,
 .obs-lock-card h2 {
-  font-size: 1.35rem;
-  font-weight: 600;
-  margin: 0 0 0.5rem;
-  color: #111827;
+  font-family: Georgia, serif;
+  font-size: 1.25rem;
+  font-weight: normal;
+  margin: 0 0 0.25rem;
+  color: #222;
+  letter-spacing: -0.01em;
 }
 
+.obs-lock-desc,
 .obs-lock-card p {
-  font-size: 0.9rem;
-  color: #6b7280;
-  margin: 0 0 1.5rem;
+  font-size: 0.85rem;
+  color: #777;
+  margin: 0 0 1.25rem;
   line-height: 1.4;
 }
 
 .obs-lock-form {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  width: 100%;
+}
+
+.obs-lock-row {
+  display: flex;
+  width: 100%;
+  gap: 6px;
 }
 
 .obs-lock-input {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  font-size: 1.05rem;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  box-sizing: border-box;
-  text-align: center;
-  letter-spacing: 0.15em;
+  flex: 1;
+  min-width: 0;
+  padding: 0.45rem 0.7rem;
+  font-size: 0.9rem;
+  font-family: inherit;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #fff;
+  color: #222;
   outline: none;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease;
 }
 
 .obs-lock-input:focus {
-  border-color: #007acc;
-  box-shadow: 0 0 0 3px rgba(0, 122, 204, 0.15);
+  border-color: #222;
 }
 
 .obs-lock-submit {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: #ffffff;
-  background: #007acc;
-  border: none;
-  border-radius: 8px;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.85rem;
+  font-family: inherit;
+  color: #fff;
+  background: #222;
+  border: 1px solid #222;
+  border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.15s ease;
+  white-space: nowrap;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 
 .obs-lock-submit:hover {
-  background: #0062a3;
+  background: #444;
+  border-color: #444;
+}
+
+.obs-lock-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .obs-lock-error {
   color: #dc2626;
-  font-size: 0.85rem;
-  margin: 0.5rem 0 0;
+  font-size: 0.8rem;
+  margin: 0.6rem 0 0;
   font-weight: 500;
+  text-align: center;
 }
 
 /* --- Sidebar Sub Navigation --- */

@@ -60,14 +60,16 @@
 
 <!-- Locked View -->
 <div id="obs-locked-view" class="obs-lock-container">
-  <div class="obs-lock-card">
+  <div class="obs-lock-box">
     <div class="obs-lock-icon">🔒</div>
-    <h2>AgentGate Observability</h2>
-    <p>This analytics dashboard is private. Please enter the password to continue.</p>
+    <h2 class="obs-lock-title">Observability</h2>
+    <p class="obs-lock-desc">Enter password to continue</p>
     <form id="obs-lock-form" class="obs-lock-form">
-      <input type="password" id="obs-pass-input" class="obs-lock-input" placeholder="Enter password" autofocus autocomplete="current-password" required />
-      <button type="submit" class="obs-lock-submit">Unlock Dashboard</button>
-      <p id="obs-lock-error" class="obs-lock-error" style="display:none;">Incorrect password. Please try again.</p>
+      <div class="obs-lock-row">
+        <input type="password" id="obs-pass-input" class="obs-lock-input" placeholder="Password" autofocus autocomplete="current-password" required />
+        <button type="submit" class="obs-lock-submit">Unlock</button>
+      </div>
+      <p id="obs-lock-error" class="obs-lock-error" style="display:none;">Incorrect password</p>
     </form>
   </div>
 </div>
@@ -834,7 +836,7 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
         } else {
           setAuthKey("");
           if (errEl) {
-            errEl.textContent = (data && data.error) || "Incorrect password. Please try again.";
+            errEl.textContent = (data && data.error) || "Incorrect password";
             errEl.style.display = "block";
           }
         }
