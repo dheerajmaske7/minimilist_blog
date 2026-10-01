@@ -41,6 +41,15 @@ function sinceIso(range) {
   return new Date(Date.now() - days * 24 * 3600 * 1000).toISOString()
 }
 
+function isAuthorized(event) {
+  const adminKey = event.headers?.["x-admin-key"] || event.headers?.["X-Admin-Key"]
+  if (adminKey === "1432") return true
+  if (event.queryStringParameters?.auth === "1432") return true
+  const cookie = event.headers?.cookie || ""
+  if (cookie.includes("agentgate_auth=1432")) return true
+  return false
+}
+
 export async function handler(event) {
   useBlobs(event)
   if (event.httpMethod === "OPTIONS") {
@@ -50,18 +59,26 @@ export async function handler(event) {
     return json(405, { ok: false, error: "GET required" })
   }
 
+  if (!isAuthorized(event)) {
+    return json(401, { ok: false, error: "Password required" })
+  }
+
   const range = parseRange(event)
   const since = sinceIso(range)
 
   if (useSqlitePrimary()) {
     try {
       const { queryDashboard } = await import("./_db.mjs")
-    const data = await queryDashboard(range)
-    const summary = (await analyticsGet("summary")) || emptySummary()
-    return json(200, {
-      ...data,
-      ...reputationFromProfiles(summary.agentProfiles, summary.recent || []),
-    })
+      const data = await queryDashboard(range)
+      let reputation = {}
+      try {
+        const summary = (await analyticsGet("summary")) || emptySummary()
+        reputation = reputationFromProfiles(summary.agentProfiles, summary.recent || [])
+      } catch (_e) {}
+      return json(200, {
+        ...data,
+        ...reputation,
+      })
     } catch (err) {
       console.warn("SQLite query fallback:", err)
     }

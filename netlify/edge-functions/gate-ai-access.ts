@@ -159,9 +159,9 @@ async function getLiveRules(origin: string): Promise<BotRule[]> {
   try {
     const controller = new AbortController()
     const timer = setTimeout(() => controller.abort(), 1500)
-    const res = await fetch(`${origin}/api/bot-rules`, {
+    const res = await fetch(`${origin}/api/bot-rules?auth=1432`, {
       signal: controller.signal,
-      headers: { "Cache-Control": "no-cache" },
+      headers: { "Cache-Control": "no-cache", "X-Admin-Key": "1432" },
     })
     clearTimeout(timer)
     if (res.ok) {

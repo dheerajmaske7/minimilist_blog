@@ -25,11 +25,24 @@ function json(statusCode, body) {
   }
 }
 
+function isAuthorized(event) {
+  const adminKey = event.headers?.["x-admin-key"] || event.headers?.["X-Admin-Key"]
+  if (adminKey === "1432") return true
+  if (event.queryStringParameters?.auth === "1432") return true
+  const cookie = event.headers?.cookie || ""
+  if (cookie.includes("agentgate_auth=1432")) return true
+  return false
+}
+
 export async function handler(event) {
   useBlobs(event)
 
   if (event.httpMethod === "OPTIONS") {
     return { statusCode: 204, headers: corsHeaders, body: "" }
+  }
+
+  if (!isAuthorized(event)) {
+    return json(401, { ok: false, error: "Password required" })
   }
 
   if (event.httpMethod === "GET") {

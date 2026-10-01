@@ -7,12 +7,37 @@ body_class: analytics-app
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
-<div id="obs" class="obs">
+<!-- Locked View -->
+<div id="obs-locked-view" class="obs-lock-container">
+  <div class="obs-lock-card">
+    <div class="obs-lock-icon">🔒</div>
+    <h2>AgentGate Observability</h2>
+    <p>This analytics dashboard is private. Please enter the password to continue.</p>
+    <form id="obs-lock-form" class="obs-lock-form">
+      <input type="password" id="obs-pass-input" class="obs-lock-input" placeholder="Enter password" autofocus autocomplete="current-password" required />
+      <button type="submit" class="obs-lock-submit">Unlock Dashboard</button>
+      <p id="obs-lock-error" class="obs-lock-error" style="display:none;">Incorrect password. Please try again.</p>
+    </form>
+  </div>
+</div>
+
+<!-- Unlocked Dashboard View -->
+<div id="obs-unlocked-view" class="obs" style="display: none;">
   <aside class="obs-nav" aria-label="Observability">
-    <p class="obs-brand">AgentGate</p>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+      <p class="obs-brand" style="margin: 0 0.5rem;">AgentGate</p>
+      <button type="button" id="obs-lock-btn" class="obs-lock-btn" title="Lock Analytics">🔒 Lock</button>
+    </div>
     <button type="button" data-tab="graphs" class="is-active">Graphs</button>
     <button type="button" data-tab="overview">Overview</button>
     <button type="button" data-tab="agents">Agents</button>
+    <div class="obs-nav-sub" id="obs-nav-agents-sub" style="display: none;">
+      <button type="button" data-subtab="all" class="is-active">↳ All Agents</button>
+      <button type="button" data-subtab="compare">↳ Good vs Bad</button>
+      <button type="button" data-subtab="good">↳ Good (Stopped)</button>
+      <button type="button" data-subtab="bad">↳ Bad (Bypassed)</button>
+      <button type="button" data-subtab="paid">↳ Paid (Returned)</button>
+    </div>
     <button type="button" data-tab="pages">Pages</button>
     <button type="button" data-tab="events">Events</button>
     <button type="button" data-tab="permissions">Permissions</button>
@@ -35,14 +60,31 @@ body_class: analytics-app
 
 <script>
 (function () {
+  const PASSWORD = "1432";
   const fmt = (n) => Number(n || 0).toLocaleString();
   const money = (n) => "$" + Number(n || 0).toFixed(2);
+
+  const DEFAULT_FALLBACK_RULES = [
+    { id: "anthropic", name: "Anthropic (Claude)", category: "AI Assistant", allowed: false, patterns: "claudebot,anthropic-ai,claude-web,claude" },
+    { id: "openai", name: "OpenAI (ChatGPT & SearchGPT)", category: "AI Assistant", allowed: false, patterns: "gptbot,chatgpt-user,oai-searchbot,chatgpt,openai" },
+    { id: "google_search", name: "Google Search (Googlebot)", category: "Search Engine", allowed: true, patterns: "googlebot,google-inspectiontool" },
+    { id: "google_ai", name: "Google AI / Gemini Training (Google-Extended)", category: "AI Training", allowed: false, patterns: "google-extended" },
+    { id: "perplexity", name: "Perplexity AI", category: "AI Search", allowed: false, patterns: "perplexitybot,perplexity" },
+    { id: "cohere", name: "Cohere AI", category: "AI Training", allowed: false, patterns: "cohere-ai,cohere" },
+    { id: "apple", name: "Apple (Applebot & Apple Intelligence)", category: "AI Assistant", allowed: false, patterns: "applebot-extended,applebot" },
+    { id: "meta", name: "Meta AI (LLaMA)", category: "AI Training", allowed: false, patterns: "meta-externalagent,facebookbot" },
+    { id: "bytedance", name: "ByteDance (Bytespider)", category: "AI Training", allowed: false, patterns: "bytespider" },
+    { id: "aggregators", name: "Aggregators (CCBot / Diffbot)", category: "Data Aggregators", allowed: false, patterns: "ccbot,diffbot,amazonbot,youbot" },
+    { id: "bing", name: "Bing Search (Bingbot)", category: "Search Engine", allowed: true, patterns: "bingbot" },
+    { id: "feed_protection", name: "Feed Protection (/feed.xml)", category: "RSS Protection", allowed: true, patterns: "" }
+  ];
+
   const state = {
     tab: "graphs",
     range: "week",
     data: null,
     charts: [],
-    rules: null,
+    rules: DEFAULT_FALLBACK_RULES.slice(),
     rulesError: null,
     rulesLoading: false,
     toastTimer: null,
@@ -55,9 +97,25 @@ body_class: analytics-app
   };
   const EVENT_PAGE = 12;
 
+  function isAuthed() {
+    return sessionStorage.getItem("agentgate_auth") === PASSWORD;
+  }
+
+  function setAuthed(val) {
+    if (val) {
+      sessionStorage.setItem("agentgate_auth", PASSWORD);
+      document.cookie = `agentgate_auth=${PASSWORD}; path=/; max-age=604800; SameSite=Lax`;
+    } else {
+      sessionStorage.removeItem("agentgate_auth");
+      document.cookie = "agentgate_auth=; path=/; max-age=0; SameSite=Lax";
+    }
+  }
+
   async function loadRules() {
     try {
-      const res = await fetch("/api/bot-rules");
+      const res = await fetch("/api/bot-rules?auth=" + PASSWORD, {
+        headers: { "x-admin-key": PASSWORD }
+      });
       const json = await res.json();
       if (json && json.ok && Array.isArray(json.rules) && json.rules.length) {
         state.rules = json.rules;
@@ -118,7 +176,7 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
     if (card) {
       const statusEl = card.querySelector(".obs-rule-status");
       if (statusEl) {
-        statusEl.textContent = allowed ? "Allow" : "Gate";
+        statusEl.textContent = allowed ? "On" : "Off";
         statusEl.className = `obs-rule-status ${allowed ? "is-allowed" : "is-gated"}`;
       }
     }
@@ -127,40 +185,38 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
       previewEl.textContent = buildRobotsPreview(state.rules);
     }
 
-    showToast(`${rule.name}: ${allowed ? "allowed" : "gated"}`);
+    showToast(`${rule.name}: ${allowed ? "free" : "gated"}`);
 
     try {
-      const res = await fetch("/api/bot-rules", {
+      const res = await fetch("/api/bot-rules?auth=" + PASSWORD, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "x-admin-key": PASSWORD },
         body: JSON.stringify({ id, allowed }),
       });
       const data = await res.json();
-      if (!res.ok || !data.ok) {
-        throw new Error(data.error || "Update failed");
-      }
+      if (!res.ok || !data.ok) throw new Error(data.error || "Update failed");
       if (data.rules) state.rules = data.rules;
     } catch (err) {
-      showToast(`⚠️ Failed to save: ${err.message}`);
+      showToast(`Save failed: ${err.message}`);
     }
   }
 
   async function actionRules(action) {
     try {
-      showToast("Saving changes…");
-      const res = await fetch("/api/bot-rules", {
+      showToast("Updating…");
+      const res = await fetch("/api/bot-rules?auth=" + PASSWORD, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "x-admin-key": PASSWORD },
         body: JSON.stringify({ action }),
       });
       const data = await res.json();
       if (data.ok && data.rules) {
         state.rules = data.rules;
         render();
-        showToast("Saved");
+        showToast("Updated");
       }
     } catch (err) {
-      showToast(`⚠️ Error: ${err.message}`);
+      showToast(`Error: ${err.message}`);
     }
   }
 
@@ -204,10 +260,7 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
       type: "doughnut",
       data: {
         labels,
-        datasets: [{
-          data: values,
-          backgroundColor: colors || ["#007acc", "#333", "#c45c26", "#888", "#9bbc5a"],
-        }],
+        datasets: [{ data: values, backgroundColor: colors || ["#007acc", "#333", "#c45c26", "#888", "#9bbc5a"] }],
       },
       options: { plugins: { legend: { position: "bottom" } }, maintainAspectRatio: false },
     });
@@ -234,7 +287,25 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
     state.charts.push(chart);
   }
 
+  function syncNav() {
+    document.querySelectorAll(".obs-nav > button").forEach((b) => {
+      b.classList.toggle("is-active", b.dataset.tab === state.tab);
+    });
+    const subnav = document.getElementById("obs-nav-agents-sub");
+    if (subnav) {
+      if (state.tab === "agents") {
+        subnav.style.display = "flex";
+        subnav.querySelectorAll("button").forEach((b) => {
+          b.classList.toggle("is-active", b.dataset.subtab === (state.agentView || "all"));
+        });
+      } else {
+        subnav.style.display = "none";
+      }
+    }
+  }
+
   function render() {
+    syncNav();
     const d = state.data;
     const root = document.getElementById("obs-panels");
     const meta = document.getElementById("obs-meta");
@@ -243,13 +314,14 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
       return;
     }
     clearCharts();
-    const store = d.store === "turso"
-      ? "Turso"
-      : d.store === "blobs"
+    const store =
+      d.store === "turso"
+        ? "Turso"
+        : d.store === "blobs"
         ? "Netlify Blobs"
         : d.store && String(d.store).includes("analytics.db")
-          ? "SQLite · data/analytics.db"
-          : (d.store || "store");
+        ? "SQLite · data/analytics.db"
+        : (d.store || "store");
     meta.textContent = `Last hit: ${d.updatedAt ? new Date(d.updatedAt).toLocaleString() : "none"} · ${store}`;
 
     const kpis = `
@@ -321,10 +393,11 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
       const view = state.agentView || "all";
       const subtabs = `
         <div class="obs-subtabs" role="tablist" aria-label="Agent groups">
-          <button type="button" data-agent-view="all"${view === "all" ? " class=\"is-active\"" : ""}>All</button>
-          <button type="button" data-agent-view="good"${view === "good" ? " class=\"is-active\"" : ""}>Good</button>
-          <button type="button" data-agent-view="bad"${view === "bad" ? " class=\"is-active\"" : ""}>Bad</button>
-          <button type="button" data-agent-view="paid"${view === "paid" ? " class=\"is-active\"" : ""}>Paid</button>
+          <button type="button" data-agent-view="all"${view === "all" ? " class=\"is-active\"" : ""}>All Agents</button>
+          <button type="button" data-agent-view="compare"${view === "compare" ? " class=\"is-active\"" : ""}>Good vs Bad Agents</button>
+          <button type="button" data-agent-view="good"${view === "good" ? " class=\"is-active\"" : ""}>Good Agents (${fmt(d.goodVisitors)})</button>
+          <button type="button" data-agent-view="bad"${view === "bad" ? " class=\"is-active\"" : ""}>Bad Agents (${fmt(d.badVisitors)})</button>
+          <button type="button" data-agent-view="paid"${view === "paid" ? " class=\"is-active\"" : ""}>Paid Agents (${fmt(d.paidVisitors)})</button>
         </div>`;
       const bindSubs = () => {
         root.querySelectorAll("[data-agent-view]").forEach((btn) => {
@@ -335,10 +408,43 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
         });
       };
 
+      if (view === "compare") {
+        root.innerHTML = `
+          ${subtabs}
+          <p class="obs-lead">Paywall compliance comparison: <strong>Good agents</strong> hit HTTP 402 and honored the gate by stopping. <strong>Bad agents</strong> were gated but continued fetching post bodies without paying. <strong>Paid agents</strong> stopped at 402, paid 0.01 USDC on Base, and returned with a valid token.</p>
+          <div class="obs-kpis">
+            ${kpi("Good (stopped at 402)", fmt(d.goodVisitors))}
+            ${kpi("Bad (bypassed 402)", fmt(d.badVisitors))}
+            ${kpi("Paid after stopping", fmt(d.paidVisitors))}
+          </div>
+          <div class="obs-split">
+            <div>
+              <h2>Paywall Behavior Mix</h2>
+              <div class="obs-chart obs-chart-sm"><canvas id="chart-agent-rep"></canvas></div>
+            </div>
+            <div>
+              <h2>Good Agents</h2>
+              ${table(d.goodAgents || [], "Agent", "Visitors")}
+            </div>
+          </div>
+          <h2 style="margin-top:1.5rem;">Bad Agents (Attempted Crawl Bypasses)</h2>
+          ${table(d.badAgents || [], "Agent", "Visitors")}
+          <h2 style="margin-top:1.5rem;">Paid Agents (Verified 0.01 USDC)</h2>
+          ${table(d.paidAgents || [], "Agent", "Visitors")}`;
+        doughnut(
+          "chart-agent-rep",
+          ["Good", "Bad", "Paid"],
+          [d.goodVisitors || 0, d.badVisitors || 0, d.paidVisitors || 0],
+          ["#10b981", "#ef4444", "#007acc"]
+        );
+        bindSubs();
+        return;
+      }
+
       if (view === "good") {
         root.innerHTML = `
           ${subtabs}
-          <p class="obs-lead"><strong>Good</strong> agents hit HTTP 402 and stopped. They did not fetch the paywalled post.</p>
+          <p class="obs-lead"><strong>Good agents</strong> hit HTTP 402 Payment Required and stopped. They did not attempt to scrape or bypass post gates.</p>
           <div class="obs-kpis">${kpi("Good visitors", fmt(d.goodVisitors))}</div>
           ${table(d.goodAgents || [], "Agent", "Visitors")}`;
         bindSubs();
@@ -347,7 +453,7 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
       if (view === "bad") {
         root.innerHTML = `
           ${subtabs}
-          <p class="obs-lead"><strong>Bad</strong> agents were gated but still fetched the post without paying.</p>
+          <p class="obs-lead"><strong>Bad agents</strong> were gated by HTTP 402 but still fetched paywalled posts without paying.</p>
           <div class="obs-kpis">${kpi("Bad visitors", fmt(d.badVisitors))}</div>
           ${table(d.badAgents || [], "Agent", "Visitors")}`;
         bindSubs();
@@ -356,7 +462,7 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
       if (view === "paid") {
         root.innerHTML = `
           ${subtabs}
-          <p class="obs-lead"><strong>Paid</strong> agents stopped at 402, then paid 0.01 USDC and came back.</p>
+          <p class="obs-lead"><strong>Paid agents</strong> stopped at HTTP 402, paid 0.01 USDC on Base, and returned with an access token.</p>
           <div class="obs-kpis">${kpi("Paid after 402", fmt(d.paidVisitors))}</div>
           ${table(d.paidAgents || [], "Agent", "Visitors")}`;
         bindSubs();
@@ -367,7 +473,7 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
       const counts = (d.topAgents || []).map((r) => r.count);
       root.innerHTML = `
         ${subtabs}
-        <p class="obs-lead">Which agents consumed the site in this range, and how heavily. Use Good / Bad / Paid to see paywall behavior.</p>
+        <p class="obs-lead">Overall agent traffic volume. Select <strong>Good vs Bad Agents</strong> to analyze paywall compliance.</p>
         <div class="obs-kpis">
           ${kpi("Good agents", fmt(d.goodVisitors))}
           ${kpi("Bad agents", fmt(d.badVisitors))}
@@ -392,32 +498,6 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
     }
 
     if (state.tab === "permissions") {
-      if (!state.rules && !state.rulesError) {
-        root.innerHTML = "<p class='obs-lead'>Loading bot permissions…</p>";
-        if (!state.rulesLoading) {
-          state.rulesLoading = true;
-          loadRules().finally(() => {
-            state.rulesLoading = false;
-            render();
-          });
-        }
-        return;
-      }
-
-      if (state.rulesError && !(state.rules && state.rules.length)) {
-        root.innerHTML = `
-          <p class="obs-lead">Could not load bot permissions. ${String(state.rulesError).replace(/</g, "")}</p>
-          <button type="button" class="obs-btn-sm" id="retry-rules">Retry</button>`;
-        const retry = document.getElementById("retry-rules");
-        if (retry) {
-          retry.addEventListener("click", () => {
-            state.rulesError = null;
-            render();
-          });
-        }
-        return;
-      }
-
       const groups = [
         { title: "Assistants", ids: ["anthropic", "openai", "perplexity", "apple"] },
         { title: "Training", ids: ["google_ai", "meta", "bytedance", "aggregators", "cohere"] },
@@ -426,19 +506,19 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
       ];
 
       let html = `
-        <p class="obs-lead">On = free. Off = HTTP 402 (0.01 USDC) and <code>Disallow</code> in robots.txt.</p>
+        <p class="obs-lead">Slide the toggles to dynamically grant or revoke crawler access. <strong>On:</strong> Free content access & marked <code>Allow</code> in robots.txt. <strong>Off:</strong> HTTP 402 (0.01 USDC) & <code>Disallow</code> in robots.txt.</p>
         <div class="obs-perm-actions">
           <button type="button" class="obs-btn-sm is-primary" id="btn-allow-all">Allow all</button>
           <button type="button" class="obs-btn-sm" id="btn-block-ai">Gate AI</button>
           <button type="button" class="obs-btn-sm" id="btn-reset-rules">Reset</button>
-          <a href="/robots.txt" target="_blank" class="obs-btn-sm" style="text-decoration:none;">robots.txt</a>
+          <a href="/robots.txt" target="_blank" class="obs-btn-sm" style="text-decoration:none;">robots.txt ↗</a>
           <span id="obs-toast-area"></span>
         </div>`;
 
       const topAgents = d.topAgents || [];
 
       groups.forEach((group) => {
-        const groupRules = state.rules.filter((r) => group.ids.includes(r.id));
+        const groupRules = (state.rules || DEFAULT_FALLBACK_RULES).filter((r) => group.ids.includes(r.id));
         if (!groupRules.length) return;
 
         html += `<div class="obs-rule-group-title">${group.title}</div>`;
@@ -457,11 +537,11 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
           html += `
             <div class="obs-rule-card" data-rule-id="${r.id}">
               <div class="obs-rule-left">
-                <h4 class="obs-rule-name">${r.name}</h4>
-                ${count > 0 ? `<span class="obs-rule-hits">${fmt(count)}</span>` : ""}
+                <span class="obs-rule-name">${r.name}</span>
+                ${count > 0 ? `<span class="obs-rule-hits">${fmt(count)} hits</span>` : ""}
               </div>
               <div class="obs-rule-right">
-                <span class="obs-rule-status ${r.allowed ? "is-allowed" : "is-gated"}">${r.allowed ? "Allow" : "Gate"}</span>
+                <span class="obs-rule-status ${r.allowed ? "is-allowed" : "is-gated"}">${r.allowed ? "On" : "Off"}</span>
                 <label class="obs-switch">
                   <input type="checkbox" data-rule-id="${r.id}" ${r.allowed ? "checked" : ""}>
                   <span class="obs-slider"></span>
@@ -473,7 +553,7 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
 
       html += `
         <details class="obs-robots-card">
-          <summary>robots.txt preview</summary>
+          <summary>Dynamic robots.txt preview</summary>
           <pre id="obs-robots-preview-code" class="obs-robots-code">${buildRobotsPreview(state.rules)}</pre>
         </details>`;
 
@@ -500,47 +580,40 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
     }
 
     const events = d.recent || [];
-    const mergeOpts = (fixed, extra) => {
-      const seen = new Set();
-      const out = ["all"];
-      for (const v of [...fixed, ...extra]) {
-        if (!v || seen.has(v)) continue;
-        seen.add(v);
-        out.push(v);
-      }
-      return out;
-    };
-    const kinds = mergeOpts(
-      ["human", "ai_agent", "search_bot", "preview_bot", "paid_agent", "unknown"],
-      events.map((e) => e.kind)
-    );
-    const agents = mergeOpts([], events.map((e) => e.agent).filter(Boolean).sort());
-    const statuses = mergeOpts(
-      ["200", "402"],
-      events.map((e) => (e.status ? String(e.status) : "")).concat(
-        (d.status || []).map((s) => String(s.name || ""))
-      )
-    );
-    const q = (state.eventQ || "").trim().toLowerCase();
+    const kinds = Array.from(new Set(events.map((e) => e.kind).filter(Boolean))).sort();
+    const agents = Array.from(new Set(events.map((e) => e.agent).filter(Boolean))).sort();
+    const statuses = Array.from(new Set(events.map((e) => String(e.status ?? "")).filter(Boolean))).sort();
+
+    const q = (state.eventQ || "").toLowerCase().trim();
     const filtered = events.filter((e) => {
       if (state.eventKind !== "all" && e.kind !== state.eventKind) return false;
       if (state.eventAgent !== "all" && e.agent !== state.eventAgent) return false;
       if (state.eventStatus !== "all" && String(e.status) !== state.eventStatus) return false;
       if (q) {
-        const blob = `${e.kind || ""} ${e.agent || ""} ${e.path || ""} ${e.status || ""}`.toLowerCase();
-        if (!blob.includes(q)) return false;
+        const hay = `${e.path || ""} ${e.kind || ""} ${e.agent || ""} ${e.status || ""}`.toLowerCase();
+        if (!hay.includes(q)) return false;
       }
       return true;
     });
-    const pages = Math.max(1, Math.ceil(filtered.length / EVENT_PAGE));
+
+    const total = filtered.length;
+    const pages = Math.max(1, Math.ceil(total / EVENT_PAGE));
     if (state.eventPage > pages) state.eventPage = pages;
     const start = (state.eventPage - 1) * EVENT_PAGE;
     const pageRows = filtered.slice(start, start + EVENT_PAGE);
-    const opt = (list, selected) =>
-      list.map((v) => `<option value="${v}" ${v === selected ? "selected" : ""}>${v === "all" ? "All" : v}</option>`).join("");
-    const pager = Array.from({ length: pages }, (_, i) => i + 1)
-      .map((n) => `<button type="button" class="obs-page${n === state.eventPage ? " is-active" : ""}" data-page="${n}">${n}</button>`)
-      .join("");
+
+    const opt = (list, curr) =>
+      `<option value="all">All</option>` +
+      list.map((v) => `<option value="${v}"${v === curr ? " selected" : ""}>${v}</option>`).join("");
+
+    let pager = "";
+    for (let p = 1; p <= pages; p++) {
+      if (pages > 7 && Math.abs(p - state.eventPage) > 2 && p !== 1 && p !== pages) {
+        if (p === 2 || p === pages - 1) pager += `<span class="obs-pager-ellipsis">…</span>`;
+        continue;
+      }
+      pager += `<button type="button" class="obs-page${p === state.eventPage ? " is-active" : ""}" data-page="${p}">${p}</button>`;
+    }
 
     root.innerHTML = `
       <p class="obs-lead">${fmt(filtered.length)} of ${fmt(events.length)} requests.</p>
@@ -620,7 +693,9 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
   async function load() {
     document.getElementById("obs-meta").textContent = "Loading…";
     const [res] = await Promise.all([
-      fetch("/api/analytics?range=" + state.range),
+      fetch("/api/analytics?range=" + state.range + "&auth=" + PASSWORD, {
+        headers: { "x-admin-key": PASSWORD }
+      }),
       loadRules(),
     ]);
     const text = await res.text();
@@ -631,20 +706,84 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
       throw new Error(text.slice(0, 180) || "Analytics request failed");
     }
     if (!res.ok || data.ok === false) {
+      if (res.status === 401) {
+        setAuthed(false);
+        showAuthScreen();
+        return;
+      }
       throw new Error(data.error || data.errorMessage || data.errorType || "Failed");
     }
     state.data = data;
     render();
   }
 
-  document.querySelectorAll(".obs-nav button").forEach((btn) => {
+  function showAuthScreen() {
+    const locked = document.getElementById("obs-locked-view");
+    const unlocked = document.getElementById("obs-unlocked-view");
+    if (locked) locked.style.display = "flex";
+    if (unlocked) unlocked.style.display = "none";
+    const passInput = document.getElementById("obs-pass-input");
+    if (passInput) {
+      passInput.value = "";
+      passInput.focus();
+    }
+  }
+
+  function showDashboard() {
+    const locked = document.getElementById("obs-locked-view");
+    const unlocked = document.getElementById("obs-unlocked-view");
+    if (locked) locked.style.display = "none";
+    if (unlocked) unlocked.style.display = "grid";
+    load().catch((err) => {
+      document.getElementById("obs-panels").innerHTML =
+        `<p>Could not load analytics. ${String(err).replace(/</g, "")}</p>`;
+    });
+  }
+
+  // Bind Login Form
+  const loginForm = document.getElementById("obs-lock-form");
+  if (loginForm) {
+    loginForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const entered = document.getElementById("obs-pass-input").value;
+      const errEl = document.getElementById("obs-lock-error");
+      if (entered === PASSWORD) {
+        if (errEl) errEl.style.display = "none";
+        setAuthed(true);
+        showDashboard();
+      } else {
+        if (errEl) errEl.style.display = "block";
+      }
+    });
+  }
+
+  // Bind Lock Button
+  const lockBtn = document.getElementById("obs-lock-btn");
+  if (lockBtn) {
+    lockBtn.addEventListener("click", () => {
+      setAuthed(false);
+      showAuthScreen();
+    });
+  }
+
+  // Bind Top-level Tabs
+  document.querySelectorAll(".obs-nav > button").forEach((btn) => {
     btn.addEventListener("click", () => {
       state.tab = btn.dataset.tab;
-      document.querySelectorAll(".obs-nav button").forEach((b) => b.classList.toggle("is-active", b === btn));
       render();
     });
   });
 
+  // Bind Sidebar Agent Sub-Tabs
+  document.querySelectorAll(".obs-nav-sub button").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      state.tab = "agents";
+      state.agentView = btn.dataset.subtab;
+      render();
+    });
+  });
+
+  // Bind Range Filters
   document.querySelectorAll(".obs-filters button").forEach((btn) => {
     btn.addEventListener("click", () => {
       state.range = btn.dataset.range;
@@ -657,9 +796,11 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
     });
   });
 
-  load().catch((err) => {
-    document.getElementById("obs-panels").innerHTML =
-      `<p>Could not load analytics. ${String(err).replace(/</g, "")}</p>`;
-  });
+  // Initial check
+  if (isAuthed()) {
+    showDashboard();
+  } else {
+    showAuthScreen();
+  }
 })();
 </script>

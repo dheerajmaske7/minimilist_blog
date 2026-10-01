@@ -1290,3 +1290,141 @@ body.analytics-app header {
   white-space: pre;
   max-height: 320px;
 }
+
+/* --- Analytics Lock Screen --- */
+.obs-lock-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 55vh;
+  padding: 3rem 1rem;
+}
+
+.obs-lock-card {
+  max-width: 380px;
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 2.25rem 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  text-align: center;
+}
+
+.obs-lock-icon {
+  width: 52px;
+  height: 52px;
+  line-height: 52px;
+  margin: 0 auto 1.25rem;
+  background: #f3f4f6;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.obs-lock-card h2 {
+  font-size: 1.35rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+  color: #111827;
+}
+
+.obs-lock-card p {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin: 0 0 1.5rem;
+  line-height: 1.4;
+}
+
+.obs-lock-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.obs-lock-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1.05rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  box-sizing: border-box;
+  text-align: center;
+  letter-spacing: 0.15em;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.obs-lock-input:focus {
+  border-color: #007acc;
+  box-shadow: 0 0 0 3px rgba(0, 122, 204, 0.15);
+}
+
+.obs-lock-submit {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #ffffff;
+  background: #007acc;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.obs-lock-submit:hover {
+  background: #0062a3;
+}
+
+.obs-lock-error {
+  color: #dc2626;
+  font-size: 0.85rem;
+  margin: 0.5rem 0 0;
+  font-weight: 500;
+}
+
+/* --- Sidebar Sub Navigation --- */
+.obs-nav-sub {
+  margin: 2px 0 6px 10px;
+  padding-left: 8px;
+  border-left: 2px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.obs-nav-sub button {
+  font-size: 0.82rem;
+  padding: 0.35rem 0.5rem;
+  color: #666;
+  border-radius: 4px;
+}
+
+.obs-nav-sub button:hover {
+  color: #111;
+  background: #f3f4f6;
+}
+
+.obs-nav-sub button.is-active {
+  color: #007acc;
+  font-weight: 600;
+  background: #eef6fc;
+}
+
+.obs-lock-btn {
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 0.75rem;
+  color: #666;
+  cursor: pointer;
+}
+
+.obs-lock-btn:hover {
+  background: #e5e7eb;
+  color: #111;
+}
