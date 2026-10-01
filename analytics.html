@@ -25,23 +25,25 @@ body_class: analytics-app
 <!-- Unlocked Dashboard View -->
 <div id="obs-unlocked-view" class="obs" style="display: none;">
   <aside class="obs-nav" aria-label="Observability">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-      <p class="obs-brand" style="margin: 0 0.5rem;">AgentGate</p>
+    <div class="obs-nav-header">
+      <p class="obs-brand">AgentGate</p>
       <button type="button" id="obs-lock-btn" class="obs-lock-btn" title="Lock Analytics">Lock</button>
     </div>
-    <button type="button" data-tab="graphs" class="is-active">Graphs</button>
-    <button type="button" data-tab="overview">Overview</button>
-    <button type="button" data-tab="agents">Agents</button>
-    <div class="obs-nav-sub" id="obs-nav-agents-sub" style="display: none;">
-      <button type="button" data-subtab="all" class="is-active">↳ All Agents</button>
-      <button type="button" data-subtab="compare">↳ Good vs Bad</button>
-      <button type="button" data-subtab="good">↳ Good (Stopped)</button>
-      <button type="button" data-subtab="bad">↳ Bad (Bypassed)</button>
-      <button type="button" data-subtab="paid">↳ Paid (Returned)</button>
+    <div class="obs-nav-tabs" role="tablist">
+      <button type="button" data-tab="graphs" class="is-active">Graphs</button>
+      <button type="button" data-tab="overview">Overview</button>
+      <button type="button" data-tab="agents">Agents</button>
+      <div class="obs-nav-sub" id="obs-nav-agents-sub" style="display: none;">
+        <button type="button" data-subtab="all" class="is-active">↳ All Agents</button>
+        <button type="button" data-subtab="compare">↳ Good vs Bad</button>
+        <button type="button" data-subtab="good">↳ Good (Stopped)</button>
+        <button type="button" data-subtab="bad">↳ Bad (Bypassed)</button>
+        <button type="button" data-subtab="paid">↳ Paid (Returned)</button>
+      </div>
+      <button type="button" data-tab="pages">Pages</button>
+      <button type="button" data-tab="events">Events</button>
+      <button type="button" data-tab="permissions">Permissions</button>
     </div>
-    <button type="button" data-tab="pages">Pages</button>
-    <button type="button" data-tab="events">Events</button>
-    <button type="button" data-tab="permissions">Permissions</button>
   </aside>
   <section class="obs-main">
     <header class="obs-top">
@@ -296,7 +298,7 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
   }
 
   function syncNav() {
-    document.querySelectorAll(".obs-nav > button").forEach((b) => {
+    document.querySelectorAll(".obs-nav button[data-tab]").forEach((b) => {
       b.classList.toggle("is-active", b.dataset.tab === state.tab);
     });
     const subnav = document.getElementById("obs-nav-agents-sub");
@@ -810,7 +812,7 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
   }
 
   // Bind Top-level Tabs
-  document.querySelectorAll(".obs-nav > button").forEach((btn) => {
+  document.querySelectorAll(".obs-nav button[data-tab]").forEach((btn) => {
     btn.addEventListener("click", () => {
       state.tab = btn.dataset.tab;
       render();
