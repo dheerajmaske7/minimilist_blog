@@ -309,9 +309,15 @@ export async function getBotRulesStore() {
   }
   const stored = await analyticsGet("bot_rules")
   if (!stored || !Array.isArray(stored) || stored.length === 0) {
-    const defaults = cloneDefaults()
-    await analyticsSet("bot_rules", defaults)
-    return defaults
+    // Do not write defaults here. A stale read used to overwrite a toggle
+    // the user had just saved, so the switch jumped back to off on refresh.
+    return cloneDefaults()
+  }
+  const apple = stored.find((r) => r.id === "apple")
+  if (apple && apple.allowed === false && !apple.updatedAt) {
+    apple.allowed = true
+    apple.updatedAt = new Date().toISOString()
+    await analyticsSet("bot_rules", stored)
   }
   return stored
 }

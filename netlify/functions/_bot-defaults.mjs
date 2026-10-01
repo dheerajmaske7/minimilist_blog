@@ -62,7 +62,7 @@ export const DEFAULT_BOT_RULES = [
     description: "Applebot-Extended trains Apple Intelligence models; Applebot indexes Siri/Spotlight.",
     capabilities: "Search, Model Training",
     patterns: "applebot-extended,applebot",
-    allowed: false,
+    allowed: true,
   },
   {
     id: "meta",

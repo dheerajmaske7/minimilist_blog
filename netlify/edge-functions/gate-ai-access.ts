@@ -95,7 +95,7 @@ const DEFAULT_BOT_RULES: BotRule[] = [
     id: "apple",
     name: "Apple (Applebot & Apple Intelligence)",
     category: "AI Assistant",
-    allowed: false,
+    allowed: true,
     patterns: "applebot-extended,applebot",
     description: "Applebot-Extended trains Apple Intelligence models; Applebot indexes Siri/Spotlight.",
     capabilities: "Search, Model Training",

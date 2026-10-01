@@ -163,7 +163,7 @@ body_class: analytics-app
     { id: "google_ai", name: "Google AI / Gemini Training (Google-Extended)", category: "AI Training", allowed: false, patterns: "google-extended" },
     { id: "perplexity", name: "Perplexity AI", category: "AI Search", allowed: false, patterns: "perplexitybot,perplexity" },
     { id: "cohere", name: "Cohere AI", category: "AI Training", allowed: false, patterns: "cohere-ai,cohere" },
-    { id: "apple", name: "Apple (Applebot & Apple Intelligence)", category: "AI Assistant", allowed: false, patterns: "applebot-extended,applebot" },
+    { id: "apple", name: "Apple (Applebot & Apple Intelligence)", category: "AI Assistant", allowed: true, patterns: "applebot-extended,applebot" },
     { id: "meta", name: "Meta AI (LLaMA)", category: "AI Training", allowed: false, patterns: "meta-externalagent,facebookbot" },
     { id: "bytedance", name: "ByteDance (Bytespider)", category: "AI Training", allowed: false, patterns: "bytespider" },
     { id: "aggregators", name: "Aggregators (CCBot / Diffbot)", category: "Data Aggregators", allowed: false, patterns: "ccbot,diffbot,amazonbot,youbot" },
@@ -296,7 +296,9 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
       if (!res.ok || !data.ok) throw new Error(data.error || "Update failed");
       if (data.rules) state.rules = data.rules;
     } catch (err) {
+      rule.allowed = !allowed;
       showToast(`Save failed: ${err.message}`);
+      render();
     }
   }
 
@@ -613,6 +615,7 @@ Sitemap: https://dheeraj-work.netlify.app/sitemap.xml`;
 
       let html = `
         <p class="obs-lead">Slide the toggles to dynamically grant or revoke crawler access. <strong>On:</strong> Free content access & marked <code>Allow</code> in robots.txt. <strong>Off:</strong> HTTP 402 (0.01 USDC) & <code>Disallow</code> in robots.txt.</p>
+        ${state.rulesError ? `<p class="obs-empty">${esc(state.rulesError)}</p>` : ""}
         <div class="obs-perm-actions">
           <button type="button" class="obs-btn-sm is-primary" id="btn-allow-all">Allow all</button>
           <button type="button" class="obs-btn-sm" id="btn-block-ai">Gate AI</button>
