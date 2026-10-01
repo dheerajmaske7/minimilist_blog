@@ -1307,12 +1307,6 @@ body.analytics-app header {
   text-align: center;
 }
 
-.obs-lock-icon {
-  font-size: 1.25rem;
-  margin: 0 auto 0.5rem;
-  opacity: 0.7;
-}
-
 .obs-lock-title,
 .obs-lock-card h2 {
   font-family: Georgia, serif;
