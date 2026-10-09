@@ -326,7 +326,7 @@ export async function getBotRulesStore() {
   return stored
 }
 
-export async function updateBotRuleStore(id, allowed) {
+export async function updateBotRuleStore(id, allowed, charge = false) {
   if (useSqlitePrimary()) {
     try {
       const { updateDbBotRule } = await sqlite()
@@ -339,9 +339,10 @@ export async function updateBotRuleStore(id, allowed) {
   const idx = rules.findIndex((r) => r.id === id)
   if (idx !== -1) {
     rules[idx].allowed = Boolean(allowed)
+    rules[idx].charge = Boolean(charge) && !allowed
     rules[idx].updatedAt = new Date().toISOString()
   } else {
-    rules.push({ id, allowed: Boolean(allowed), updatedAt: new Date().toISOString() })
+    rules.push({ id, allowed: Boolean(allowed), charge: Boolean(charge) && !allowed, updatedAt: new Date().toISOString() })
   }
   await analyticsSet("bot_rules", rules)
   return rules
@@ -362,6 +363,7 @@ export async function updateAllBotRulesStore(newRules) {
     const idx = rules.findIndex((r) => r.id === item.id)
     if (idx !== -1) {
       rules[idx].allowed = Boolean(item.allowed)
+      rules[idx].charge = Boolean(item.charge) && !item.allowed
       rules[idx].updatedAt = now
     }
   }

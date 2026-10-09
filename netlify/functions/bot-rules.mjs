@@ -80,8 +80,8 @@ export async function handler(event) {
     try {
       // Single toggle update
       if (typeof body.id === "string" && typeof body.allowed === "boolean") {
-        const rules = await updateBotRuleStore(body.id, body.allowed)
-        return json(200, { ok: true, updatedId: body.id, allowed: body.allowed, rules })
+        const rules = await updateBotRuleStore(body.id, body.allowed, body.charge === true)
+        return json(200, { ok: true, updatedId: body.id, allowed: body.allowed, charge: body.charge === true, rules })
       }
 
       // Bulk update
@@ -104,6 +104,17 @@ export async function handler(event) {
           id: r.id,
           allowed: r.category === "Search Engine", // preserve search engines
         }))
+        const rules = await updateAllBotRulesStore(updated)
+        return json(200, { ok: true, rules })
+      }
+
+      if (body.action === "charge_ai") {
+        // Robots.txt allows these bots in, the gate answers posts with HTTP 402 until they pay.
+        const current = await getBotRulesStore()
+        const updated = current.map((r) => {
+          const free = r.category === "Search Engine" || r.id === "feed_protection"
+          return { id: r.id, allowed: free, charge: !free }
+        })
         const rules = await updateAllBotRulesStore(updated)
         return json(200, { ok: true, rules })
       }

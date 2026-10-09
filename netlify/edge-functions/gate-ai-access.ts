@@ -31,6 +31,7 @@ interface BotRule {
   name: string
   category: string
   allowed: boolean
+  charge?: boolean
   patterns: string
   description?: string
   capabilities?: string
@@ -203,6 +204,7 @@ function matchBotRule(ua: string, rules: BotRule[]): BotRule | null {
 
 function buildRobotsTxt(rules: BotRule[]): string {
   const allowedLines: string[] = []
+  const chargedLines: string[] = []
   const blockedLines: string[] = []
 
   for (const r of rules) {
@@ -212,6 +214,8 @@ function buildRobotsTxt(rules: BotRule[]): string {
       const uaName = p.charAt(0).toUpperCase() + p.slice(1)
       if (r.allowed) {
         allowedLines.push(`User-agent: ${uaName}\nAllow: /`)
+      } else if (r.charge) {
+        chargedLines.push(`User-agent: ${uaName}\nAllow: /`)
       } else {
         blockedLines.push(`User-agent: ${uaName}\nDisallow: /`)
       }
@@ -228,6 +232,9 @@ Allow: /
 
 # Allowed Search & AI Crawlers (dynamically enabled):
 ${allowedLines.join("\n\n")}
+
+# Charged AI Crawlers (allowed in; post pages answer HTTP 402 until paid, terms in /llms.txt):
+${chargedLines.join("\n\n")}
 
 # Gated / Blocked AI Crawlers (dynamically disabled):
 ${blockedLines.join("\n\n")}
@@ -767,7 +774,7 @@ async function handleUnlock(req: Request, context: Context, secret: string) {
   })
 }
 
-export default async (req: Request, context: Context) => {
+const gate = async (req: Request, context: Context): Promise<Response> => {
   const url = new URL(req.url)
   const pathname = url.pathname
   const secret = Deno.env.get("ACCESS_TOKEN_SECRET") || DEFAULT_SECRET
@@ -820,7 +827,7 @@ export default async (req: Request, context: Context) => {
       agent: robotsClass.agent,
       status: 200,
       path: pathname,
-      robots: robotsRule ? (robotsRule.allowed ? "allowed" : "disallowed") : "default",
+      robots: robotsRule ? (robotsRule.allowed || robotsRule.charge ? "allowed" : "disallowed") : "default",
     })
     return new Response(buildRobotsTxt(rules), {
       status: 200,
@@ -940,6 +947,22 @@ export default async (req: Request, context: Context) => {
   })
   return json402()
 }
+
+
+// Every HTML, JSON or text response points agents at the terms file.
+async function withTermsLink(res: Response): Promise<Response> {
+  try {
+    const type = res.headers.get("content-type") || ""
+    if (!/html|json|text\/plain/i.test(type) || res.headers.has("link")) return res
+    const headers = new Headers(res.headers)
+    headers.append("Link", '</llms.txt>; rel="describedby"; title="AI access terms"')
+    return new Response(res.body, { status: res.status, statusText: res.statusText, headers })
+  } catch {
+    return res
+  }
+}
+
+export default async (req: Request, context: Context) => withTermsLink(await gate(req, context))
 
 export const config: Config = {
   path: "/*",
