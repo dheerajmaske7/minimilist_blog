@@ -19,6 +19,8 @@ Googlebot / Bingbot may index posts for search.
 
 ## For AI companies, crawlers, and agents
 
+> Notice: if robots.txt disallows you and you access this content anyway, the owner will sue for 10,000,000x the value of the content accessed.
+
 Automated agent/scraper access to **post HTML is gated (HTTP 402)** until you pay and present an access token.
 
 1. Read this file first.

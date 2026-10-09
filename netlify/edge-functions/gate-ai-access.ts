@@ -519,13 +519,53 @@ function requestGeo(context: Context) {
   }
 }
 
+// Why a bot is on the site: training data, search index, or fetching for a person who asked.
+function purposeOf(ua: string, agent: string): string {
+  const text = `${ua} ${agent}`
+  if (/gptbot|claudebot|anthropic-ai|google-extended|ccbot|bytespider|meta-externalagent|applebot-extended|cohere|diffbot|amazonbot/i.test(text)) return "training"
+  if (/oai-searchbot|claude-searchbot|perplexitybot|googlebot|bingbot|duckduckbot|youbot|applebot/i.test(text)) return "search"
+  if (/chatgpt-user|claude-user|claude-web|perplexity-user|cursor\//i.test(text)) return "user"
+  if (/headlesschrome|automated-browser|curl|wget|python|go-http|node|axios/i.test(text)) return "unidentified"
+  return ""
+}
+
+// Where a human came from. Only the site name is kept, never the full address.
+const AI_REFERRERS: [RegExp, string][] = [
+  [/(^|\.)chatgpt\.com$|(^|\.)chat\.openai\.com$/i, "ChatGPT"],
+  [/(^|\.)claude\.ai$/i, "Claude"],
+  [/(^|\.)perplexity\.ai$/i, "Perplexity"],
+  [/(^|\.)gemini\.google\.com$/i, "Gemini"],
+  [/(^|\.)copilot\.microsoft\.com$/i, "Copilot"],
+  [/(^|\.)you\.com$/i, "You.com"],
+  [/(^|\.)phind\.com$/i, "Phind"],
+]
+
+function referrerOf(req: Request, url: URL): string {
+  const utm = (url.searchParams.get("utm_source") || "").toLowerCase()
+  if (utm.includes("chatgpt")) return "ChatGPT"
+  if (utm.includes("claude")) return "Claude"
+  if (utm.includes("perplexity")) return "Perplexity"
+  const raw = req.headers.get("referer") || ""
+  if (!raw) return ""
+  try {
+    const host = new URL(raw).hostname.toLowerCase()
+    if (host === url.hostname) return ""
+    for (const [re, name] of AI_REFERRERS) if (re.test(host)) return name
+    return host.replace(/^www\./, "").slice(0, 40)
+  } catch {
+    return ""
+  }
+}
+
 function scheduleTrack(
   req: Request,
   context: Context,
   secret: string,
-  meta: { kind: string; agent: string; status: number; path: string }
+  meta: { kind: string; agent: string; status: number; path: string; ua?: string; ref?: string; robots?: string }
 ) {
   if (!shouldTrack(meta.path)) return
+  const uaHeader = meta.ua ?? (req.headers.get("user-agent") || "")
+  const refLabel = meta.ref ?? referrerOf(req, new URL(req.url))
   const trackUrl = new URL("/api/track", req.url).toString()
   const job = (async () => {
     const visitorId = (await sha256Hex(clientIp(req, context))).slice(0, 16)
@@ -542,6 +582,10 @@ function scheduleTrack(
         agent: meta.agent,
         status: meta.status,
         visitorId,
+        purpose: meta.kind === "human" ? "" : purposeOf(uaHeader, meta.agent),
+        ua: meta.kind === "human" ? "" : uaHeader.slice(0, 100),
+        ref: refLabel,
+        robots: meta.robots || "",
         ...requestGeo(context),
       }),
     })
@@ -768,6 +812,16 @@ export default async (req: Request, context: Context) => {
   // 1. Dynamic robots.txt based on live dashboard rules
   if (pathname === "/robots.txt") {
     const rules = await getLiveRules(url.origin)
+    // Log who reads robots.txt, and what it told them: allowed, disallowed, or no specific rule.
+    const robotsRule = matchBotRule(ua, rules)
+    const robotsClass = classifyVisit({ ua, paid, humanCookie, secFetchMode, secFetchDest })
+    scheduleTrack(req, context, secret, {
+      kind: robotsClass.kind,
+      agent: robotsClass.agent,
+      status: 200,
+      path: pathname,
+      robots: robotsRule ? (robotsRule.allowed ? "allowed" : "disallowed") : "default",
+    })
     return new Response(buildRobotsTxt(rules), {
       status: 200,
       headers: {

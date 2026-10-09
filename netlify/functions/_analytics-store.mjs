@@ -269,6 +269,10 @@ function applyVisit(summary, recent, event, writeStamp) {
   }
 
   const row = { ts, path, kind, agent, status }
+  if (visitorId) row.vid = visitorId.slice(0, 8)
+  for (const field of ["purpose", "ua", "ref", "robots"]) {
+    if (typeof event[field] === "string" && event[field]) row[field] = event[field]
+  }
   if (typeof event.lat === "number" && typeof event.lon === "number") {
     row.lat = event.lat
     row.lon = event.lon

@@ -82,6 +82,10 @@ export async function handler(event) {
           ? body.countryCode.slice(0, 2).toUpperCase()
           : "",
       city: typeof body.city === "string" ? body.city.slice(0, 40) : "",
+      purpose: typeof body.purpose === "string" ? body.purpose.slice(0, 16) : "",
+      ua: typeof body.ua === "string" ? body.ua.slice(0, 100) : "",
+      ref: typeof body.ref === "string" ? body.ref.slice(0, 40) : "",
+      robots: ["allowed", "disallowed", "default"].includes(body.robots) ? body.robots : "",
       lat: hasGeo ? Math.round(lat * 10) / 10 : null,
       lon: hasGeo ? Math.round(lon * 10) / 10 : null,
     })
