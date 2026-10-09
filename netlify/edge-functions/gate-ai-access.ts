@@ -39,6 +39,16 @@ interface BotRule {
 
 const DEFAULT_BOT_RULES: BotRule[] = [
   {
+    id: "maplelabs",
+    name: "MapleLabsBot",
+    category: "AI Assistant",
+    allowed: false,
+    charge: true,
+    patterns: "maplelabsbot",
+    description: "Test crawler for the AgentGate demo.",
+    capabilities: "Search, Model Training, User Search",
+  },
+  {
     id: "anthropic",
     name: "Anthropic (Claude)",
     category: "AI Assistant",
@@ -384,6 +394,7 @@ function isPreviewBot(ua: string) {
 }
 
 const AI_AGENTS: [RegExp, string][] = [
+  [/maplelabsbot/i, "MapleLabsBot"],
   [/gptbot/i, "GPTBot"],
   [/chatgpt-user/i, "ChatGPT-User"],
   [/google-extended/i, "Google-Extended"],
@@ -529,6 +540,9 @@ function requestGeo(context: Context) {
 // Why a bot is on the site: training data, search index, or fetching for a person who asked.
 function purposeOf(ua: string, agent: string): string {
   const text = `${ua} ${agent}`
+  if (/maplelabsbot-train/i.test(text)) return "training"
+  if (/maplelabsbot-search/i.test(text)) return "search"
+  if (/maplelabsbot-user/i.test(text)) return "user"
   if (/gptbot|claudebot|anthropic-ai|google-extended|ccbot|bytespider|meta-externalagent|applebot-extended|cohere|diffbot|amazonbot/i.test(text)) return "training"
   if (/oai-searchbot|claude-searchbot|perplexitybot|googlebot|bingbot|duckduckbot|youbot|applebot/i.test(text)) return "search"
   if (/chatgpt-user|claude-user|claude-web|perplexity-user|cursor\//i.test(text)) return "user"

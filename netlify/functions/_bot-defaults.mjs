@@ -101,6 +101,16 @@ export const DEFAULT_BOT_RULES = [
     allowed: true,
   },
   {
+    id: "maplelabs",
+    name: "MapleLabsBot",
+    category: "AI Assistant",
+    description: "Test crawler for the AgentGate demo. Runs in three modes: Search, Train and User search.",
+    capabilities: "Search, Model Training, User Search",
+    patterns: "maplelabsbot",
+    allowed: false,
+    charge: true,
+  },
+  {
     id: "feed_protection",
     name: "Feed Protection (/feed.xml)",
     category: "RSS Protection",

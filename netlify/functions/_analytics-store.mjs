@@ -302,6 +302,13 @@ function cloneDefaults() {
   return JSON.parse(JSON.stringify(DEFAULT_BOT_RULES))
 }
 
+// Rules added to the defaults after the stored list was saved still show up, with their default setting.
+function withNewDefaults(stored) {
+  const known = new Set(stored.map((r) => r.id))
+  const missing = cloneDefaults().filter((r) => !known.has(r.id))
+  return missing.length ? [...stored, ...missing] : stored
+}
+
 export async function getBotRulesStore() {
   if (useSqlitePrimary()) {
     try {
@@ -323,7 +330,7 @@ export async function getBotRulesStore() {
     apple.updatedAt = new Date().toISOString()
     await analyticsSet("bot_rules", stored)
   }
-  return stored
+  return withNewDefaults(stored)
 }
 
 export async function updateBotRuleStore(id, allowed, charge = false) {
@@ -335,7 +342,7 @@ export async function updateBotRuleStore(id, allowed, charge = false) {
       console.warn("SQLite bot rule update fallback:", err)
     }
   }
-  const rules = (await analyticsGet("bot_rules")) || cloneDefaults()
+  const rules = withNewDefaults((await analyticsGet("bot_rules")) || cloneDefaults())
   const idx = rules.findIndex((r) => r.id === id)
   if (idx !== -1) {
     rules[idx].allowed = Boolean(allowed)
@@ -357,7 +364,7 @@ export async function updateAllBotRulesStore(newRules) {
       console.warn("SQLite bot rules bulk fallback:", err)
     }
   }
-  const rules = (await analyticsGet("bot_rules")) || cloneDefaults()
+  const rules = withNewDefaults((await analyticsGet("bot_rules")) || cloneDefaults())
   const now = new Date().toISOString()
   for (const item of newRules) {
     const idx = rules.findIndex((r) => r.id === item.id)
