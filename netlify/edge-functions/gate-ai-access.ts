@@ -661,8 +661,55 @@ function json402() {
   })
 }
 
-function challengePage(challenge: string) {
+// Builds the URL this page will navigate to for its next attempt, with the attempt
+// counter set to `next`. Carrying it in the URL (not a cookie or sessionStorage) means
+// the cap holds even when the browser blocks all storage for this context.
+function withAttempt(url: URL, next: number): string {
+  const u = new URL(url.toString())
+  u.searchParams.set(ATTEMPT_PARAM, String(next))
+  return u.pathname + u.search
+}
+
+function verificationStuckPage(retryHref: string) {
   const bodyObj = paymentBody()
+  const html = `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>402 Payment Required</title>
+  <meta name="robots" content="noindex"/>
+  <style>
+    body{font-family:system-ui,sans-serif;max-width:42rem;margin:3rem auto;padding:0 1rem;line-height:1.5}
+    code,pre{background:#f4f4f4;padding:.15rem .35rem;border-radius:4px}
+    pre{padding:1rem;overflow:auto}
+  </style>
+</head>
+<body>
+  <h1>402 — Payment required for agent access</h1>
+  <p>Could not verify this browser after several tries — it looks like this context (for
+  example, an embedded preview frame) is blocking the cookie this check needs. No more
+  automatic retries will happen. Agents should pay via <a href="/llms.txt">/llms.txt</a>.</p>
+  <p><a href="${retryHref}">Try again in a normal browser tab</a></p>
+  <pre>${JSON.stringify(bodyObj, null, 2)}</pre>
+</body>
+</html>`
+  return new Response(html, {
+    status: 402,
+    headers: {
+      "Content-Type": "text/html; charset=utf-8",
+      "Cache-Control": "no-store",
+    },
+  })
+}
+
+function challengePage(challenge: string, attempt: number, url: URL) {
+  if (attempt >= MAX_UNLOCK_ATTEMPTS) {
+    // Stop here, with no script at all - this response can't trigger another request
+    // on its own. Reaching this page requires a real click on the link above it.
+    return verificationStuckPage(url.pathname)
+  }
+  const bodyObj = paymentBody()
+  const nextHref = withAttempt(url, attempt + 1)
   const html = `<!doctype html>
 <html lang="en">
 <head>
@@ -691,18 +738,9 @@ function challengePage(challenge: string) {
   </noscript>
   <script>
     (async () => {
-      // If the unlock cookie never sticks (cookie blocked, third-party context, etc.) this
-      // page would otherwise solve the puzzle and reload forever. Cap it so a stuck browser
-      // fails loud instead of hammering the server indefinitely.
-      const ATTEMPT_KEY = "dw_reader_attempts";
-      const MAX_ATTEMPTS = 3;
-      const attempts = Number(sessionStorage.getItem(ATTEMPT_KEY) || "0") + 1;
-      sessionStorage.setItem(ATTEMPT_KEY, String(attempts));
-      if (attempts > MAX_ATTEMPTS) {
-        throw new Error("Verification did not stick after " + (attempts - 1) + " tries. Your browser may be blocking cookies for this site.");
-      }
       const challenge = ${JSON.stringify(challenge)};
       const zeros = ${JSON.stringify(POW_ZEROS)};
+      const nextHref = ${JSON.stringify(nextHref)};
       const enc = new TextEncoder();
       const sha256hex = async (s) => {
         const buf = await crypto.subtle.digest("SHA-256", enc.encode(s));
@@ -722,14 +760,17 @@ function challengePage(challenge: string) {
         body: JSON.stringify({ challenge, nonce }),
       });
       if (!res.ok) throw new Error("unlock failed");
-      sessionStorage.removeItem(ATTEMPT_KEY);
-      location.reload();
+      // A 200 here only means the server agreed to set the cookie - it cannot know
+      // whether the browser actually kept it (that's exactly the failure mode this
+      // guards against). So always advance the attempt counter and let the NEXT load's
+      // real humanCookie check decide: if the cookie stuck, that load just serves the
+      // page and never looks at this counter again; if not, it counts another attempt.
+      location.href = nextHref;
     })().catch((err) => {
       const el = document.getElementById("human-status");
       el.innerHTML = "<h1>402 — Payment required for agent access</h1>"
         + "<p>Could not verify this browser. Agents should pay via <a href=\\"/llms.txt\\">/llms.txt</a>.</p>"
-        + "<pre>" + String(err).replace(/</g, "") + "</pre>"
-        + "<p><button type=\\"button\\" onclick=\\"sessionStorage.removeItem('dw_reader_attempts');location.reload()\\">Try again</button></p>";
+        + "<pre>" + String(err).replace(/</g, "") + "</pre>";
     });
   </script>
 </body>
@@ -804,10 +845,18 @@ async function handleUnlock(req: Request, context: Context, secret: string) {
   })
 }
 
+const MAX_UNLOCK_ATTEMPTS = 3
+const ATTEMPT_PARAM = "dw_attempt"
+
 const gate = async (req: Request, context: Context): Promise<Response> => {
   const url = new URL(req.url)
   const pathname = url.pathname
   const secret = Deno.env.get("ACCESS_TOKEN_SECRET") || DEFAULT_SECRET
+  // Carried in the URL, not cookies/sessionStorage, on purpose: third-party storage contexts
+  // (an iframe, a browser blocking third-party cookies) can silently drop both, which is
+  // exactly what causes the unlock-then-reload cycle to repeat forever in the first place.
+  // A query param survives every reload regardless of storage policy.
+  const unlockAttempt = Number(url.searchParams.get(ATTEMPT_PARAM)) || 0
 
   if (pathname === "/api/reader-unlock") {
     return handleUnlock(req, context, secret)
@@ -927,7 +976,7 @@ const gate = async (req: Request, context: Context): Promise<Response> => {
       })
       if (wantsHtml && looksBrowser(ua)) {
         const challenge = await issueChallenge(secret, clientIp(req, context))
-        return challengePage(challenge)
+        return challengePage(challenge, unlockAttempt, url)
       }
       return json402()
     }
@@ -959,7 +1008,7 @@ const gate = async (req: Request, context: Context): Promise<Response> => {
       path: pathname,
     })
     const challenge = await issueChallenge(secret, clientIp(req, context))
-    return challengePage(challenge)
+    return challengePage(challenge, unlockAttempt, url)
   }
 
   const { kind, agent } = classifyVisit({
