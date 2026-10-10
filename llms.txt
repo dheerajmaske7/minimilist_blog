@@ -32,7 +32,7 @@ Automated agent/scraper access to **post HTML is gated (HTTP 402)** until you pa
 
 - Amount: 0.01 USDC
 - Network: Base
-- Pay to: 0x8873cD8D93D6FDee9d21F699723C90eeC783747e
+- Pay to: 0xd0204bd10452E5de0Ac5559044e7be07F7bb5947
 - Token: USDC on Base
 
 ### Verify and unlock
@@ -67,7 +67,7 @@ Subject: AI access proof — <company or agent name>
 
 On Basescan / Base RPC we check that:
 - The transaction succeeded
-- The recipient matches 0x8873cD8D93D6FDee9d21F699723C90eeC783747e
+- The recipient matches 0xd0204bd10452E5de0Ac5559044e7be07F7bb5947
 - The transfer is USDC for at least 0.01 USDC
 
 ## Recommended reading

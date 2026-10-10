@@ -54,7 +54,7 @@ export async function handler(event) {
       pay: {
         amount: "0.01 USDC",
         network: "Base",
-        payTo: "0x8873cD8D93D6FDee9d21F699723C90eeC783747e",
+        payTo: process.env.PAY_TO_ADDRESS || (() => { throw new Error("PAY_TO_ADDRESS is not set") })(),
         verify: "POST /api/verify-payment",
         terms: "https://dheeraj-work.netlify.app/llms.txt",
       },

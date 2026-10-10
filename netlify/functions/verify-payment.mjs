@@ -5,7 +5,13 @@
 
 import { mintAccessToken, TOKEN_TTL_SECONDS } from "./token-lib.mjs"
 
-const PAY_TO = "0x8873cD8D93D6FDee9d21F699723C90eeC783747e".toLowerCase()
+// No hardcoded fallback on purpose: a previous address was exposed, this must be set explicitly.
+function payTo() {
+  const addr = process.env.PAY_TO_ADDRESS
+  if (!addr) throw new Error("PAY_TO_ADDRESS is not set")
+  return addr.toLowerCase()
+}
+const PAY_TO = payTo()
 const USDC_BASE = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913".toLowerCase()
 const MIN_AMOUNT_RAW = 10_000n // 0.01 USDC (6 decimals)
 const TRANSFER_TOPIC =

@@ -7,7 +7,11 @@
  */
 import type { Config, Context } from "https://edge.netlify.com"
 
-const PAY_TO = "0x8873cD8D93D6FDee9d21F699723C90eeC783747e"
+// No hardcoded fallback on purpose: a previous address was exposed. Falls back to a clearly
+// non-functional placeholder (not the old key) so the gate keeps serving the rest of the site
+// instead of crashing every request if this isn't set yet, but payment info will visibly read
+// "not configured" until PAY_TO_ADDRESS is set in Netlify's environment variables.
+const PAY_TO = Deno.env.get("PAY_TO_ADDRESS") || "0x0000000000000000000000000000000000000000"
 const DEFAULT_SECRET = "dheeraj-work-netlify-ai-access-hmac-v1"
 const COOKIE = "dw_reader"
 const POW_ZEROS = "000"
