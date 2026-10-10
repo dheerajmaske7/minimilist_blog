@@ -103,6 +103,9 @@ export async function handler(event) {
 
   const range = parseRange(event)
   const since = sinceIso(range)
+  // Default stays 500 so existing dashboard views look the same. Pass ?limit=2000 (max) for
+  // a deeper look, e.g. when checking whether older history survived the store's own cap.
+  const recentLimit = Math.min(Math.max(Number(event.queryStringParameters?.limit) || 500, 1), 2000)
 
   if (useSqlitePrimary()) {
     try {
@@ -170,7 +173,7 @@ export async function handler(event) {
       topBlogs,
       topPages,
       series,
-      recent: recent.slice(0, 500),
+      recent: recent.slice(0, recentLimit),
       places: placesFrom(recent),
       ...reputation,
       updatedAt: summary.updatedAt || null,

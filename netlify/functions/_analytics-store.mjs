@@ -209,7 +209,9 @@ export async function recordVisit(event) {
   applyVisit(summary, recent, event, writeStamp)
   await analyticsWrite({
     summary,
-    recent: recent.slice(0, 500),
+    // Was 500, which a single busy hour could fill entirely, evicting everything older.
+    // 10,000 gives real headroom before the oldest rows start getting pushed out.
+    recent: recent.slice(0, 10000),
   })
 }
 
