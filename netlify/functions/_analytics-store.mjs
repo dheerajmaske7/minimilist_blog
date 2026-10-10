@@ -209,9 +209,9 @@ export async function recordVisit(event) {
   applyVisit(summary, recent, event, writeStamp)
   await analyticsWrite({
     summary,
-    // Was 500, which a single busy hour could fill entirely, evicting everything older.
-    // 10,000 gives real headroom before the oldest rows start getting pushed out.
-    recent: recent.slice(0, 10000),
+    // Was 500, then 10,000 — both got filled by the reader-unlock reload-loop bug (now
+    // fixed in gate-ai-access.ts), not by organic traffic. 20,000 is extra headroom.
+    recent: recent.slice(0, 20000),
   })
 }
 

@@ -691,6 +691,16 @@ function challengePage(challenge: string) {
   </noscript>
   <script>
     (async () => {
+      // If the unlock cookie never sticks (cookie blocked, third-party context, etc.) this
+      // page would otherwise solve the puzzle and reload forever. Cap it so a stuck browser
+      // fails loud instead of hammering the server indefinitely.
+      const ATTEMPT_KEY = "dw_reader_attempts";
+      const MAX_ATTEMPTS = 3;
+      const attempts = Number(sessionStorage.getItem(ATTEMPT_KEY) || "0") + 1;
+      sessionStorage.setItem(ATTEMPT_KEY, String(attempts));
+      if (attempts > MAX_ATTEMPTS) {
+        throw new Error("Verification did not stick after " + (attempts - 1) + " tries. Your browser may be blocking cookies for this site.");
+      }
       const challenge = ${JSON.stringify(challenge)};
       const zeros = ${JSON.stringify(POW_ZEROS)};
       const enc = new TextEncoder();
@@ -712,12 +722,14 @@ function challengePage(challenge: string) {
         body: JSON.stringify({ challenge, nonce }),
       });
       if (!res.ok) throw new Error("unlock failed");
+      sessionStorage.removeItem(ATTEMPT_KEY);
       location.reload();
     })().catch((err) => {
       const el = document.getElementById("human-status");
       el.innerHTML = "<h1>402 — Payment required for agent access</h1>"
         + "<p>Could not verify this browser. Agents should pay via <a href=\\"/llms.txt\\">/llms.txt</a>.</p>"
-        + "<pre>" + String(err).replace(/</g, "") + "</pre>";
+        + "<pre>" + String(err).replace(/</g, "") + "</pre>"
+        + "<p><button type=\\"button\\" onclick=\\"sessionStorage.removeItem('dw_reader_attempts');location.reload()\\">Try again</button></p>";
     });
   </script>
 </body>
