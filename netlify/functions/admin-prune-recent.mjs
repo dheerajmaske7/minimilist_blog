@@ -12,7 +12,7 @@
 //   GET  /api/admin-prune-recent?auth=...&start=...&end=...           -> preview, no write
 //   POST /api/admin-prune-recent?auth=...&start=...&end=...&confirm=1 -> actually writes
 
-import { analyticsGet, analyticsSet } from "./_analytics-store.mjs"
+import { analyticsGet, analyticsSet, useBlobs } from "./_analytics-store.mjs"
 
 const corsHeaders = { "Content-Type": "application/json", "Cache-Control": "no-store" }
 function json(statusCode, body) {
@@ -31,6 +31,7 @@ function sig(r) {
 }
 
 export async function handler(event) {
+  useBlobs(event)
   if (!isAuthorized(event)) return json(401, { ok: false, error: "Password required" })
 
   const q = event.queryStringParameters || {}
