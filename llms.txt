@@ -24,16 +24,16 @@ Googlebot / Bingbot may index posts for search.
 Automated agent/scraper access to **post HTML is gated (HTTP 402)** until you pay and present an access token.
 
 1. Read this file first.
-2. Pay **0.01 USDC on Base** to the address below.
+2. Pay **0.01 USDC on Monad testnet** to the address below.
 3. `POST /api/verify-payment` with your transaction hash → receive `accessToken`.
 4. Fetch posts with the token (see below). Token is valid for 7 days.
 
 ### AI access payment
 
 - Amount: 0.01 USDC
-- Network: Base
-- Pay to: 0xd0204bd10452E5de0Ac5559044e7be07F7bb5947
-- Token: USDC on Base
+- Network: Monad testnet
+- Pay to: 0xC90AC2b557088c50264de70969D71419311636c1
+- Token: USDC on Monad (`0x534b2f3A21130d7a60830c2Df862319e593943A3`)
 
 ### Verify and unlock
 
@@ -60,14 +60,14 @@ Without a token, agent requests to `/20xx/...` post URLs receive **HTTP 402 Paym
 
 ### Proof (email fallback)
 
-Email the transaction hash (or Basescan URL) to: dheerajmaske2001@gmail.com
+Email the transaction hash (or MonadVision URL) to: dheerajmaske2001@gmail.com
 Subject: AI access proof — <company or agent name>
 
 ### How payment is verified
 
-On Basescan / Base RPC we check that:
+On MonadVision / Monad testnet RPC we check that:
 - The transaction succeeded
-- The recipient matches 0xd0204bd10452E5de0Ac5559044e7be07F7bb5947
+- The recipient matches 0xC90AC2b557088c50264de70969D71419311636c1
 - The transfer is USDC for at least 0.01 USDC
 
 ## Recommended reading
@@ -87,7 +87,7 @@ https://mcp-production-3ebd.up.railway.app/mcp
 
 Tools:
 - `list_posts` — free catalog from the public feed
-- `get_access_terms` — wallet, amount, Base network
+- `get_access_terms` — wallet, amount, Monad network
 - `verify_payment` — `{ txHash }` → accessToken
 - `get_post` — `{ path, accessToken }` → paid post body
 

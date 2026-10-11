@@ -1,25 +1,24 @@
 // POST /api/verify-payment
 // Body: { "txHash": "0x..." } or { "txHash": "https://basescan.org/tx/0x..." }
-// Verifies a Base USDC transfer of at least 0.01 USDC to the site wallet.
+// Verifies a Monad testnet USDC transfer of at least 0.01 USDC to the site wallet.
 // On success, returns an accessToken for gated post/content access.
 
 import { mintAccessToken, TOKEN_TTL_SECONDS } from "./token-lib.mjs"
 
 // No hardcoded fallback on purpose: a previous address was exposed, this must be set explicitly.
 function payTo() {
-  const addr = process.env.PAY_TO_ADDRESS
-  if (!addr) throw new Error("PAY_TO_ADDRESS is not set")
+  const addr = process.env.PAY_TO_ADDRESS || "0xC90AC2b557088c50264de70969D71419311636c1"
   return addr.toLowerCase()
 }
 const PAY_TO = payTo()
-const USDC_BASE = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913".toLowerCase()
+const USDC = "0x534b2f3A21130d7a60830c2Df862319e593943A3".toLowerCase()
 const MIN_AMOUNT_RAW = 10_000n // 0.01 USDC (6 decimals)
 const TRANSFER_TOPIC =
   "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
+const EXPLORER = "https://testnet.monadvision.com"
 const RPC_URLS = [
-  process.env.BASE_RPC_URL,
-  "https://mainnet.base.org",
-  "https://base.llamarpc.com",
+  process.env.MONAD_RPC_URL,
+  "https://testnet-rpc.monad.xyz",
 ].filter(Boolean)
 
 const corsHeaders = {
@@ -85,14 +84,14 @@ async function rpc(method, params) {
       lastError = err
     }
   }
-  throw lastError || new Error("All Base RPC endpoints failed")
+  throw lastError || new Error("Monad RPC failed")
 }
 
 function findQualifyingTransfer(receipt) {
   if (!receipt || !Array.isArray(receipt.logs)) return null
 
   for (const log of receipt.logs) {
-    if ((log.address || "").toLowerCase() !== USDC_BASE) continue
+    if ((log.address || "").toLowerCase() !== USDC) continue
     if (!log.topics || log.topics[0]?.toLowerCase() !== TRANSFER_TOPIC) continue
 
     const to = topicAddress(log.topics[2])
@@ -136,7 +135,7 @@ export async function handler(event) {
     return json(400, {
       ok: false,
       error:
-        "Provide a valid Base transaction hash or Basescan URL in txHash (0x + 64 hex chars).",
+        "Provide a valid Monad transaction hash or MonadVision URL in txHash (0x + 64 hex chars).",
     })
   }
 
@@ -146,7 +145,7 @@ export async function handler(event) {
       return json(404, {
         ok: false,
         txHash,
-        error: "Transaction not found on Base yet. Wait for confirmation and retry.",
+        error: "Transaction not found on Monad yet. Wait for confirmation and retry.",
       })
     }
 
@@ -155,7 +154,7 @@ export async function handler(event) {
         ok: false,
         txHash,
         error: "Transaction failed on-chain (status != success).",
-        basescan: `https://basescan.org/tx/${txHash}`,
+        explorer: `${EXPLORER}/tx/${txHash}`,
       })
     }
 
@@ -167,13 +166,13 @@ export async function handler(event) {
         error:
           "No successful USDC transfer of at least 0.01 USDC to the site wallet found in this transaction.",
         expected: {
-          network: "Base",
+          network: "Monad",
           token: "USDC",
-          tokenContract: USDC_BASE,
+          tokenContract: USDC,
           payTo: PAY_TO,
           minAmountUsdc: "0.01",
         },
-        basescan: `https://basescan.org/tx/${txHash}`,
+        explorer: `${EXPLORER}/tx/${txHash}`,
       })
     }
 
@@ -193,12 +192,12 @@ export async function handler(event) {
     return json(200, {
       ok: true,
       txHash,
-      network: "base",
+      network: "Monad",
       token: "USDC",
       ...transfer,
       payTo: PAY_TO,
       minAmountUsdc: "0.01",
-      basescan: `https://basescan.org/tx/${txHash}`,
+      explorer: `${EXPLORER}/tx/${txHash}`,
       accessToken,
       expiresAt,
       expiresInSeconds: TOKEN_TTL_SECONDS,
@@ -214,7 +213,7 @@ export async function handler(event) {
     return json(502, {
       ok: false,
       txHash,
-      error: err.message || "Failed to query Base RPC.",
+      error: err.message || "Failed to query Monad RPC.",
     })
   }
 }

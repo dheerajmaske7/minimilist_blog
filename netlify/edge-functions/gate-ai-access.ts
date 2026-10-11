@@ -11,7 +11,7 @@ import type { Config, Context } from "https://edge.netlify.com"
 // non-functional placeholder (not the old key) so the gate keeps serving the rest of the site
 // instead of crashing every request if this isn't set yet, but payment info will visibly read
 // "not configured" until PAY_TO_ADDRESS is set in Netlify's environment variables.
-const PAY_TO = Deno.env.get("PAY_TO_ADDRESS") || "0x0000000000000000000000000000000000000000"
+const PAY_TO = Deno.env.get("PAY_TO_ADDRESS") || "0xC90AC2b557088c50264de70969D71419311636c1"
 const DEFAULT_SECRET = "dheeraj-work-netlify-ai-access-hmac-v1"
 const COOKIE = "dw_reader"
 const POW_ZEROS = "000"
@@ -633,16 +633,16 @@ function paymentBody() {
     paymentRequired: true,
     status: 402,
     message:
-      "AI/agent access to post HTML requires a verified 0.01 USDC payment on Base.",
+      "AI/agent access to post HTML requires a verified 0.01 USDC payment on Monad.",
     terms: "https://dheeraj-work.netlify.app/llms.txt",
     pay: {
       amount: "0.01 USDC",
-      network: "Base",
+      network: "Monad",
       payTo: PAY_TO,
       token: "USDC",
     },
     next: [
-      "1. Send 0.01 USDC on Base to the payTo address",
+      "1. Send 0.01 USDC on Monad to the payTo address",
       "2. POST /api/verify-payment with { \"txHash\": \"0x...\" }",
       "3. Retry this URL with Authorization: Bearer <accessToken>",
       "   or ?access_token=<accessToken>",
@@ -727,10 +727,10 @@ function challengePage(challenge: string, attempt: number, url: URL) {
   <noscript>
     <h1>402 — Payment required for agent access</h1>
     <p>This browser did not run JavaScript, so it is treated as an automated client.</p>
-    <p>Humans: enable JavaScript and reload. Agents: pay <strong>0.01 USDC on Base</strong> first.</p>
+    <p>Humans: enable JavaScript and reload. Agents: pay <strong>0.01 USDC on Monad</strong> first.</p>
     <ol>
       <li>Read <a href="/llms.txt">/llms.txt</a></li>
-      <li>Pay <code>0.01 USDC</code> on Base to <code>${PAY_TO}</code></li>
+      <li>Pay <code>0.01 USDC</code> on Monad to <code>${PAY_TO}</code></li>
       <li><code>POST /api/verify-payment</code> with your tx hash</li>
       <li>Retry with <code>Authorization: Bearer &lt;accessToken&gt;</code></li>
     </ol>

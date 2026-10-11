@@ -42,13 +42,13 @@ export function parseAtomFeed(xml) {
 export function registerBlogTools(server) {
   server.tool(
     "get_access_terms",
-    "How to pay for AI access to this blog (0.01 USDC on Base)",
+    "How to pay for AI access to this blog (0.01 USDC on Monad)",
     {},
     async () =>
       ok({
         amount: "0.01 USDC",
-        network: "Base",
-        payTo: "0x8873cD8D93D6FDee9d21F699723C90eeC783747e",
+        network: "Monad",
+        payTo: "0xC90AC2b557088c50264de70969D71419311636c1",
         site: SITE,
         llmsTxt: `${SITE}/llms.txt`,
         next: "Call verify_payment with the tx hash, then get_post with the accessToken.",
@@ -57,7 +57,7 @@ export function registerBlogTools(server) {
 
   server.tool(
     "verify_payment",
-    "Exchange a Base USDC tx hash for an access token",
+    "Exchange a Monad USDC tx hash for an access token",
     { txHash: z.string() },
     async ({ txHash }) => {
       const res = await fetch(`${SITE}/api/verify-payment`, {
@@ -99,7 +99,7 @@ export function registerBlogTools(server) {
       const body = await res.text()
       if (res.status === 402) {
         return ok(
-          "Payment required. Call get_access_terms, pay 0.01 USDC on Base, then verify_payment."
+          "Payment required. Call get_access_terms, pay 0.01 USDC on Monad, then verify_payment."
         )
       }
       return ok(body)

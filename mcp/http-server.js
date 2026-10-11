@@ -43,8 +43,8 @@ app.get("/", (_req, res) => {
     llmsTxt: `${SITE}/llms.txt`,
     payment: {
       amount: "0.01 USDC",
-      network: "Base",
-      payTo: "0x8873cD8D93D6FDee9d21F699723C90eeC783747e",
+      network: "Monad",
+      payTo: "0xC90AC2b557088c50264de70969D71419311636c1",
     },
     tools: [
       "list_posts (free)",
